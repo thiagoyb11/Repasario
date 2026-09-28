@@ -1,39 +1,37 @@
 # Repaso Java
 
-Aplicación local de cuestionarios para Windows, macOS y Linux. La **versión compilada** se abre sin instalar Python. La versión de código fuente usa Python 3.9 o posterior y el navegador del equipo.
+Aplicación local de cuestionarios sobre Java para Windows, macOS y Linux. Funciona en el navegador mediante un servidor local. La versión de código fuente requiere Python 3.9 o posterior; la versión compilada no requiere instalar Python.
 
-## Versión compilada: doble clic
+## Versión compilada
 
-En esta Mac se generó [RepasoJava-macOS-arm64.zip](release/RepasoJava-macOS-arm64.zip) para equipos Apple Silicon. Descomprimir el ZIP y abrir **RepasoJava.app** con doble clic. Mantener `preguntas.json` junto a la app para editar el banco. La aplicación abre el navegador y muestra el botón **Salir** para cerrarla.
+El archivo [RepasoJava-macOS-arm64.zip](release/RepasoJava-macOS-arm64.zip) contiene una versión para equipos Mac con Apple Silicon. Para utilizarla, descomprimir el ZIP y abrir **RepasoJava.app**. El archivo `preguntas.json` debe permanecer junto a la aplicación para poder editar el banco de preguntas. La aplicación abre el navegador y se puede cerrar con el botón **Salir**.
 
-Para Windows y Linux hay que compilar en una computadora con ese sistema operativo. PyInstaller genera binarios para el sistema en el que se ejecuta. Desde esta carpeta:
+Para obtener una versión compilada en Windows, Linux o una Mac Intel, ejecutar la compilación en un equipo con ese sistema y arquitectura. PyInstaller genera binarios para el sistema en el que se ejecuta. Desde la raíz del proyecto:
 
 ```text
 python -m pip install -r requirements-build.txt
 python tools/build_desktop.py
 ```
 
-En Windows, `python` se puede reemplazar por `py -3`. El ZIP compilado aparecerá en `release/`. La compilación se hace una sola vez; quien use la versión resultante no necesita instalar Python.
-
-La app de macOS incluida aquí es para arquitectura **arm64**. Para una Mac Intel se debe ejecutar el mismo proceso de compilación en una Mac Intel.
+En Windows, `python` se puede reemplazar por `py -3`. El ZIP generado se guarda en `release/`.
 
 ## Iniciar desde el código fuente
 
-- **Windows:** hacer doble clic en `lanzar.bat`, o ejecutar `py -3 app.py` en una terminal.
-- **macOS:** ejecutar `sh lanzar.command`, o `python3 app.py`. También se puede hacer doble clic en `lanzar.command` si el sistema permite abrirlo.
-- **Linux:** ejecutar `sh lanzar.sh`, o `python3 app.py`.
+- **Windows:** abrir `lanzar.bat` o ejecutar `py -3 app.py` en una terminal.
+- **macOS:** ejecutar `sh lanzar.command` o `python3 app.py`.
+- **Linux:** ejecutar `sh lanzar.sh` o `python3 app.py`.
 
-Se abrirá el navegador en una dirección local `http://127.0.0.1:PUERTO/`. La terminal debe permanecer abierta mientras se usa la aplicación. Para cerrar, presionar `Ctrl+C`.
+La aplicación abre el navegador en una dirección local `http://127.0.0.1:PUERTO/`. La terminal debe permanecer abierta durante el uso. Para detener el servidor, presionar `Ctrl+C`.
 
-Si el navegador no se abre automáticamente, usar la dirección que aparece en la terminal. Para iniciarla sin abrirlo: `python3 app.py --no-browser`. Se puede fijar un puerto con `--port 8765`.
+Si el navegador no se abre automáticamente, utilizar la dirección que aparece en la terminal. La opción `--no-browser` evita que se abra el navegador; `--port 8765` fija el puerto.
 
 ## Preguntas y puntaje
 
-El archivo [preguntas.json](preguntas.json) contiene **150 preguntas editables**: 74 originales distintas de los HTML, 12 adaptadas de cuatro ejercicios originales de emparejamiento y 64 nuevas. Las preguntas de verdadero/falso originales aparecen como selección entre dos opciones. Cada cuestionario contiene de 1 a 50 preguntas elegidas al azar.
+El archivo [preguntas.json](preguntas.json) contiene **150 preguntas editables**. Cada cuestionario incluye entre 1 y 50 preguntas elegidas al azar.
 
-Cada pregunta vale **1 punto**. Las preguntas con una sola respuesta correcta usan botones de selección; las que tienen varias usan casillas. En estas últimas, cada respuesta correcta marcada suma `1 / cantidad de respuestas correctas` y cada opción incorrecta marcada resta lo mismo, con un mínimo de **0 puntos** por pregunta. Así, marcar todas las correctas suma exactamente **1 punto**. Deben responderse todas las preguntas para finalizar. La revisión muestra las respuestas elegidas, las correctas, el puntaje de cada pregunta y una explicación.
+Cada pregunta vale **1 punto**. Las preguntas con una sola respuesta correcta usan botones de selección; las que tienen varias usan casillas. En estas últimas, cada respuesta correcta marcada suma `1 / cantidad de respuestas correctas` y cada opción incorrecta marcada resta lo mismo, con un mínimo de **0 puntos** por pregunta. Es necesario responder todas las preguntas para finalizar. La revisión muestra las respuestas elegidas, las correctas, el puntaje de cada pregunta y una explicación.
 
-Para modificar el banco, editar el JSON con cualquier editor de texto. Los cambios se aplican al crear el próximo cuestionario. Cada entrada usa esta estructura:
+El banco se puede modificar editando el JSON. Los cambios se aplican al crear el siguiente cuestionario. Cada entrada usa esta estructura:
 
 ```json
 {
@@ -48,11 +46,11 @@ Para modificar el banco, editar el JSON con cualquier editor de texto. Los cambi
 }
 ```
 
-`correctas` contiene índices empezando en **0**. Para una pregunta con más de una respuesta válida, usar varios índices, por ejemplo `[0, 2]`. Cada `id` debe ser único. Si el JSON tiene un error, la aplicación lo indicará al iniciar o crear un cuestionario.
+`correctas` contiene índices que comienzan en **0**. Una pregunta con varias respuestas válidas puede usar varios índices, por ejemplo `[0, 2]`. Cada `id` debe ser único. Si el JSON contiene un error, la aplicación lo indica al iniciar o crear un cuestionario.
 
 ## Historial
 
-Al finalizar se guarda un archivo JSON por intento, con fecha, preguntas, respuestas, corrección y puntaje. La pantalla **Historial** permite abrir cualquier revisión anterior. La carpeta se indica en la pantalla inicial y sigue las convenciones del sistema:
+Al finalizar un cuestionario, se guarda un archivo JSON con la fecha, las preguntas, las respuestas, la corrección y el puntaje. La pantalla **Historial** permite consultar los intentos anteriores. La ubicación de los archivos aparece en la pantalla inicial y depende del sistema operativo:
 
 | Sistema | Carpeta |
 | --- | --- |
@@ -60,12 +58,12 @@ Al finalizar se guarda un archivo JSON por intento, con fecha, preguntas, respue
 | macOS | `~/Library/Application Support/CuestionariosJava/historial` |
 | Linux | `${XDG_DATA_HOME:-~/.local/share}/CuestionariosJava/historial` |
 
-Los intentos terminados permanecen disponibles aunque se cierre la aplicación. Los cuestionarios en curso viven en memoria y no se guardan hasta finalizar.
+Los intentos finalizados permanecen disponibles después de cerrar la aplicación. Los cuestionarios en curso se mantienen en memoria y se guardan al finalizar.
 
 ## Archivos
 
 - `app.py`: servidor local y corrección.
 - `web/`: interfaz del navegador.
 - `preguntas.json`: banco editable.
-- `tools/`: scripts utilizados para extraer y construir el banco; no hacen falta para ejecutar la aplicación.
+- `tools/`: scripts para construir el banco de preguntas y compilar la aplicación.
 - `tools/build_desktop.py`: genera un paquete compilado en el sistema operativo actual.
