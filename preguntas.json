@@ -1,0 +1,2511 @@
+[
+  {
+    "id": "original-001",
+    "pregunta": "En una arquitectura multicapa, la capa de presentación solicita la información a mostrar de la capa de datos.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: Falso.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-002",
+    "pregunta": "Cuál es la principal ventaja del patrón Factory?",
+    "opciones": [
+      "Evitar la herencia múltiple",
+      "Minimizar el consumo de memoria",
+      "Reducir el acoplamiento entre atributos y métodos",
+      "Centralizar la creación de objetos"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "La respuesta correcta es: Centralizar la creación de objetos.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-003",
+    "pregunta": "¿Qué imprime el programa?\nJava 21. Guardar este programa independiente en Main.java. Los ejemplos se ejecutan en un solo hilo.\n```\nimport java.util.*;\nclass ProductoDTO {\n    final int precio;\n    ProductoDTO(int precio) { this.precio = precio; }\n}\ninterface ProductoDAO { ProductoDTO buscar(int id); }\nclass MemoriaDAO implements ProductoDAO {\n    public ProductoDTO buscar(int id) { return new ProductoDTO(40); }\n}\nclass Servicio {\n    private final ProductoDAO dao;\n    Servicio(ProductoDAO dao) { this.dao = dao; }\n    int precioFinal(int id) { return dao.buscar(id).precio + 10; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Servicio servicio = new Servicio(new MemoriaDAO());\n        System.out.println(servicio.precioFinal(1));\n    }\n}\n```",
+    "opciones": [
+      "50",
+      "40",
+      "No compila.",
+      "10"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "El DAO entrega el DTO con precio 40. La regla de negocio del servicio suma 10, sin conocer cómo se recuperó el dato.\nReferencia: 09-patrones.pdf, páginas 64–65.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-004",
+    "pregunta": "En Java, el ámbito de una variable local está limitado a:",
+    "opciones": [
+      "El bloque {} donde se declara y sus bloques anidados",
+      "Todo el paquete java y sus subpaquetes",
+      "Toda la clase donde se declara",
+      "El método donde se declara"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Respuesta incorrecta.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-005",
+    "pregunta": "¿Cuál es el propósito principal de la referencia super?",
+    "opciones": [
+      "Se utiliza para redefinir un método de la superclase.",
+      "Se utiliza para crear una nueva instancia de la superclase.",
+      "Se utiliza para acceder a las variables de instancia de la clase actual.",
+      "Se utiliza para llamar a un método o constructor de la superclase desde la subclase."
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "La respuesta correcta es: Se utiliza para llamar a un método o constructor de la superclase desde la subclase..",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-006",
+    "pregunta": "En Java, una clase declarada como final no puede ser instanciada.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: Falso.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-007",
+    "pregunta": "¿Qué instrucción reemplaza el comentario para eliminar duplicados consecutivos e imprimir [1, 2, 3]?\nJava 21. Guardar este programa independiente en Main.java. Los ejemplos se ejecutan en un solo hilo.\n```\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> lista = new ArrayList<>(Arrays.asList(1, 1, 2, 2, 3));\n        Iterator<Integer> it = lista.iterator();\n        Integer anterior = null;\n        while (it.hasNext()) {\n            Integer actual = it.next();\n            if (actual.equals(anterior)) {\n                // COMPLETAR\n            }\n            anterior = actual;\n        }\n        System.out.println(lista);\n    }\n}\n```",
+    "opciones": [
+      "lista.clear();",
+      "it.remove();",
+      "it.remove(actual);",
+      "it.next();"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "El iterador elimina el último elemento obtenido y mantiene el recorrido válido. La lista está ordenada, por lo que basta comparar valores consecutivos.\nReferencia: 09-patrones.pdf, páginas 43–51.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-008",
+    "pregunta": "¿Cuáles de estas clases permiten leer caracteres a partir de bytes de un archivo?",
+    "opciones": [
+      "InputStreamReader",
+      "FileReader",
+      "OutputStreamWriter",
+      "FileOutputStream"
+    ],
+    "correctas": [
+      0,
+      1
+    ],
+    "explicacion": "InputStreamReader convierte bytes en caracteres y FileReader, que lo extiende, lee caracteres desde un archivo.",
+    "tema": "Entrada y salida",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-009",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué imprime?\n```\nclass Caja { int valor; }\nclass Cambio {\n    static void modificar(Caja c) {\n        c = new Caja();\n        c.valor = 10;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Caja c = new Caja();\n        c.valor = 4;\n        Cambio.modificar(c);\n        System.out.println(c.valor);\n    }\n}\n```",
+    "opciones": [
+      "No compila.",
+      "0",
+      "4",
+      "10"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "Reasignar el parámetro solo cambia la copia local de la referencia. La variable del llamador sigue apuntando al objeto original.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 28–29.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-010",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué imprime?\n```\nclass Pelicula { String titulo; int oscars; }\npublic class Main {\n    public static void main(String[] args) {\n        Pelicula p = new Pelicula();\n        System.out.println(p.titulo + \" \" + p.oscars);\n    }\n}\n```",
+    "opciones": [
+      "No compila porque los atributos no se inicializaron explícitamente.",
+      "Cadena vacía y 0.",
+      "Lanza NullPointerException.",
+      "null 0"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "Los atributos de referencia se inicializan en null y los int en 0. Concatenar null con una cadena produce el texto null.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 15–16 y 22.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-011",
+    "pregunta": "Si tengo N objetos que son instancias de una clase \"ClaseX\". Y quiero agregar todas las instancias a una colección que me asegure que los datos se podrán buscar y encontrar de la forma más eficiente posible y que no habrá duplicados. ¿Qué clase del API de Collection usaria para definir una variable que almacene dicha colección?",
+    "opciones": [
+      "LinkedHashSet<ClaseX> micoleccion;",
+      "ArrayList<ClaseX> micoleccion;",
+      "HashSet<ClaseX> micoleccion;",
+      "LinkedList<ClaseX> micoleccion;",
+      "TreeSet<ClaseX> micoleccion;"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "Respuesta incorrecta.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-012",
+    "pregunta": "Dentro de un método de instancia, this referencia al objeto sobre el que se está ejecutando ese método.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "this permite referirse al objeto actual y acceder a sus miembros.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 37.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-013",
+    "pregunta": "Java 21. Guardar este programa independiente en Main.java.\n¿Qué imprime el programa?\n```\nclass Base {\n    Base(String texto) { System.out.print(texto); }\n}\nclass Hija extends Base {\n    Hija() {\n        super(\"B\");\n        System.out.print(\"H\");\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        new Hija();\n    }\n}\n```",
+    "opciones": [
+      "HB",
+      "No compila.",
+      "H",
+      "BH"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "La llamada explícita a super ejecuta el constructor de Base e imprime B. Luego continúa el cuerpo del constructor de Hija e imprime H.\nReferencia: 04-Clases y Objetos en Java - parte 1.pdf, páginas 25–28.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-014",
+    "pregunta": "Cual será el resultado de ejecutar el siguiente código\n```\nint a = 3;\n\nint b = 4;\n\na += b * 2;\n\nSystem.out.println(a);\n```",
+    "opciones": [
+      "7",
+      "8",
+      "3",
+      "11"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "La respuesta correcta es: 11.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-015",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué línea reemplaza el comentario para aceptar edades no negativas y conservar la edad anterior cuando el argumento es negativo?\n```\nclass Persona {\n    private int edad;\n    void setEdad(int nueva) {\n        // COMPLETAR\n    }\n    int getEdad() { return edad; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Persona p = new Persona();\n        p.setEdad(5);\n        p.setEdad(-2);\n        System.out.println(p.getEdad());\n    }\n}\n```",
+    "opciones": [
+      "if (nueva >= 0) edad = nueva;",
+      "if (nueva >= 0) nueva = edad;",
+      "if (nueva < 0) edad = nueva;",
+      "edad = nueva;"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La condición permite asignar únicamente valores no negativos. La segunda llamada conserva 5.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 32 y 36.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-016",
+    "pregunta": "¿Cuál es la diferencia entre String y StringBuffer respecto de su contenido?",
+    "opciones": [
+      "String permite modificar su contenido y StringBuffer es inmutable.",
+      "Ambas clases permiten modificar el contenido del mismo objeto.",
+      "StringBuffer solo puede almacenar un carácter.",
+      "String es inmutable, mientras que StringBuffer permite modificar su contenido."
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "Un objeto String conserva su secuencia de caracteres. StringBuffer ofrece operaciones como append, insert y setCharAt que modifican su contenido.\nReferencia: 07-Utilidades-colecciones.pdf, páginas 2–5.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-017",
+    "pregunta": "En el patrón STATE quien es el responsable de conocer el siguiente estado:",
+    "opciones": [
+      "Estado",
+      "Contexto",
+      "SubclaseEstado"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La respuesta correcta es: SubclaseEstado.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-018",
+    "pregunta": "En la sobreescritura de métodos, el método que sobreescribe (Subclase)",
+    "opciones": [
+      "puede alterar los argumentos",
+      "puede alterar el tipo de retorno y argumentos",
+      "puede alterar el tipo de retorno",
+      "puede alterar o mantener el modificador de acceso"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "Respuesta incorrecta.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-019",
+    "pregunta": "Cuando un valor de tipo primitivo se pasa a un método, se crea una copia del valor. Sin embargo, al pasar una referencia a un objeto, el argumento se refiere al objeto original, por lo que los cambios hechos dentro del método afectarán al objeto original.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Verdadero.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-020",
+    "pregunta": "Cuando un objeto deja de ser alcanzable, Java garantiza que su memoria se recupera inmediatamente.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "El objeto puede quedar disponible para recolección, pero no se garantiza la recuperación inmediata ni un momento concreto para ella.\nReferencia: 04-Clases y Objetos en Java - parte 1.pdf, páginas 8.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01 Attempt review  Campus Virtual.html"
+  },
+  {
+    "id": "original-021",
+    "pregunta": "Cual es el operador a usar en la expresion IF\n```\npublic class OperadoresLogicos {\n\n  public static void main(String[] args) {\n\n    String opcion = getOpcionDelUsuario(); // Supongamos que esta función obtiene la opción del usuario\n\n    if (opcion != null [___COMPLETAR____] opcion.equals(\"OK\")) {\n\n      System.out.println(\"Guardar\");\n\n    } else {\n\n      System.out.println(\"Cancelar\");\n\n    }\n\n  }\n\n}\n```",
+    "opciones": [
+      "%",
+      "&&",
+      "|",
+      "||",
+      "&"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: &&.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-022",
+    "pregunta": "La palabra reservada \"throws\" declara que un método podría generar una excepción",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Verdadero.",
+    "tema": "Excepciones",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-023",
+    "pregunta": "Java 21. Guardar este programa independiente en Main.java.\n¿Qué sucede al compilar con Java 21?\n```\npublic class Main {\n    public static void main(String[] args) {\n        int base = 3;\n        class Local {\n            int leer() { return base; }\n        }\n        base = 4;\n        System.out.println(new Local().leer());\n    }\n}\n```",
+    "opciones": [
+      "No compila: base es capturada por una clase local y no es final ni efectivamente final.",
+      "Compila e imprime 4.",
+      "Compila e imprime 3.",
+      "Compila, pero lanza una excepción al crear Local."
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Una variable local capturada debe ser final o efectivamente final. Reasignar base impide la captura, aunque esa reasignación ocurra antes de crear Local.\nReferencia: 04-Clases y Objetos en Java - parte 1.pdf, páginas 14.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-024",
+    "pregunta": "El polimorfismo en Java permite que:",
+    "opciones": [
+      "Se creen varias instancias de una clase final.",
+      "Un método tenga diferentes nombres en distintas clases.",
+      "Diferentes clases relacionadas respondan de manera distinta al mismo mensaje.",
+      "Una clase herede de múltiples superclases"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La respuesta correcta es: Diferentes clases relacionadas respondan de manera distinta al mismo mensaje..",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-025",
+    "pregunta": "¿Qué instrucción reemplaza el comentario para conservar los pasos de construcción e imprimir azul true?\nJava 21. Guardar este programa independiente en Main.java. Los ejemplos se ejecutan en un solo hilo.\n```\nimport java.util.*;\nclass Auto {\n    final String color;\n    final boolean techo;\n    Auto(String color, boolean techo) { this.color = color; this.techo = techo; }\n}\nclass AutoBuilder {\n    private String color = \"blanco\";\n    private boolean techo;\n    AutoBuilder color(String color) { this.color = color; return this; }\n    AutoBuilder techo(boolean techo) { this.techo = techo; /* COMPLETAR */ }\n    Auto construir() { return new Auto(color, techo); }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Auto a = new AutoBuilder().techo(true).color(\"azul\").construir();\n        System.out.println(a.color + \" \" + a.techo);\n    }\n}\n```",
+    "opciones": [
+      "return new AutoBuilder();",
+      "return this;",
+      "return null;",
+      "return construir();"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Devolver this permite continuar configurando el mismo builder, que ya tiene techo=true.\nReferencia: 09-patrones.pdf, páginas 15–23.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-026",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué línea reemplaza el comentario para imprimir Hola?\n```\nclass Saludo { void mostrar() { System.out.println(\"Hola\"); } }\npublic class Main {\n    public static void main(String[] args) {\n        Saludo s = null;\n        // COMPLETAR\n        s.mostrar();\n    }\n}\n```",
+    "opciones": [
+      "new Saludo();",
+      "s = new Saludo();",
+      "Saludo s = new Saludo();",
+      "s = null;"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Es necesario asignar a s la referencia del objeto creado. Crear un objeto sin guardar su referencia deja s en null; redeclarar s en el mismo bloque no compila.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 15–16 y 22.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-027",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué imprime?\n```\nclass Cambio {\n    static void modificar(int n) { n = 10; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        int n = 4;\n        Cambio.modificar(n);\n        System.out.println(n);\n    }\n}\n```",
+    "opciones": [
+      "0",
+      "No compila.",
+      "10",
+      "4"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "El parámetro contiene una copia del valor 4. Reasignarlo no cambia la variable del llamador.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 28–29.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-028",
+    "pregunta": "Considerar una interfaz como tipo, significa que creando una variable de tipo interfaz puedo recibir un objeto de esa interfaz o de cualquiera de las subinterfaces",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Considerar una interfaz como tipo, significa que creando una variable de tipo interfaz, puedo recibir un objeto de cualquiera de las clases que implementa la interfaz.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-029",
+    "pregunta": "Dos objetos distintos de una misma clase pueden tener valores diferentes en sus variables de instancia.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Cada objeto tiene sus propias variables de instancia, por lo que sus valores pueden diferir.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 21.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-030",
+    "pregunta": "Si tengo N objetos que son instancias de una clase \"ClaseX\". Y quiero agregar todas las instancias a una colección que me asegure que los datos permanecerán ordenados en el orden en que los inserté y que no habrá duplicados. ¿Qué clase del API de Collection usaria para definir una variable que almacene dicha colección?",
+    "opciones": [
+      "ArrayList<ClaseX> micoleccion;",
+      "TreeSet<ClaseX> micoleccion;",
+      "LinkedList<ClaseX> micoleccion;",
+      "HashSet<ClaseX> micoleccion;",
+      "LinkedHashSet<ClaseX> micoleccion;"
+    ],
+    "correctas": [
+      4
+    ],
+    "explicacion": "La respuesta correcta es: LinkedHashSet<ClaseX> micoleccion;.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-031",
+    "pregunta": "Cual de las siguientes clases considera apropiada para escribir información de texto en un archivo usando el API IO de java",
+    "opciones": [
+      "BufferedStringPrinter",
+      "DataInputStream",
+      "StreamReader",
+      "DataOutputStream",
+      "BufferedWriter"
+    ],
+    "correctas": [
+      4
+    ],
+    "explicacion": "La respuesta correcta es: BufferedWriter.",
+    "tema": "Entrada y salida",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-032",
+    "pregunta": "¿Cuál de las siguientes opciones describe una de las tres vistas fundamentales de una arquitectura de software?",
+    "opciones": [
+      "La visión estática, que describe qué componentes tiene la arquitectura",
+      "La visión de rendimiento, que describe la eficiencia del sistema",
+      "La visión de implementación, que describe la tecnología utilizada.",
+      "La visión de datos, que describe las bases de datos utilizadas."
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: La visión estática, que describe qué componentes tiene la arquitectura.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-033",
+    "pregunta": "¿Qué instrucción reemplaza el comentario para usar la estrategia recibida e imprimir 30?\nJava 21. Guardar este programa independiente en Main.java. Los ejemplos se ejecutan en un solo hilo.\n```\nimport java.util.*;\ninterface Descuento { int aplicar(int precio); }\nclass SinDescuento implements Descuento {\n    public int aplicar(int precio) { return precio; }\n}\nclass Mitad implements Descuento {\n    public int aplicar(int precio) { return precio / 2; }\n}\nclass Venta {\n    Descuento estrategia;\n    Venta(Descuento estrategia) { this.estrategia = estrategia; }\n    int total(int precio) { // COMPLETAR }\n}\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(new Venta(new Mitad()).total(60));\n    }\n}\n```",
+    "opciones": [
+      "return new SinDescuento().aplicar(precio);",
+      "return total(precio);",
+      "return estrategia.aplicar(precio);",
+      "return precio;"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La delegación debe utilizar la estrategia recibida por el contexto; así el algoritmo puede cambiar sin modificar total.\nReferencia: 09-patrones.pdf, páginas 36–42.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-034",
+    "pregunta": "Cuál es la ventaja principal de la encapsulación?",
+    "opciones": [
+      "Ocultar la implementación interna de la clase y exponer solo su interfaz",
+      "Permitir que los métodos accedan directamente a las variables privadas de otras clases",
+      "Asegurar que todas las variables sean públicas",
+      "Permitir herencia múltiple"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Ocultar la implementación interna de la clase y exponer solo su interfaz.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-035",
+    "pregunta": "¿Cuál de las siguientes afirmaciones sobre constructores es correcta?",
+    "opciones": [
+      "Siempre deben ser public.",
+      "No pueden sobrecargarse.",
+      "Deben tener el mismo nombre que la clase.",
+      "Pueden devolver cualquier tipo de dato."
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La respuesta correcta es: Deben tener el mismo nombre que la clase..",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-036",
+    "pregunta": "La palabra clave final en Java impide que el valor de una variable sea modificado después de su inicialización.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Verdadero.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-037",
+    "pregunta": "¿Qué interfaz funcional representa una condición que recibe un objeto y devuelve un boolean, por ejemplo para filtrar elementos?",
+    "opciones": [
+      "Function<T, String>",
+      "Supplier<T>",
+      "Consumer<T>",
+      "Predicate<T>"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "Predicate<T> evalúa una condición sobre un argumento de tipo T y devuelve boolean.\nReferencia: 07-Utilidades-colecciones.pdf, páginas 29 y 39.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-038",
+    "pregunta": "Una clase interna miembro no estática está asociada a una instancia de la clase exterior y puede acceder a sus atributos privados.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La clase interna miembro dispone de una instancia exterior asociada y puede acceder a sus miembros, incluidos los privados.\nReferencia: 04-Clases y Objetos en Java - parte 1.pdf, páginas 10–13.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-039",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué línea reemplaza el comentario para actualizar el título e imprimir Matrix respetando el acceso declarado?\n```\nclass Pelicula {\n    private String titulo;\n    public void setTitulo(String t) { titulo = t; }\n    public String getTitulo() { return titulo; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Pelicula p = new Pelicula();\n        // COMPLETAR\n        System.out.println(p.getTitulo());\n    }\n}\n```",
+    "opciones": [
+      "p.titulo = \"Matrix\";",
+      "Pelicula.titulo = \"Matrix\";",
+      "p.setTitulo(\"Matrix\");",
+      "p.getTitulo() = \"Matrix\";"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "El método público permite modificar el atributo privado. El acceso directo desde Main no está permitido.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 32 y 36.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-040",
+    "pregunta": "El patrón Singleton garantiza que existan múltiples instancias de un mismo objeto para facilitar el acceso concurrente.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: Falso.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-041",
+    "pregunta": "La arquitectura de software define únicamente los componentes funcionales del sistema, sin considerar restricciones tecnológicas ni objetivos no funcionales.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: Falso.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Attempt review _ Campus Virtual.html"
+  },
+  {
+    "id": "original-042",
+    "pregunta": "¿Cuál de estas conversiones de objetos es siempre segura?",
+    "opciones": [
+      "De una subclase a una superclase",
+      "No es seguro en ningún caso y hay que validar tipos.",
+      "Entre clases hermanas",
+      "De una superclase a una subclase"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Respuesta incorrecta.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 2_ Campus Virtual.html"
+  },
+  {
+    "id": "original-043",
+    "pregunta": "Una importación static permite usar miembros estáticos accesibles sin anteponer el nombre de su clase.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Por ejemplo, import static java.lang.Math.PI permite escribir PI en lugar de Math.PI cuando el nombre se resuelve sin ambigüedad.\nReferencia: 07-Utilidades-colecciones.pdf, páginas 23.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 2_ Campus Virtual.html"
+  },
+  {
+    "id": "original-044",
+    "pregunta": "Si tengo que guardar al disco el contenido en memoria de un archivo binario PDF cual de las siguientes clases usaría",
+    "opciones": [
+      "DataOutputStream",
+      "StreamWriter",
+      "BufferedStream",
+      "BufferedInputStream"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: DataOutputStream.",
+    "tema": "Entrada y salida",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 2_ Campus Virtual.html"
+  },
+  {
+    "id": "original-045",
+    "pregunta": "¿Qué instrucción reemplaza el comentario para consultar el DAO recibido y sumar 10 al precio recuperado?\nJava 21. Guardar este programa independiente en Main.java. Los ejemplos se ejecutan en un solo hilo.\n```\nimport java.util.*;\nclass ProductoDTO {\n    final int precio;\n    ProductoDTO(int precio) { this.precio = precio; }\n}\ninterface ProductoDAO { ProductoDTO buscar(int id); }\nclass MemoriaDAO implements ProductoDAO {\n    public ProductoDTO buscar(int id) { return new ProductoDTO(40); }\n}\nclass Servicio {\n    private final ProductoDAO dao;\n    Servicio(ProductoDAO dao) { this.dao = dao; }\n    int precioFinal(int id) { // COMPLETAR }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Servicio servicio = new Servicio(new MemoriaDAO());\n        System.out.println(servicio.precioFinal(1));\n    }\n}\n```",
+    "opciones": [
+      "return precioFinal(id);",
+      "return new MemoriaDAO().buscar(id).precio;",
+      "return 10;",
+      "return dao.buscar(id).precio + 10;"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "El servicio debe consultar mediante el DAO inyectado y aplicar su regla de negocio. No necesita crear una implementación concreta.\nReferencia: 09-patrones.pdf, páginas 64–65.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 2_ Campus Virtual.html"
+  },
+  {
+    "id": "original-046",
+    "pregunta": "Opción Múltiple: ¿Cuál de las siguientes afirmaciones sobre los identificadores en Java es INCORRECTA?",
+    "opciones": [
+      "Deben comenzar con una letra, el símbolo de subrayado (_) o el signo de dólar ($).",
+      "La longitud máxima de un identificador es de 256 caracteres.",
+      "Distinguen entre mayúsculas y minúsculas.",
+      "No pueden ser palabras clave de Java ni literales booleanos."
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Respuesta incorrecta.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-047",
+    "pregunta": "Si un método recibe un argumento int y reasigna su parámetro, esa reasignación modifica también la variable int que el llamador utilizó como argumento.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Java pasa los argumentos por valor. El parámetro recibe una copia del valor primitivo; reasignarlo no cambia la variable del llamador.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 28.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-048",
+    "pregunta": "Al convertir automáticamente una referencia Integer cuyo valor es null a un int, el resultado es 0.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "El unboxing requiere obtener el valor del objeto wrapper. Si la referencia es null, se lanza NullPointerException.\nReferencia: 07-Utilidades-colecciones.pdf, páginas 24–25.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-049",
+    "pregunta": "Qué modificador de clase se utiliza para declarar que una clase no puede ser instanciada?",
+    "opciones": [
+      "public",
+      "protected",
+      "static",
+      "final",
+      "abstract"
+    ],
+    "correctas": [
+      4
+    ],
+    "explicacion": "La respuesta correcta es: abstract.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-050",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué sucede al ejecutar?\n```\nclass Pelicula { String titulo; }\npublic class Main {\n    public static void main(String[] args) {\n        Pelicula p = new Pelicula();       // linea A\n        System.out.println(p.titulo.length()); // linea B\n    }\n}\n```",
+    "opciones": [
+      "Imprime 0.",
+      "Lanza NullPointerException en B.",
+      "Lanza NullPointerException en A.",
+      "No compila."
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "p referencia una instancia, pero su atributo titulo es null. Invocar length() sobre ese atributo provoca la excepción.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 15–16 y 22.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-051",
+    "pregunta": "Un cast válido de una referencia de superclase a subclase transforma el objeto original en un objeto nuevo de la subclase.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "El cast no crea ni transforma el objeto. Para una referencia no nula, comprueba su compatibilidad con el tipo de destino; un cast incompatible puede lanzar ClassCastException.\nReferencia: 04-Clases y Objetos en Java - parte 1.pdf, páginas 38 y 41–43.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-052",
+    "pregunta": "¿Qué sucede si una excepción no es capturada en ningún nivel de la pila de llamadas?",
+    "opciones": [
+      "Se reintenta la operación fallida",
+      "Se convierte en una excepción Error",
+      "El compilador la resuelve automáticamente",
+      "La JVM finaliza el programa"
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "La respuesta correcta es: La JVM finaliza el programa.",
+    "tema": "Excepciones",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-053",
+    "pregunta": "Java 21. Guardar este programa independiente en Main.java.\n¿Qué imprime el programa?\n```\npublic class Main {\n    public static void main(String[] args) {\n        int a = 5;\n        int b = 2;\n        System.out.println((double) a / b);\n        System.out.println((double) (a / b));\n    }\n}\n```",
+    "opciones": [
+      "2.5 y luego 2.0, en líneas separadas.",
+      "2.0 y luego 2.0, en líneas separadas.",
+      "2.5 y luego 2.5, en líneas separadas.",
+      "No compila."
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "En la primera expresión, el cast ocurre antes de la división y produce división de punto flotante. En la segunda primero se realiza 5 / 2 con enteros, que da 2; luego se convierte a 2.0.\nReferencia: 04-Clases y Objetos en Java - parte 1.pdf, páginas 39–40.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-054",
+    "pregunta": "El operador new en Java:",
+    "opciones": [
+      "Llama a un método static por defecto.",
+      "No puede usarse con clases sin constructores definidos.",
+      "Devuelve directamente el objeto creado.",
+      "Asigna memoria, invoca el constructor y devuelve una referencia al objeto."
+    ],
+    "correctas": [
+      3
+    ],
+    "explicacion": "La respuesta correcta es: Asigna memoria, invoca el constructor y devuelve una referencia al objeto..",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-055",
+    "pregunta": "cuando la construcción de varias representaciones requiere de pasos similares que sólo varían en los detalles, que patrón utilizaría:",
+    "opciones": [
+      "singleton",
+      "builder",
+      "factory"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: builder.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento 3_ Campus Virtual.html"
+  },
+  {
+    "id": "original-056",
+    "pregunta": "¿Qué patrón permite añadir responsabilidades dinámicamente a un objeto sin modificar su clase base?",
+    "opciones": [
+      "Decorator",
+      "Composite",
+      "DAO",
+      "Strategy"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Decorator.",
+    "tema": "Patrones de diseño",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual 2.html"
+  },
+  {
+    "id": "original-057",
+    "pregunta": "La palabra reservada \"throw\" se usa para finalizar la ejecución de un método retornando una instancia de alguna clase de tipo excepción",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Verdadero.",
+    "tema": "Excepciones",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual 2.html"
+  },
+  {
+    "id": "original-058",
+    "pregunta": "Cual es la forma correcta de declarar y crear una arreglo de valores enteros primitivos de hasta 8 posiciones",
+    "opciones": [
+      "int arr = new int(8);",
+      "int[] arr = new int[8];",
+      "int arr[10];",
+      "int arr[] = {10};"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: int[] arr = new int[8];.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual 2.html"
+  },
+  {
+    "id": "original-059",
+    "pregunta": "¿Qué imprime el programa?\nJava 21. Guardar este programa independiente en Main.java. Los ejemplos se ejecutan en un solo hilo.\n```\nimport java.util.*;\ninterface Observador { void actualizar(int valor); }\nclass Pantalla implements Observador {\n    final String nombre;\n    Pantalla(String nombre) { this.nombre = nombre; }\n    public void actualizar(int valor) { System.out.print(nombre + valor + \" \"); }\n}\nclass Sensor {\n    private final List<Observador> observadores = new ArrayList<>();\n    void agregar(Observador o) { observadores.add(o); }\n    void quitar(Observador o) { observadores.remove(o); }\n    void cambiar(int valor) {\n        for (Observador o : observadores) o.actualizar(valor);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Sensor s = new Sensor();\n        Pantalla a = new Pantalla(\"A\");\n        Pantalla b = new Pantalla(\"B\");\n        s.agregar(a); s.agregar(b);\n        s.cambiar(1);\n        s.quitar(a);\n        s.cambiar(2);\n    }\n}\n```",
+    "opciones": [
+      "B1 A1 B2",
+      "A1 A2",
+      "A1 B1 B2",
+      "A1 B1 A2 B2"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La lista notifica en orden de registro. Después de quitar a, solo b recibe el segundo cambio.\nReferencia: 09-patrones.pdf, páginas 30–35.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual 2.html"
+  },
+  {
+    "id": "original-060",
+    "pregunta": "SimpleDateFormat permite convertir una fecha a texto mediante format y convertir texto a una fecha mediante parse.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "format representa la fecha como texto y parse interpreta texto de acuerdo con el patrón configurado.\nReferencia: 07-Utilidades-colecciones.pdf, páginas 6–7.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual 2.html"
+  },
+  {
+    "id": "original-061",
+    "pregunta": "En Java, los identificadores pueden comenzar con un número siempre que no sea cero.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: Falso.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual 2.html"
+  },
+  {
+    "id": "original-062",
+    "pregunta": "Si tengo N objetos que son instancias de una clase \"ClaseX\". Y quiero agregar todas las instancias a una colección que me asegure que los datos se podrán buscar con la menor cantidad de operaciones posibles y que no habrá duplicados. ¿Qué clase del API de Collection usaria para definir una variable que almacene dicha colección?",
+    "opciones": [
+      "HashSet<ClaseX> micoleccion;",
+      "LinkedList<ClaseX> micoleccion;",
+      "ArrayList<ClaseX> micoleccion;",
+      "LinkedHashSet<ClaseX> micoleccion;",
+      "TreeSet<ClaseX> micoleccion;"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Respuesta incorrecta.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual 2.html"
+  },
+  {
+    "id": "original-063",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué imprime?\n```\nclass Caja { int valor; }\nclass Cambio {\n    static void modificar(Caja c) { c.valor = 10; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Caja c = new Caja();\n        c.valor = 4;\n        Cambio.modificar(c);\n        System.out.println(c.valor);\n    }\n}\n```",
+    "opciones": [
+      "Lanza NullPointerException.",
+      "10",
+      "0",
+      "4"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Se copia la referencia, pero ambas referencias permiten acceder al mismo objeto. El método modifica ese objeto.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 28–29.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-064",
+    "pregunta": "¿Cuál de las siguientes afirmaciones sobre la sobre escritura de métodos es correcta?",
+    "opciones": [
+      "Un método redefinido debe tener un tipo de retorno diferente al del método sobrescrito.",
+      "Un método protected en la superclase puede ser redefinido como public en la subclase.",
+      "El modificador de acceso para un método redefinido puede ser más restrictivo que el del método sobrescrito",
+      "Un método private en la superclase puede ser redefinido como private en la subclase"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: Un método protected en la superclase puede ser redefinido como public en la subclase..",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-065",
+    "pregunta": "La palabra reservada \"throws\" se usa para finalizar la ejecución de un método retornando una instancia de alguna clase de tipo excepción",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La respuesta correcta es: Falso.",
+    "tema": "Excepciones",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-066",
+    "pregunta": "Si tengo que cargar a memoria, desde disco un archivo binario PDF cual de las siguientes clases usaría",
+    "opciones": [
+      "BufferedReader",
+      "StreamReader",
+      "BufferedInputStream",
+      "DataOutputStream"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La respuesta correcta es: BufferedInputStream.",
+    "tema": "Entrada y salida",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-067",
+    "pregunta": "Se recorre un ArrayList mediante su Iterator. Después de obtener un elemento con next(), se decide eliminarlo. ¿Qué operación permite hacerlo mediante ese mismo iterador?",
+    "opciones": [
+      "iterador.remove(), sin argumentos.",
+      "lista.remove(elemento), para que el iterador se actualice automáticamente.",
+      "lista.clear(), para eliminar únicamente el último elemento obtenido.",
+      "iterador.remove(indice), indicando la posición actual."
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "El iterador de ArrayList permite eliminar mediante remove() el último elemento obtenido con next(). Debe llamarse como máximo una vez por cada next().\nReferencia: 07-Utilidades-colecciones.pdf, páginas 14–18.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-068",
+    "pregunta": "Si una referencia a un objeto en Java no ha sido inicializada, su valor por defecto es null.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Verdadero.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-069",
+    "pregunta": "¿Cuales de los siguientes no son tipos de dato primitivos en Java?",
+    "opciones": [
+      "Boolean",
+      "int",
+      "Long",
+      "char",
+      "String"
+    ],
+    "correctas": [
+      0,
+      2,
+      4
+    ],
+    "explicacion": "Respuesta parcialmente correcta.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-070",
+    "pregunta": "¿Qué instrucción reemplaza el comentario para notificar a los observadores registrados e imprimir A3 B3?\nJava 21. Guardar este programa independiente en Main.java. Los ejemplos se ejecutan en un solo hilo.\n```\nimport java.util.*;\ninterface Observador { void actualizar(int valor); }\nclass Pantalla implements Observador {\n    final String nombre;\n    Pantalla(String nombre) { this.nombre = nombre; }\n    public void actualizar(int valor) { System.out.print(nombre + valor + \" \"); }\n}\nclass Sensor {\n    private final List<Observador> observadores = new ArrayList<>();\n    void agregar(Observador o) { observadores.add(o); }\n    void quitar(Observador o) { observadores.remove(o); }\n    void cambiar(int valor) {\n        for (Observador o : observadores) { /* COMPLETAR */ }\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Sensor s = new Sensor();\n        s.agregar(new Pantalla(\"A\"));\n        s.agregar(new Pantalla(\"B\"));\n        s.cambiar(3);\n    }\n}\n```",
+    "opciones": [
+      "o.actualizar(valor);",
+      "observadores.clear();",
+      "cambiar(valor);",
+      "new Pantalla(\"X\").actualizar(valor);"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "El sujeto usa la interfaz Observador para notificar a cada suscriptor sin depender de Pantalla.\nReferencia: 09-patrones.pdf, páginas 30–35.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-071",
+    "pregunta": "Una variable de clase (static) es única para todas las instancias de esa clase.",
+    "opciones": [
+      "Verdadero",
+      "Falso"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La respuesta correcta es: Verdadero.",
+    "tema": "Clases y objetos",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-072",
+    "pregunta": "Java 21. Cada fragmento es independiente. Guardar el programa en Main.java.\n¿Qué imprime?\n```\nclass Producto {\n    private int precio = 10;\n    void setPrecio(int nuevo) { if (nuevo >= 0) precio = nuevo; }\n    int getPrecio() { return precio; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Producto p = new Producto();\n        p.setPrecio(20);\n        p.setPrecio(-5);\n        System.out.println(p.getPrecio());\n    }\n}\n```",
+    "opciones": [
+      "0",
+      "10",
+      "20",
+      "-5"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "El setter acepta 20 y rechaza -5, por lo que conserva el último valor válido.\nReferencia: 03-Clases y Objetos en Java - parte 1.pdf, páginas 32 y 36.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-073",
+    "pregunta": "Dado el siguiente codigo\n```\nint x = 5;\n\nint y = 2;\n\nSystem.out.println(x / y);\n```\nCual será el resultado ?",
+    "opciones": [
+      "2.5",
+      "2.0",
+      "2",
+      "Error de compilación"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La respuesta correcta es: 2.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "original-074",
+    "pregunta": "Java 21. Guardar este programa independiente en Main.java.\n¿Qué línea reemplaza el comentario para convertir el texto a un int e imprimir 13?\n```\npublic class Main {\n    public static void main(String[] args) {\n        String texto = \"12\";\n        // COMPLETAR\n        System.out.println(numero + 1);\n    }\n}\n```",
+    "opciones": [
+      "String numero = texto;",
+      "int numero = Integer.parseInt(texto);",
+      "int numero = (int) texto;",
+      "int numero = texto.intValue();"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Integer.parseInt convierte la cadena numérica a un int. Una variable String produciría concatenación; las otras conversiones indicadas no son válidas.\nReferencia: 04-Clases y Objetos en Java - parte 1.pdf, páginas 45–48.",
+    "tema": "Fundamentos de Java",
+    "origen": "Original del cuestionario",
+    "fuente": "Preguntas Repaso - Parcial 01_ Revisión del intento _ Campus Virtual.html"
+  },
+  {
+    "id": "nueva-001",
+    "pregunta": "En un bloque de manejo de excepciones, ¿qué parte se ejecuta normalmente exista o no una excepción?",
+    "opciones": [
+      "try",
+      "catch",
+      "finally",
+      "throw"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "finally se ejecuta después de try/catch, salvo terminaciones extraordinarias de la JVM.",
+    "tema": "Excepciones",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-002",
+    "pregunta": "¿Qué bloque define cómo manejar un tipo concreto de excepción?",
+    "opciones": [
+      "catch",
+      "try",
+      "finally",
+      "throws"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "catch captura y maneja las excepciones compatibles con su parámetro.",
+    "tema": "Excepciones",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-003",
+    "pregunta": "¿Qué bloque contiene el código que puede lanzar una excepción?",
+    "opciones": [
+      "finally",
+      "try",
+      "catch",
+      "throw"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "El código que puede fallar se coloca en try.",
+    "tema": "Excepciones",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-004",
+    "pregunta": "En una arquitectura multicapa, ¿qué capa accede al almacenamiento de información?",
+    "opciones": [
+      "Presentación",
+      "Negocio",
+      "Datos"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La capa de datos concentra el acceso y la gestión del almacenamiento.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-005",
+    "pregunta": "En una arquitectura multicapa, ¿qué capa interactúa directamente con el usuario?",
+    "opciones": [
+      "Datos",
+      "Presentación",
+      "Negocio"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La presentación recibe acciones y muestra resultados al usuario.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-006",
+    "pregunta": "En una arquitectura multicapa, ¿qué capa aplica reglas y procesa información?",
+    "opciones": [
+      "Negocio",
+      "Datos",
+      "Presentación"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La lógica de negocio implementa las reglas del dominio.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-007",
+    "pregunta": "¿Qué patrón cambia su comportamiento según un estado interno?",
+    "opciones": [
+      "Singleton",
+      "State",
+      "Observer",
+      "Iterator"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "State delega el comportamiento al objeto que representa el estado actual.",
+    "tema": "Patrones de diseño",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-008",
+    "pregunta": "¿Qué patrón permite recorrer una colección sin exponer su estructura interna?",
+    "opciones": [
+      "Observer",
+      "Iterator",
+      "Decorator",
+      "Singleton"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Iterator ofrece una interfaz de recorrido independiente de la representación de la colección.",
+    "tema": "Patrones de diseño",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-009",
+    "pregunta": "¿Qué patrón busca asegurar una única instancia de una clase?",
+    "opciones": [
+      "Strategy",
+      "State",
+      "Singleton",
+      "Observer"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "Singleton controla la creación y el acceso a una única instancia.",
+    "tema": "Patrones de diseño",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-010",
+    "pregunta": "¿Qué patrón notifica cambios a varios objetos suscritos?",
+    "opciones": [
+      "Observer",
+      "Decorator",
+      "Iterator",
+      "Factory"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Observer mantiene suscriptores y les comunica cambios.",
+    "tema": "Patrones de diseño",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-011",
+    "pregunta": "¿En qué patrón se configura normalmente el algoritmo concreto desde el exterior?",
+    "opciones": [
+      "State",
+      "Strategy",
+      "Observer"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Strategy permite sustituir una estrategia mediante configuración o inyección.",
+    "tema": "Patrones de diseño",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-012",
+    "pregunta": "¿En qué patrón la transición suele depender del estado interno del objeto?",
+    "opciones": [
+      "Strategy",
+      "Decorator",
+      "State"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "State modela estados y sus transiciones de comportamiento.",
+    "tema": "Patrones de diseño",
+    "origen": "Adaptada de emparejamiento",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-013",
+    "pregunta": "¿Qué herramienta del JDK transforma un archivo .java en bytecode?",
+    "opciones": [
+      "java",
+      "javac",
+      "jar",
+      "javadoc"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "javac compila el código fuente y produce archivos .class.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-014",
+    "pregunta": "¿Qué comando ejecuta una clase Java que contiene main?",
+    "opciones": [
+      "javac Main",
+      "java Main",
+      "java Main.java.class",
+      "run Main"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "java inicia la JVM y ejecuta la clase indicada.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-015",
+    "pregunta": "¿Cuál es el tipo primitivo apropiado para almacenar true o false?",
+    "opciones": [
+      "Boolean",
+      "bool",
+      "boolean",
+      "String"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "boolean es el tipo primitivo de valores lógicos.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-016",
+    "pregunta": "¿Qué imprime System.out.println(7 / 2) cuando ambos operandos son int?",
+    "opciones": [
+      "3",
+      "3.5",
+      "4",
+      "Error de compilación"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La división entre enteros descarta la parte fraccionaria.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-017",
+    "pregunta": "¿Qué expresión compara el contenido de dos String de forma habitual?",
+    "opciones": [
+      "a == b",
+      "a.equals(b)",
+      "a = b",
+      "a.compareTo(b) == 1"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "equals compara el contenido de las cadenas; == compara referencias.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-018",
+    "pregunta": "¿Cuál de estas declaraciones crea un arreglo de tres enteros?",
+    "opciones": [
+      "int[] a = new int[3];",
+      "int a = new int[3];",
+      "int[] a = int[3];",
+      "array<int> a = 3;"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "new int[3] reserva un arreglo de longitud tres.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-019",
+    "pregunta": "¿Qué valor inicial tienen los elementos de un arreglo nuevo de int?",
+    "opciones": [
+      "null",
+      "-1",
+      "0",
+      "No tienen valor"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "Los elementos int de un arreglo se inicializan con cero.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-020",
+    "pregunta": "¿Qué característica permite ejecutar el mismo bytecode en sistemas con una JVM compatible?",
+    "opciones": [
+      "La portabilidad de la JVM",
+      "El nombre del archivo",
+      "La clase String",
+      "El compilador C"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La JVM interpreta o compila el bytecode para la plataforma donde corre.",
+    "tema": "Fundamentos de Java",
+    "origen": "Pregunta nueva",
+    "fuente": "Intro-java.pdf"
+  },
+  {
+    "id": "nueva-021",
+    "pregunta": "¿Qué representa un objeto respecto de su clase?",
+    "opciones": [
+      "Una instancia de la clase",
+      "Un paquete",
+      "Un archivo fuente",
+      "Un método estático"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Un objeto es una instancia creada según la definición de una clase.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-022",
+    "pregunta": "¿Qué miembro se comparte entre todas las instancias de una clase?",
+    "opciones": [
+      "Un campo local",
+      "Un campo static",
+      "Un parámetro",
+      "Un campo de instancia"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Los campos static pertenecen a la clase.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-023",
+    "pregunta": "¿Qué hace this dentro de un método de instancia?",
+    "opciones": [
+      "Se refiere al objeto actual",
+      "Crea un objeto nuevo",
+      "Invoca la superclase",
+      "Finaliza el método"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "this permite referirse a la instancia sobre la que se invoca el método.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-024",
+    "pregunta": "¿Qué sucede si una clase no declara ningún constructor?",
+    "opciones": [
+      "Siempre falla al compilar",
+      "Java aporta un constructor sin argumentos",
+      "Todos sus campos se vuelven static",
+      "La clase se vuelve abstracta"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "El compilador agrega un constructor por defecto sin argumentos.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-025",
+    "pregunta": "¿Qué instrucción crea una instancia de Persona si existe Persona()?",
+    "opciones": [
+      "Persona p = Persona();",
+      "Persona p = new Persona();",
+      "new Persona p;",
+      "Persona.new();"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "new invoca el constructor y devuelve una referencia.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-026",
+    "pregunta": "¿Qué modificador limita el acceso a un campo a su propia clase?",
+    "opciones": [
+      "public",
+      "protected",
+      "private",
+      "static"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "private restringe el acceso directo a la clase que declara el campo.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-027",
+    "pregunta": "¿Qué ocurre con una variable local antes de asignarle un valor?",
+    "opciones": [
+      "Vale null",
+      "Vale cero",
+      "No se puede leer",
+      "Vale false"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "El compilador exige asignación definitiva antes de leer una variable local.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-028",
+    "pregunta": "¿Qué llamada a constructor debe ser la primera sentencia de otro constructor?",
+    "opciones": [
+      "this(...) o super(...)",
+      "println(...) ",
+      "return",
+      "new(...)"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La invocación explícita de this(...) o super(...) debe aparecer primero.",
+    "tema": "Clases y objetos",
+    "origen": "Pregunta nueva",
+    "fuente": "CyO-java.pdf; CyO-java-2.pdf"
+  },
+  {
+    "id": "nueva-029",
+    "pregunta": "¿Se puede crear directamente new Figura() si Figura es abstract?",
+    "opciones": [
+      "Sí, siempre",
+      "Sí, si no declara métodos",
+      "No",
+      "Solo desde main"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "Una clase abstracta no puede instanciarse directamente.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-030",
+    "pregunta": "¿Qué palabra usa una clase para declarar que implementa una interfaz?",
+    "opciones": [
+      "extends",
+      "implements",
+      "interface",
+      "import"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "implements declara la relación de implementación.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-031",
+    "pregunta": "¿Qué palabra usa una interfaz para heredar otra interfaz?",
+    "opciones": [
+      "implements",
+      "extends",
+      "super",
+      "package"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Las interfaces pueden extender otras interfaces.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-032",
+    "pregunta": "¿Qué debe hacer una subclase concreta con los métodos abstractos heredados?",
+    "opciones": [
+      "Implementarlos",
+      "Convertirlos en campos",
+      "Eliminarlos",
+      "Declararlos private"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Una clase concreta implementa los métodos abstractos pendientes.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-033",
+    "pregunta": "¿Qué sentencia declara el paquete al que pertenece un archivo fuente Java?",
+    "opciones": [
+      "import",
+      "module",
+      "package",
+      "classpath"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "package ubica la unidad de compilación en un espacio de nombres.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-034",
+    "pregunta": "¿Cuál es una ventaja de usar una interfaz como tipo de una variable?",
+    "opciones": [
+      "Permite referirse a distintas implementaciones",
+      "Elimina la necesidad de objetos",
+      "Hace todos los métodos privados",
+      "Convierte la variable en primitiva"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "El código depende del contrato y puede recibir implementaciones diferentes.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-035",
+    "pregunta": "¿Qué permite una clase abstracta además de declarar métodos abstractos?",
+    "opciones": [
+      "Solo constantes",
+      "Campos, constructores y métodos concretos",
+      "Instanciación directa",
+      "Herencia múltiple de clases"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Una clase abstracta también puede compartir estado y comportamiento concreto.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-036",
+    "pregunta": "¿Qué modificador impide que una clase tenga subclases?",
+    "opciones": [
+      "abstract",
+      "final",
+      "static",
+      "protected"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Una clase final no puede extenderse.",
+    "tema": "Interfaces y paquetes",
+    "origen": "Pregunta nueva",
+    "fuente": "Clases-abstractas-interfaces-paquetes.pdf"
+  },
+  {
+    "id": "nueva-037",
+    "pregunta": "¿Qué interfaz representa una secuencia que permite elementos repetidos?",
+    "opciones": [
+      "Set",
+      "List",
+      "Map",
+      "Queue"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "List conserva una secuencia de elementos y admite repetidos.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-038",
+    "pregunta": "¿Qué colección evita elementos duplicados según equals/hashCode?",
+    "opciones": [
+      "ArrayList",
+      "HashSet",
+      "LinkedList",
+      "StringBuilder"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "HashSet mantiene elementos únicos según igualdad y hash.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-039",
+    "pregunta": "¿Qué método devuelve la cantidad de elementos de una List?",
+    "opciones": [
+      "length",
+      "size()",
+      "count()",
+      "capacity()"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Las colecciones usan size(); los arreglos usan el campo length.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-040",
+    "pregunta": "¿Qué método se usa normalmente para agregar un elemento a una List?",
+    "opciones": [
+      "put",
+      "append",
+      "add",
+      "insert"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "La interfaz List hereda add de Collection.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-041",
+    "pregunta": "¿Qué expresión obtiene el primer elemento de una List<String> llamada lista?",
+    "opciones": [
+      "lista[0]",
+      "lista.get(0)",
+      "lista.first()",
+      "lista.next()"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "get(0) accede al elemento de índice cero.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-042",
+    "pregunta": "¿Qué método de String compara contenido sin distinguir mayúsculas?",
+    "opciones": [
+      "equalsIgnoreCase",
+      "compare",
+      "same",
+      "=="
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "equalsIgnoreCase compara ignorando las diferencias de mayúsculas.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-043",
+    "pregunta": "¿Qué clase permite modificar una secuencia de caracteres sin crear un String por cada cambio?",
+    "opciones": [
+      "StringBuffer",
+      "Character",
+      "Integer",
+      "String"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "StringBuffer mantiene contenido mutable.",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-044",
+    "pregunta": "¿Qué llamada elimina de forma segura el último elemento obtenido por un Iterator?",
+    "opciones": [
+      "lista.remove(0)",
+      "it.remove()",
+      "it.delete()",
+      "it.next(null)"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Iterator.remove elimina el elemento entregado por la última llamada a next().",
+    "tema": "Colecciones y cadenas",
+    "origen": "Pregunta nueva",
+    "fuente": "Colecciones-java.pdf"
+  },
+  {
+    "id": "nueva-045",
+    "pregunta": "¿Qué palabra lanza explícitamente un objeto de excepción?",
+    "opciones": [
+      "throws",
+      "catch",
+      "throw",
+      "finally"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "throw lanza una instancia de Throwable o una subclase.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-046",
+    "pregunta": "¿Qué palabra declara en la firma las excepciones que un método puede propagar?",
+    "opciones": [
+      "throw",
+      "throws",
+      "try",
+      "catch"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "throws aparece en la firma del método.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-047",
+    "pregunta": "¿Qué tipo de excepción debe normalmente capturarse o declararse?",
+    "opciones": [
+      "Checked exception",
+      "RuntimeException",
+      "Error",
+      "NullPointerException"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Las excepciones checked están sujetas al control del compilador.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-048",
+    "pregunta": "¿Qué excepción produce normalmente un acceso a un objeto mediante una referencia null?",
+    "opciones": [
+      "IOException",
+      "NullPointerException",
+      "ClassCastException",
+      "ArithmeticException"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "Desreferenciar null provoca NullPointerException.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-049",
+    "pregunta": "¿Qué bloque puede manejar IOException lanzada dentro de try?",
+    "opciones": [
+      "catch (IOException e)",
+      "finally (IOException e)",
+      "throws (IOException e)",
+      "throw IOException"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "catch recibe la excepción de tipo compatible.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-050",
+    "pregunta": "¿Qué construccion cierra automáticamente recursos que implementan AutoCloseable?",
+    "opciones": [
+      "try-with-resources",
+      "if-else",
+      "switch",
+      "for-each"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "try-with-resources invoca close al salir del bloque.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-051",
+    "pregunta": "¿Qué ocurre cuando una excepción no se captura en el método actual?",
+    "opciones": [
+      "Se propaga al llamador",
+      "Se convierte en cero",
+      "Siempre se ignora",
+      "Se reinicia la JVM"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La búsqueda de un manejador continúa por la pila de llamadas.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-052",
+    "pregunta": "¿Qué categoría representa problemas graves que normalmente una aplicación no recupera?",
+    "opciones": [
+      "Error",
+      "IOException",
+      "Exception",
+      "RuntimeException"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Error representa fallos serios de la JVM o del entorno.",
+    "tema": "Excepciones",
+    "origen": "Pregunta nueva",
+    "fuente": "Excepciones-java.pdf"
+  },
+  {
+    "id": "nueva-053",
+    "pregunta": "¿Qué flujo se usa para leer bytes de un archivo binario?",
+    "opciones": [
+      "FileInputStream",
+      "FileReader",
+      "FileWriter",
+      "PrintWriter"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "FileInputStream lee bytes del archivo.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-054",
+    "pregunta": "¿Qué flujo se usa para escribir bytes en un archivo binario?",
+    "opciones": [
+      "FileReader",
+      "FileOutputStream",
+      "BufferedReader",
+      "Scanner"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "FileOutputStream escribe bytes.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-055",
+    "pregunta": "¿Qué clase lee caracteres de un archivo usando una codificación de caracteres?",
+    "opciones": [
+      "FileReader",
+      "FileInputStream",
+      "DataOutputStream",
+      "ObjectOutputStream"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "FileReader trabaja con caracteres; en código nuevo también puede elegirse una codificación explícita.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-056",
+    "pregunta": "¿Qué clase agrega búfer a la lectura de bytes?",
+    "opciones": [
+      "BufferedInputStream",
+      "StringBuilder",
+      "FileWriter",
+      "OutputStreamWriter"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "BufferedInputStream reduce lecturas pequeñas del flujo subyacente.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-057",
+    "pregunta": "¿Qué tipo de flujo convierte bytes en caracteres?",
+    "opciones": [
+      "InputStreamReader",
+      "OutputStreamWriter",
+      "FileOutputStream",
+      "BufferedOutputStream"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "InputStreamReader decodifica bytes a caracteres.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-058",
+    "pregunta": "¿Qué tipo de flujo convierte caracteres en bytes?",
+    "opciones": [
+      "InputStreamReader",
+      "OutputStreamWriter",
+      "FileInputStream",
+      "BufferedReader"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "OutputStreamWriter codifica caracteres como bytes.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-059",
+    "pregunta": "¿Qué método de BufferedReader devuelve una línea de texto?",
+    "opciones": [
+      "nextLine()",
+      "readLine()",
+      "readText()",
+      "getLine()"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "readLine() lee una línea o devuelve null al finalizar.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-060",
+    "pregunta": "¿Qué valor devuelve read() de un InputStream al llegar al fin del flujo?",
+    "opciones": [
+      "null",
+      "0",
+      "-1",
+      "false"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "read() devuelve -1 para indicar fin del flujo.",
+    "tema": "Entrada y salida",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales"
+  },
+  {
+    "id": "nueva-061",
+    "pregunta": "En MVC, ¿qué componente representa los datos y reglas del dominio?",
+    "opciones": [
+      "Vista",
+      "Controlador",
+      "Modelo",
+      "Router"
+    ],
+    "correctas": [
+      2
+    ],
+    "explicacion": "El modelo contiene las entidades y lógica del dominio.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-062",
+    "pregunta": "En MVC, ¿qué componente presenta información al usuario?",
+    "opciones": [
+      "Vista",
+      "Modelo",
+      "Controlador",
+      "DAO"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La vista se ocupa de mostrar la información.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-063",
+    "pregunta": "En MVC, ¿qué componente recibe acciones del usuario y coordina la respuesta?",
+    "opciones": [
+      "Modelo",
+      "Controlador",
+      "Base de datos",
+      "Repositorio"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "El controlador interpreta la entrada y coordina modelo y vista.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-064",
+    "pregunta": "¿Qué principio central propone MVC?",
+    "opciones": [
+      "Separar responsabilidades",
+      "Guardar todo en una clase",
+      "Evitar interfaces",
+      "Usar solo una capa"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "MVC organiza modelo, vista y controlador en responsabilidades distintas.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-065",
+    "pregunta": "¿Qué describe la vista estática de una arquitectura?",
+    "opciones": [
+      "Los componentes y sus relaciones",
+      "Solo el tiempo de respuesta",
+      "Únicamente las pantallas",
+      "El historial de errores"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La vista estática muestra los elementos y relaciones estructurales.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-066",
+    "pregunta": "¿Qué restricción no funcional puede influir en una arquitectura?",
+    "opciones": [
+      "Disponibilidad",
+      "Nombre de una variable local",
+      "Color de un comentario",
+      "Orden de imports"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "La disponibilidad es un atributo de calidad que influye en el diseño.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-067",
+    "pregunta": "¿Qué capa conviene que concentre las reglas del dominio en una arquitectura multicapa?",
+    "opciones": [
+      "Presentación",
+      "Negocio",
+      "Datos",
+      "Interfaz gráfica"
+    ],
+    "correctas": [
+      1
+    ],
+    "explicacion": "La capa de negocio aplica las reglas del dominio.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-068",
+    "pregunta": "¿Por qué se usan interfaces entre capas?",
+    "opciones": [
+      "Para reducir el acoplamiento",
+      "Para eliminar todos los objetos",
+      "Para evitar pruebas",
+      "Para forzar variables globales"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Los contratos permiten cambiar una implementación con menos impacto en otras capas.",
+    "tema": "Arquitectura y MVC",
+    "origen": "Pregunta nueva",
+    "fuente": "MVC.pdf; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-069",
+    "pregunta": "¿Qué patrón encapsula la creación de objetos detrás de una operación?",
+    "opciones": [
+      "Factory",
+      "Observer",
+      "State",
+      "Iterator"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Factory concentra la decisión de qué objeto crear.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-070",
+    "pregunta": "¿Qué patrón construye un objeto complejo mediante pasos configurables?",
+    "opciones": [
+      "Builder",
+      "Singleton",
+      "Observer",
+      "State"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Builder separa la construcción paso a paso del objeto resultante.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-071",
+    "pregunta": "¿Qué patrón agrega comportamiento envolviendo un objeto existente?",
+    "opciones": [
+      "Decorator",
+      "DAO",
+      "Iterator",
+      "Factory"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Decorator envuelve un componente y añade responsabilidades.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-072",
+    "pregunta": "¿Qué patrón abstrae operaciones de acceso a datos?",
+    "opciones": [
+      "DAO",
+      "State",
+      "Observer",
+      "Builder"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "DAO encapsula el acceso y la persistencia de datos.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-073",
+    "pregunta": "¿Qué patrón permite intercambiar algoritmos que comparten un contrato?",
+    "opciones": [
+      "Strategy",
+      "Singleton",
+      "Observer",
+      "Factory"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Strategy encapsula algoritmos intercambiables.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-074",
+    "pregunta": "¿Qué elemento recibe avisos del sujeto en Observer?",
+    "opciones": [
+      "El observador suscrito",
+      "El compilador",
+      "El constructor",
+      "El iterador"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "El sujeto notifica a los observadores registrados.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-075",
+    "pregunta": "¿Cuál es un riesgo de usar Singleton para estado mutable compartido?",
+    "opciones": [
+      "Acoplamiento global difícil de probar",
+      "Necesidad de un arreglo",
+      "Imposibilidad de métodos",
+      "Compilación más lenta siempre"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Un estado global compartido dificulta aislar pruebas y dependencias.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  },
+  {
+    "id": "nueva-076",
+    "pregunta": "¿Qué diferencia principal hay entre Strategy y State?",
+    "opciones": [
+      "Strategy selecciona algoritmos; State modela cambios ligados al estado",
+      "Strategy solo sirve para archivos",
+      "State no usa interfaces",
+      "Son idénticos en intención"
+    ],
+    "correctas": [
+      0
+    ],
+    "explicacion": "Aunque su estructura se parece, sus objetivos son distintos.",
+    "tema": "Patrones de diseño",
+    "origen": "Pregunta nueva",
+    "fuente": "Cuestionarios originales; arquitecturas.pdf"
+  }
+]
