@@ -120,6 +120,41 @@ def main():
             assert partial_result["preguntas"][0]["puntaje"] == 0.5
             assert get("/api/history/" + multi_quiz["id"])["aciertos"] == 0.5
 
+            # Preguntas de desarrollo e imágenes.
+            (subjects / "imagenes").mkdir()
+            (subjects / "imagenes" / "diagrama.png").write_bytes(b"\x89PNG\r\n\x1a\nfalso")
+            essay = {"id": "d1", "tipo": "desarrollo", "pregunta": "Explicá esto:\n![Diagrama](imagenes/diagrama.png)", "respuesta": "Modelo"}
+            pictured = {**question(3), "opciones": ["![](imagenes/diagrama.png)", "B", "C"], "correctas": [0]}
+            (subjects / "con-imagenes.json").write_text(json.dumps([essay, pictured]), encoding="utf-8")
+            assert "error" not in {s["id"]: s for s in get("/api/meta")["materias"]}["con-imagenes"]
+            with urlopen(base + "/materias/imagenes/diagrama.png") as response:
+                assert response.headers["Content-Type"] == "image/png" and response.read().startswith(b"\x89PNG")
+            for bad in ("/materias/con-imagenes.json", "/materias/imagenes/..%2f..%2fhistorial", "/materias/%2e%2e/historia.json", "/materias/imagenes/falta.png"):
+                try:
+                    urlopen(base + bad)
+                    raise AssertionError(f"Se sirvió {bad}")
+                except HTTPError as error:
+                    assert error.code == 404, bad
+            for broken in ({**essay, "respuesta": ""}, {**essay, "pregunta": "![](imagenes/falta.png)"}, {**essay, "pregunta": "![](../historia.json)"}, {**essay, "tipo": "otro"}):
+                try:
+                    app.validate_questions([broken], "prueba")
+                    raise AssertionError(f"Se aceptó {broken}")
+                except ValueError:
+                    pass
+            assert app.shuffle_options(essay, rng) is essay
+            assert app.public_question(essay)["tipo"] == "desarrollo" and app.public_question(essay)["correctas_count"] == 0
+            essay_quiz = post("/api/quiz", {"materia": "con-imagenes", "cantidad": 2})
+            by_id = {q["id"]: q for q in essay_quiz["preguntas"]}
+            image_answer = by_id[pictured["id"]]["opciones"].index("![](imagenes/diagrama.png)")
+            assert rejected({"id": essay_quiz["id"], "respuestas": {"d1": "   ", pictured["id"]: [image_answer]}}, "/api/submit"), "Se aceptó un desarrollo vacío"
+            assert rejected({"id": essay_quiz["id"], "respuestas": {"d1": [0], pictured["id"]: [image_answer]}}, "/api/submit"), "Se aceptó un desarrollo con opciones"
+            essay_result = post("/api/submit", {"id": essay_quiz["id"], "respuestas": {"d1": " Mi respuesta ", pictured["id"]: [image_answer]}})
+            assert essay_result["total"] == 1 and essay_result["aciertos"] == 1 and essay_result["desarrollo"] == 1 and essay_result["porcentaje"] == 100.0
+            essay_detail = next(q for q in essay_result["preguntas"] if q["id"] == "d1")
+            assert essay_detail["respuesta_usuario"] == "Mi respuesta" and essay_detail["puntaje"] is None
+            only_essay = app.score_attempt([essay], {"d1": "texto"})
+            assert only_essay["total"] == 0 and only_essay["porcentaje"] is None
+
             # Una materia agregada con la aplicación abierta aparece sin reiniciar.
             (subjects / "nueva.json").write_text(json.dumps([question(1)]), encoding="utf-8")
             assert "nueva" in {s["id"] for s in get("/api/meta")["materias"]}
