@@ -114,7 +114,27 @@ def validate_questions(data, origin: str) -> list[dict]:
             raise ValueError(f"Opciones inválidas en {q['id']} ({origin})")
         if not isinstance(correct, list) or not correct or len(set(correct)) != len(correct) or any(type(i) is not int or i < 0 or i >= len(options) for i in correct):
             raise ValueError(f"Respuestas correctas inválidas en {q['id']} ({origin})")
+        if "mezclar" in q and not isinstance(q["mezclar"], bool):
+            raise ValueError(f"\"mezclar\" debe ser true o false en {q['id']} ({origin})")
     return data
+
+
+# Opciones que dependen de su posición ("Todas las anteriores", "Ninguna de las anteriores"): no se mueven.
+FIXED_OPTION = re.compile(r"\b(todas|todos|ninguna|ninguno)\s+(de\s+)?(las|los)\s+anteriores\b", re.IGNORECASE)
+
+
+def shuffle_options(q: dict, rng: random.Random) -> dict:
+    """Devuelve una copia con las opciones en orden aleatorio y los índices correctos reubicados."""
+    options = q["opciones"]
+    if q.get("mezclar") is False:
+        return q
+    movable = [i for i, text in enumerate(options) if not FIXED_OPTION.search(text)]
+    shuffled = movable[:]
+    rng.shuffle(shuffled)
+    order = list(range(len(options)))  # order[posición nueva] = índice original
+    for slot, source in zip(movable, shuffled):
+        order[slot] = source
+    return {**q, "opciones": [options[i] for i in order], "correctas": sorted(order.index(i) for i in q["correctas"])}
 
 
 def public_question(q: dict) -> dict:
@@ -217,7 +237,8 @@ class Handler(BaseHTTPRequestHandler):
                 limit = min(MAX_QUESTIONS, len(bank))
                 if type(count) is not int or not 1 <= count <= limit:
                     raise ValueError(f"Elegí una cantidad entre 1 y {limit}")
-                questions = random.SystemRandom().sample(bank, count)
+                rng = random.SystemRandom()
+                questions = [shuffle_options(q, rng) for q in rng.sample(bank, count)]
                 quiz_id = str(uuid.uuid4())
                 label = {"id": subject["id"], "nombre": subject["nombre"]}
                 with LOCK:

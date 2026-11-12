@@ -75,9 +75,24 @@ def main():
             assert "correctas" not in quiz["preguntas"][0]
             assert rejected({"id": quiz["id"], "respuestas": {}}, "/api/submit"), "Se aceptó un cuestionario incompleto"
             ids = [q["id"] for q in quiz["preguntas"]]
-            result = post("/api/submit", {"id": quiz["id"], "respuestas": {ids[0]: [0], ids[1]: [1]}})
+            # Las opciones llegan mezcladas: la correcta (texto "A") puede estar en cualquier posición.
+            right = [q["opciones"].index("A") for q in quiz["preguntas"]]
+            result = post("/api/submit", {"id": quiz["id"], "respuestas": {ids[0]: [right[0]], ids[1]: [(right[1] + 1) % 4]}})
             assert result["total"] == 2 and result["aciertos"] == 1 and result["materia"]["id"] == "Álgebra lineal"
-            assert rejected({"id": quiz["id"], "respuestas": {ids[0]: [0], ids[1]: [1]}}, "/api/submit"), "Se entregó dos veces"
+            assert rejected({"id": quiz["id"], "respuestas": {ids[0]: [right[0]], ids[1]: [right[1]]}}, "/api/submit"), "Se entregó dos veces"
+
+            # La mezcla conserva qué texto es correcto, varía el orden y respeta las opciones fijas.
+            rng = app.random.Random(1)
+            base_q = {"id": "m", "pregunta": "?", "opciones": ["A", "B", "C", "D", "Todas las anteriores"], "correctas": [1, 4]}
+            orders = set()
+            for _ in range(50):
+                mixed_q = app.shuffle_options(base_q, rng)
+                assert sorted(mixed_q["opciones"][i] for i in mixed_q["correctas"]) == ["B", "Todas las anteriores"]
+                assert mixed_q["opciones"][4] == "Todas las anteriores"
+                orders.add(tuple(mixed_q["opciones"]))
+            assert len(orders) > 1, "Las opciones no se mezclan"
+            assert app.shuffle_options({**base_q, "mezclar": False}, rng)["opciones"] == base_q["opciones"]
+            assert base_q["opciones"] == ["A", "B", "C", "D", "Todas las anteriores"], "Se modificó el banco original"
             record = get("/api/history")[0]
             assert record["id"] == quiz["id"] and record["materia"]["nombre"] == "Álgebra lineal"
             assert get("/api/history/" + quiz["id"])["aciertos"] == result["aciertos"]

@@ -53,8 +53,9 @@ Cada archivo usa esta estructura:
 ```
 
 - `nombre` es el texto que se muestra en la aplicación. Si falta, se usa el nombre del archivo. `descripcion` es opcional.
-- `preguntas` debe tener al menos una pregunta. Cada pregunta requiere `id`, `pregunta`, `opciones` (entre 2 y 8) y `correctas`; `explicacion`, `tema`, `origen` y `fuente` son opcionales.
+- `preguntas` debe tener al menos una pregunta. Cada pregunta requiere `id`, `pregunta`, `opciones` (entre 2 y 8) y `correctas`; `explicacion`, `tema`, `origen`, `fuente` y `mezclar` son opcionales.
 - `correctas` contiene índices que comienzan en **0**. Una pregunta con varias respuestas válidas puede usar varios índices, por ejemplo `[0, 2]`.
+- Las opciones se muestran en orden aleatorio en cada cuestionario. Las del tipo "Todas las anteriores" o "Ninguna de las anteriores" quedan en la posición en la que se escribieron. Para conservar el orden original de una pregunta, agregar `"mezclar": false`.
 - Cada `id` debe ser único dentro de la materia.
 - En el enunciado, el texto encerrado entre dos marcas de tres acentos graves se muestra como bloque de código.
 - El archivo también puede contener directamente la lista de preguntas, sin `nombre` ni `descripcion`.
@@ -63,7 +64,7 @@ Si un archivo contiene un error, la pantalla inicial indica cuál es y las demá
 
 ## Cuestionarios y puntaje
 
-Cada cuestionario incluye entre 1 y 50 preguntas de la materia elegida, seleccionadas al azar.
+Cada cuestionario incluye entre 1 y 50 preguntas de la materia elegida, seleccionadas al azar y con las opciones en orden aleatorio.
 
 Cada pregunta vale **1 punto**. Las preguntas con una sola respuesta correcta usan botones de selección; las que tienen varias usan casillas. En estas últimas, cada respuesta correcta marcada suma `1 / cantidad de respuestas correctas` y cada opción incorrecta marcada resta lo mismo, con un mínimo de **0 puntos** por pregunta. Es necesario responder todas las preguntas para finalizar. La revisión muestra las respuestas elegidas, las correctas, el puntaje de cada pregunta y una explicación.
 
@@ -79,9 +80,16 @@ Al finalizar un cuestionario, se guarda un archivo JSON con la fecha, la materia
 
 Si existe un historial de la versión anterior (carpeta `CuestionariosJava`), la aplicación lo traslada a la carpeta nueva la primera vez que se inicia. Los intentos finalizados permanecen disponibles después de cerrar la aplicación. Los cuestionarios en curso se mantienen en memoria y se guardan al finalizar.
 
+## Servidor MCP
+
+`mcp_server.py` permite que un asistente compatible con MCP (por ejemplo, Claude Code) consulte y edite los bancos de preguntas y abra la aplicación. No requiere dependencias adicionales. El archivo `.mcp.json` lo registra al abrir el proyecto en Claude Code; en otros clientes, configurar el comando `python3 mcp_server.py` desde la raíz del proyecto.
+
+Herramientas: `listar_materias`, `ver_materia`, `guardar_pregunta` (agrega o reemplaza por `id`), `eliminar_pregunta`, `crear_materia` y `abrir_app`. Antes de guardar, se valida el banco completo con las mismas reglas que usa la aplicación.
+
 ## Archivos
 
 - `app.py`: servidor local y corrección.
+- `mcp_server.py`: servidor MCP para editar materias y abrir la aplicación.
 - `web/`: interfaz del navegador.
 - `materias/`: un banco de preguntas editable por materia.
 - `tools/build_desktop.py`: genera un paquete compilado en el sistema operativo actual.
