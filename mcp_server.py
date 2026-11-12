@@ -152,10 +152,12 @@ def abrir_app(_args):
 
 QUESTION_SCHEMA = {
     "type": "object",
-    "description": "Pregunta con el formato del banco. 'correctas' es una lista de índices (desde 0) de 'opciones'; con más de un índice la pregunta es de respuesta múltiple.",
+    "description": "Pregunta con el formato del banco. 'correctas' es una lista de índices (desde 0) de 'opciones'; con más de un índice la pregunta es de respuesta múltiple. Con \"tipo\": \"desarrollo\" se responde con texto libre: lleva 'respuesta' (modelo) en lugar de 'opciones' y 'correctas', y no suma puntaje. Los textos pueden incluir imágenes con ![descripción](ruta), con la ruta relativa a la carpeta de materias (por ejemplo imagenes/materia/diagrama.png).",
     "properties": {
         "id": {"type": "string"},
+        "tipo": {"type": "string", "enum": ["opciones", "desarrollo"], "description": "Por defecto 'opciones'"},
         "pregunta": {"type": "string"},
+        "respuesta": {"type": "string", "description": "Respuesta modelo de una pregunta de desarrollo"},
         "opciones": {"type": "array", "items": {"type": "string"}, "minItems": 2},
         "correctas": {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 1},
         "explicacion": {"type": "string"},
@@ -164,7 +166,7 @@ QUESTION_SCHEMA = {
         "fuente": {"type": "string"},
         "mezclar": {"type": "boolean", "description": "false deja las opciones en el orden escrito (por defecto se mezclan en cada cuestionario)"},
     },
-    "required": ["id", "pregunta", "opciones", "correctas"],
+    "required": ["id", "pregunta"],
 }
 MATERIA = {"type": "string", "description": "Identificador de la materia: nombre del archivo sin .json (por ejemplo 'desarrollo-software')"}
 
