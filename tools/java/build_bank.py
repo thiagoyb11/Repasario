@@ -1,4 +1,4 @@
-"""Construye materias/java.json a partir de las preguntas originales y las nuevas."""
+"""Construye materias/desarrollo-software.json a partir de las preguntas originales y las nuevas."""
 
 from pathlib import Path
 import json
@@ -175,9 +175,9 @@ assert len(originals) == 74, len(originals)
 assert len(bank) == 150, len(bank)
 assert len({q["id"] for q in bank}) == len(bank)
 subject = {
-    "nombre": "Java",
+    "nombre": "Desarrollo de Software",
     "descripcion": "Preguntas del campus y ejercicios adicionales sobre Java, colecciones, excepciones, patrones y arquitectura.",
     "preguntas": bank,
 }
-(ROOT / "materias" / "java.json").write_text(json.dumps(subject, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+(ROOT / "materias" / "desarrollo-software.json").write_text(json.dumps(subject, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 print(f"Banco creado: {len(originals)} originales + 12 adaptadas + 64 nuevas = {len(bank)}")

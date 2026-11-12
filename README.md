@@ -29,7 +29,7 @@ Si el navegador no se abre automáticamente, utilizar la dirección que aparece 
 
 Cada archivo `.json` de la carpeta [materias](materias) es una materia. Para agregar una, crear un archivo nuevo en esa carpeta, por ejemplo `materias/historia.json`; para quitarla, borrar o mover el archivo. La pantalla inicial permite elegir la materia del cuestionario y muestra la ubicación de la carpeta. Los cambios se aplican al volver a la pantalla inicial, sin reiniciar la aplicación.
 
-El repositorio incluye la materia [Java](materias/java.json), con **150 preguntas**.
+El repositorio incluye las materias [Desarrollo de Software](materias/desarrollo-software.json), con **150 preguntas** sobre Java, y [Diseño de Sistemas – Parcial 2](materias/diseno-sistemas-p2.json), con **126 preguntas**.
 
 Cada archivo usa esta estructura:
 
@@ -94,4 +94,4 @@ Herramientas: `listar_materias`, `ver_materia`, `guardar_pregunta` (agrega o ree
 - `materias/`: un banco de preguntas editable por materia.
 - `tools/build_desktop.py`: genera un paquete compilado en el sistema operativo actual.
 - `tools/smoke_test.py`: prueba la API con materias de ejemplo, sin tocar las materias ni el historial reales.
-- `tools/java/`: scripts con los que se construyó `materias/java.json`.
+- `tools/java/`: scripts con los que se construyó `materias/desarrollo-software.json`.
