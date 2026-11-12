@@ -4,9 +4,18 @@ Aplicación local de cuestionarios para repasar cualquier materia en Windows, ma
 
 ## Versión compilada
 
-El archivo [Repasario-macOS-arm64.zip](release/Repasario-macOS-arm64.zip) contiene una versión para equipos Mac con Apple Silicon. Para utilizarla, descomprimir el ZIP y abrir **Repasario.app**. La carpeta `materias` debe permanecer junto a la aplicación para poder editar los bancos de preguntas o agregar materias. La aplicación abre el navegador y se puede cerrar con el botón **Salir**.
+La carpeta `release/` contiene versiones compiladas para dos sistemas:
 
-Para obtener una versión compilada en Windows, Linux o una Mac Intel, ejecutar la compilación en un equipo con ese sistema y arquitectura. PyInstaller genera binarios para el sistema en el que se ejecuta. Desde la raíz del proyecto:
+| Sistema | Archivo | Para abrir |
+| --- | --- | --- |
+| Windows (x64) | [Repasario-Windows-amd64.zip](release/Repasario-Windows-amd64.zip) | **Repasario.exe** |
+| macOS (Apple Silicon) | [Repasario-macOS-arm64.zip](release/Repasario-macOS-arm64.zip) | **Repasario.app** |
+
+Para utilizarla, descomprimir el ZIP y abrir la aplicación con doble clic. La carpeta `materias` debe permanecer junto a la aplicación para poder editar los bancos de preguntas o agregar materias. La aplicación abre el navegador y se puede cerrar con el botón **Salir**.
+
+En Windows, la aplicación no tiene firma digital, por lo que la primera vez SmartScreen puede mostrar el aviso "Windows protegió su PC". Para continuar, elegir **Más información** y luego **Ejecutar de todas formas**.
+
+Para obtener una versión compilada en Linux, en una Mac Intel o en Windows ARM, ejecutar la compilación en un equipo con ese sistema y arquitectura. PyInstaller genera binarios para el sistema en el que se ejecuta. Desde la raíz del proyecto:
 
 ```text
 python -m pip install -r requirements-build.txt
