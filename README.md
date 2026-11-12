@@ -29,7 +29,7 @@ Si el navegador no se abre automáticamente, utilizar la dirección que aparece 
 
 Cada archivo `.json` de la carpeta [materias](materias) es una materia. Para agregar una, crear un archivo nuevo en esa carpeta, por ejemplo `materias/historia.json`; para quitarla, borrar o mover el archivo. La pantalla inicial permite elegir la materia del cuestionario y muestra la ubicación de la carpeta. Los cambios se aplican al volver a la pantalla inicial, sin reiniciar la aplicación.
 
-El repositorio incluye las materias [Desarrollo de Software](materias/desarrollo-software.json), con **150 preguntas** sobre Java, y [Diseño de Sistemas – Parcial 2](materias/diseno-sistemas-p2.json), con **126 preguntas**.
+El repositorio incluye las materias [Desarrollo de Software](materias/desarrollo-software.json), con **150 preguntas** sobre Java, [Diseño de Sistemas – Parcial 2](materias/diseno-sistemas-p2.json), con **126 preguntas**, y [Diseño de Sistemas – Banco de parciales](materias/diseno-sistemas-banco-parciales.json), con **60 preguntas** de parciales anteriores, varias con diagramas.
 
 Cada archivo usa esta estructura:
 
@@ -58,6 +58,8 @@ Cada archivo usa esta estructura:
 - Las opciones se muestran en orden aleatorio en cada cuestionario. Las del tipo "Todas las anteriores" o "Ninguna de las anteriores" quedan en la posición en la que se escribieron. Para conservar el orden original de una pregunta, agregar `"mezclar": false`.
 - Cada `id` debe ser único dentro de la materia.
 - En el enunciado, el texto encerrado entre dos marcas de tres acentos graves se muestra como bloque de código.
+- El enunciado, las opciones, la explicación y la respuesta pueden incluir imágenes con la sintaxis `![descripción](imagenes/mi-materia/diagrama.png)`. La ruta es relativa a la carpeta `materias` (formatos PNG, JPG, GIF, WebP o SVG) y la imagen debe existir. Las imágenes se pueden ampliar con el botón **Ampliar**. Si alguna opción tiene una imagen, la lista de opciones tiene una altura fija con barra de desplazamiento.
+- Una pregunta con `"tipo": "desarrollo"` se responde con texto libre. En lugar de `opciones` y `correctas` lleva `respuesta`, la respuesta esperada que se muestra en la revisión.
 - El archivo también puede contener directamente la lista de preguntas, sin `nombre` ni `descripcion`.
 
 Si un archivo contiene un error, la pantalla inicial indica cuál es y las demás materias siguen disponibles.
@@ -66,7 +68,7 @@ Si un archivo contiene un error, la pantalla inicial indica cuál es y las demá
 
 Cada cuestionario incluye entre 1 y 50 preguntas de la materia elegida, seleccionadas al azar y con las opciones en orden aleatorio.
 
-Cada pregunta vale **1 punto**. Las preguntas con una sola respuesta correcta usan botones de selección; las que tienen varias usan casillas. En estas últimas, cada respuesta correcta marcada suma `1 / cantidad de respuestas correctas` y cada opción incorrecta marcada resta lo mismo, con un mínimo de **0 puntos** por pregunta. Es necesario responder todas las preguntas para finalizar. La revisión muestra las respuestas elegidas, las correctas, el puntaje de cada pregunta y una explicación.
+Cada pregunta vale **1 punto**. Las preguntas con una sola respuesta correcta usan botones de selección; las que tienen varias usan casillas. En estas últimas, cada respuesta correcta marcada suma `1 / cantidad de respuestas correctas` y cada opción incorrecta marcada resta lo mismo, con un mínimo de **0 puntos** por pregunta. Las preguntas de desarrollo no tienen corrección automática: no suman puntaje y la revisión muestra la respuesta escrita junto a la esperada. Es necesario responder todas las preguntas para finalizar. La revisión muestra las respuestas elegidas, las correctas, el puntaje de cada pregunta y una explicación.
 
 ## Historial
 
