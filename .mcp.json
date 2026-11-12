@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "repasario": {
+      "command": "python3",
+      "args": ["mcp_server.py"]
+    }
+  }
+}
