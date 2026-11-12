@@ -26,6 +26,12 @@ MAX_ANSWER_LENGTH = 5000
 IMAGE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)\)")
 IMAGE_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp", ".svg": "image/svg+xml"}
 
+# Compilada sin consola (--windowed en Windows), stdout y stderr son None y http.server
+# falla al registrar cada solicitud, cortando la conexión antes de responder.
+for _stream in ("stdout", "stderr"):
+    if getattr(sys, _stream) is None:
+        setattr(sys, _stream, open(os.devnull, "w", encoding="utf-8"))
+
 if getattr(sys, "frozen", False):
     ROOT = Path(sys._MEIPASS)
     executable = Path(sys.executable)
