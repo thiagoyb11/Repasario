@@ -1,12 +1,13 @@
-"""Construye el banco editable a partir de las preguntas originales y las nuevas."""
+"""Construye materias/java.json a partir de las preguntas originales y las nuevas."""
 
 from pathlib import Path
 import json
 import re
 
 
-ROOT = Path(__file__).resolve().parents[1]
-originals = json.loads((ROOT / "tools" / "originales_extraidas.json").read_text(encoding="utf-8"))
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+originals = json.loads((HERE / "originales_extraidas.json").read_text(encoding="utf-8"))
 bank = []
 
 
@@ -173,5 +174,10 @@ for section, (source, questions) in GROUPS.items():
 assert len(originals) == 74, len(originals)
 assert len(bank) == 150, len(bank)
 assert len({q["id"] for q in bank}) == len(bank)
-(ROOT / "preguntas.json").write_text(json.dumps(bank, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+subject = {
+    "nombre": "Java",
+    "descripcion": "Preguntas del campus y ejercicios adicionales sobre Java, colecciones, excepciones, patrones y arquitectura.",
+    "preguntas": bank,
+}
+(ROOT / "materias" / "java.json").write_text(json.dumps(subject, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 print(f"Banco creado: {len(originals)} originales + 12 adaptadas + 64 nuevas = {len(bank)}")

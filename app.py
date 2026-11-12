@@ -1,4 +1,4 @@
-"""Cuestionarios de Java: servidor local sin dependencias externas."""
+"""Repasario: cuestionarios de cualquier materia en un servidor local sin dependencias externas."""
 
 from __future__ import annotations
 
@@ -18,18 +18,22 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
 
+APP_NAME = "Repasario"
+LEGACY_DATA_DIRS = ("CuestionariosJava",)
+MAX_QUESTIONS = 50
+
 if getattr(sys, "frozen", False):
     ROOT = Path(sys._MEIPASS)
     executable = Path(sys.executable)
     bundle = next((parent for parent in executable.parents if parent.suffix == ".app"), None)
     editable_dir = bundle.parent if bundle else executable.parent
-    external_bank = editable_dir / "preguntas.json"
-    BANK = external_bank if external_bank.is_file() else ROOT / "preguntas.json"
+    external_subjects = editable_dir / "materias"
+    SUBJECTS = external_subjects if external_subjects.is_dir() else ROOT / "materias"
 else:
     ROOT = Path(__file__).resolve().parent
-    BANK = ROOT / "preguntas.json"
+    SUBJECTS = ROOT / "materias"
 WEB = ROOT / "web"
-SESSIONS: dict[str, list[dict]] = {}
+SESSIONS: dict[str, dict] = {}
 LOCK = threading.Lock()
 
 
@@ -40,26 +44,76 @@ def history_dir() -> Path:
         base = Path.home() / "Library" / "Application Support"
     else:
         base = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
-    return base / "CuestionariosJava" / "historial"
+    folder = base / APP_NAME
+    if not folder.exists():
+        # Conserva el historial de versiones anteriores de la aplicación.
+        for legacy in LEGACY_DATA_DIRS:
+            if (base / legacy).is_dir():
+                try:
+                    (base / legacy).rename(folder)
+                except OSError:
+                    pass
+                break
+    return folder / "historial"
 
 
-def load_bank() -> list[dict]:
-    data = json.loads(BANK.read_text(encoding="utf-8"))
+def subject_files() -> dict[str, Path]:
+    if not SUBJECTS.is_dir():
+        return {}
+    files = (f for f in SUBJECTS.glob("*.json") if f.is_file() and not f.name.startswith("."))
+    return {f.stem: f for f in sorted(files, key=lambda f: f.stem.casefold())}
+
+
+def load_subject(subject_id: str) -> dict:
+    """Lee y valida materias/<subject_id>.json."""
+    file = subject_files().get(subject_id) if isinstance(subject_id, str) else None
+    if file is None:
+        raise ValueError("Materia no encontrada")
+    try:
+        data = json.loads(file.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{file.name} no es un JSON válido: {exc}") from None
+    # Una lista suelta de preguntas también es válida; el nombre sale del archivo.
+    if isinstance(data, list):
+        data = {"preguntas": data}
+    if not isinstance(data, dict):
+        raise ValueError(f"{file.name} debe contener un objeto con \"nombre\" y \"preguntas\"")
+    name = data.get("nombre", subject_id)
+    description = data.get("descripcion", "")
+    if not isinstance(name, str) or not name.strip() or not isinstance(description, str):
+        raise ValueError(f"Nombre o descripción inválidos en {file.name}")
+    return {"id": subject_id, "nombre": name.strip(), "descripcion": description.strip(), "preguntas": validate_questions(data.get("preguntas"), file.name)}
+
+
+def list_subjects() -> list[dict]:
+    """Resumen de cada materia; un archivo con errores no impide usar las demás."""
+    subjects = []
+    for subject_id in subject_files():
+        try:
+            subject = load_subject(subject_id)
+            count = len(subject["preguntas"])
+            subjects.append({"id": subject_id, "nombre": subject["nombre"], "descripcion": subject["descripcion"], "cantidad": count, "maximo": min(MAX_QUESTIONS, count)})
+        except (ValueError, OSError) as exc:
+            subjects.append({"id": subject_id, "nombre": subject_id, "error": str(exc)})
+    return subjects
+
+
+def validate_questions(data, origin: str) -> list[dict]:
     if not isinstance(data, list) or not data:
-        raise ValueError("preguntas.json debe contener una lista no vacía")
+        raise ValueError(f"{origin} debe contener una lista no vacía de preguntas")
     seen = set()
     for n, q in enumerate(data, 1):
         if not isinstance(q, dict) or not isinstance(q.get("id"), str) or not q["id"] or q["id"] in seen:
-            raise ValueError(f"ID faltante o repetido en la pregunta {n}")
+            raise ValueError(f"ID faltante o repetido en la pregunta {n} de {origin}")
         seen.add(q["id"])
         if not isinstance(q.get("pregunta"), str) or not q["pregunta"].strip():
-            raise ValueError(f"Enunciado vacío en {q['id']}")
+            raise ValueError(f"Enunciado vacío en {q['id']} ({origin})")
         options = q.get("opciones")
         correct = q.get("correctas")
         if not isinstance(options, list) or not 2 <= len(options) <= 8 or any(not isinstance(x, str) or not x.strip() for x in options):
-            raise ValueError(f"Opciones inválidas en {q['id']}")
+            raise ValueError(f"Opciones inválidas en {q['id']} ({origin})")
         if not isinstance(correct, list) or not correct or len(set(correct)) != len(correct) or any(type(i) is not int or i < 0 or i >= len(options) for i in correct):
-            raise ValueError(f"Respuestas correctas inválidas en {q['id']}")
+            raise ValueError(f"Respuestas correctas inválidas en {q['id']} ({origin})")
     return data
 
 
@@ -113,8 +167,7 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         try:
             if path == "/api/meta":
-                bank = load_bank()
-                return self.send_json({"cantidad": len(bank), "maximo": min(50, len(bank)), "carpeta_historial": str(history_dir()), "compilada": bool(getattr(sys, "frozen", False))})
+                return self.send_json({"aplicacion": APP_NAME, "materias": list_subjects(), "carpeta_materias": str(SUBJECTS), "carpeta_historial": str(history_dir()), "compilada": bool(getattr(sys, "frozen", False))})
             if path == "/api/history":
                 folder = history_dir()
                 records = []
@@ -122,9 +175,10 @@ class Handler(BaseHTTPRequestHandler):
                     for file in sorted(folder.glob("*.json"), reverse=True):
                         try:
                             data = json.loads(file.read_text(encoding="utf-8"))
-                            records.append({key: data[key] for key in ("id", "fecha", "aciertos", "total", "porcentaje")})
+                            records.append({**{key: data[key] for key in ("id", "fecha", "aciertos", "total", "porcentaje")}, "materia": data.get("materia")})
                         except (OSError, ValueError, KeyError):
                             continue
+                records.sort(key=lambda record: str(record["fecha"]), reverse=True)
                 return self.send_json(records)
             match = re.fullmatch(r"/api/history/([0-9a-f-]{36})", path)
             if match:
@@ -158,27 +212,30 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if path == "/api/quiz":
                 count = body.get("cantidad")
-                bank = load_bank()
-                if type(count) is not int or not 1 <= count <= min(50, len(bank)):
-                    raise ValueError("Elegí una cantidad entre 1 y 50")
+                subject = load_subject(body.get("materia"))
+                bank = subject["preguntas"]
+                limit = min(MAX_QUESTIONS, len(bank))
+                if type(count) is not int or not 1 <= count <= limit:
+                    raise ValueError(f"Elegí una cantidad entre 1 y {limit}")
                 questions = random.SystemRandom().sample(bank, count)
                 quiz_id = str(uuid.uuid4())
+                label = {"id": subject["id"], "nombre": subject["nombre"]}
                 with LOCK:
-                    SESSIONS[quiz_id] = questions
-                return self.send_json({"id": quiz_id, "preguntas": [public_question(q) for q in questions]})
+                    SESSIONS[quiz_id] = {"materia": label, "preguntas": questions}
+                return self.send_json({"id": quiz_id, "materia": label, "preguntas": [public_question(q) for q in questions]})
             if path == "/api/submit":
                 quiz_id = body.get("id")
                 if not isinstance(quiz_id, str):
                     raise ValueError("Identificador de cuestionario inválido")
                 with LOCK:
-                    questions = SESSIONS.get(quiz_id)
-                if questions is None:
+                    session = SESSIONS.get(quiz_id)
+                if session is None:
                     raise ValueError("El cuestionario ya fue entregado o no existe")
                 answers = body.get("respuestas")
                 if not isinstance(answers, dict):
                     raise ValueError("Respuestas inválidas")
-                result = score_attempt(questions, answers)
-                result.update({"id": quiz_id, "fecha": datetime.now().astimezone().isoformat(timespec="seconds")})
+                result = score_attempt(session["preguntas"], answers)
+                result.update({"id": quiz_id, "materia": session["materia"], "fecha": datetime.now().astimezone().isoformat(timespec="seconds")})
                 folder = history_dir()
                 folder.mkdir(parents=True, exist_ok=True)
                 destination = folder / (quiz_id + ".json")
@@ -196,14 +253,19 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Cuestionarios de Java en el navegador local")
+    parser = argparse.ArgumentParser(description=f"{APP_NAME}: cuestionarios de cualquier materia en el navegador local")
     parser.add_argument("--port", type=int, default=0, help="Puerto local (0 elige uno libre)")
     parser.add_argument("--no-browser", action="store_true", help="No abrir el navegador automáticamente")
     args = parser.parse_args()
-    bank = load_bank()
+    subjects = list_subjects()
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     url = f"http://127.0.0.1:{server.server_port}/"
-    print(f"Banco: {len(bank)} preguntas | Historial: {history_dir()}")
+    print(f"Materias en {SUBJECTS}:")
+    for subject in subjects:
+        print(f"  - {subject['nombre']}: " + (f"ERROR: {subject['error']}" if "error" in subject else f"{subject['cantidad']} preguntas"))
+    if not subjects:
+        print("  (ninguna: agregá un archivo .json en esa carpeta)")
+    print(f"Historial: {history_dir()}")
     print(f"Abrí {url} (Ctrl+C para salir)")
     if not args.no_browser:
         threading.Timer(0.4, lambda: webbrowser.open(url)).start()

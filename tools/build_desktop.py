@@ -11,7 +11,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 
 ROOT = Path(__file__).resolve().parents[1]
-NAME = "RepasoJava"
+NAME = "Repasario"
 SYSTEM = platform.system()
 
 
@@ -27,7 +27,7 @@ def main():
         sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--onedir",
         "--name", NAME,
         "--add-data", f"{ROOT / 'web'}:web",
-        "--add-data", f"{ROOT / 'preguntas.json'}:.",
+        "--add-data", f"{ROOT / 'materias'}:materias",
         "--distpath", str(ROOT / "dist"),
         "--workpath", str(work),
         "--specpath", str(work),
@@ -50,14 +50,15 @@ def main():
     else:
         bundle = ROOT / "dist" / NAME
         shutil.copytree(bundle, staging, symlinks=True, dirs_exist_ok=True)
-    shutil.copy2(ROOT / "preguntas.json", staging / "preguntas.json")
+    shutil.copytree(ROOT / "materias", staging / "materias")
     instructions = (
-        "Repaso Java - versión compilada\n\n"
-        + ("Abrí RepasoJava.app con doble clic.\n" if SYSTEM == "Darwin" else
-           "Abrí RepasoJava.exe con doble clic.\n" if SYSTEM == "Windows" else
-           "Ejecutá ./RepasoJava desde esta carpeta.\n")
+        f"{NAME} - versión compilada\n\n"
+        + (f"Abrí {NAME}.app con doble clic.\n" if SYSTEM == "Darwin" else
+           f"Abrí {NAME}.exe con doble clic.\n" if SYSTEM == "Windows" else
+           f"Ejecutá ./{NAME} desde esta carpeta.\n")
         + "La aplicación abre el navegador local. Usá el botón Salir para cerrarla.\n"
-        + "Podés editar preguntas.json, que está junto a la aplicación.\n"
+        + "Cada archivo .json de la carpeta materias, que está junto a la aplicación, es una materia.\n"
+        + "Podés editar esos archivos o agregar otros para sumar materias.\n"
     )
     (staging / "LEEME.txt").write_text(instructions, encoding="utf-8")
     if release.exists():

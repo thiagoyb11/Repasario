@@ -54,42 +54,96 @@ function showError(error) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function showHome() {
+function validSubjects() { return meta.materias.filter(subject => !subject.error); }
+
+function rememberedSubject() {
+  try { return localStorage.getItem('materia'); } catch { return null; }
+}
+
+function rememberSubject(id) {
+  try { localStorage.setItem('materia', id); } catch { /* sin almacenamiento local */ }
+}
+
+async function showHome() {
+  // Las materias se vuelven a leer para reflejar archivos agregados o editados.
+  try { meta = await api('/api/meta'); } catch (error) { main.replaceChildren(); return showError(error); }
   main.replaceChildren();
   const hero = el('section', 'hero');
   hero.append(el('span', 'eyebrow', 'Práctica a tu ritmo'));
-  hero.append(el('h1', '', 'Prepará tu próximo parcial de Java.'));
-  hero.append(el('p', '', 'Armá un cuestionario aleatorio, respondé todas las preguntas y revisá tus resultados cuando quieras.'));
+  hero.append(el('h1', '', 'Prepará tu próximo examen.'));
+  hero.append(el('p', '', 'Elegí una materia, armá un cuestionario aleatorio, respondé todas las preguntas y revisá tus resultados cuando quieras.'));
   main.append(hero);
 
+  const subjects = validSubjects();
   const grid = el('div', 'home-grid');
   const setup = el('section', 'panel setup-panel');
   setup.append(el('h2', '', 'Nuevo cuestionario'));
-  setup.append(el('p', 'muted', 'Elegí cuántas preguntas querés practicar. Cada intento se guarda al finalizar.'));
+  const info = el('aside', 'panel info-panel');
+  meta.materias.filter(subject => subject.error).forEach(subject => setup.append(el('div', 'error', `No se pudo cargar la materia «${subject.id}»: ${subject.error}`)));
+
+  function folders() {
+    const path = el('div', 'path');
+    path.append(el('strong', '', 'Materias en esta computadora'), el('span', '', meta.carpeta_materias));
+    path.append(el('strong', '', 'Historial en esta computadora'), el('span', '', meta.carpeta_historial));
+    return path;
+  }
+
+  if (!subjects.length) {
+    const help = el('p', 'muted', 'Todavía no hay materias disponibles. Agregá un archivo ');
+    help.append(el('code', '', '.json'), document.createTextNode(' con preguntas en la carpeta de materias y volvé a esta pantalla.'));
+    setup.append(help);
+    info.append(el('h2', '', 'Tu espacio de práctica'), el('p', '', 'Cada archivo de la carpeta de materias es un banco de preguntas independiente.'), folders());
+    grid.append(setup, info); main.append(grid);
+    return;
+  }
+
+  setup.append(el('p', 'muted', 'Elegí la materia y cuántas preguntas querés practicar. Cada intento se guarda al finalizar.'));
+  const subjectLabel = el('label', 'field-label', 'Materia');
+  subjectLabel.htmlFor = 'subject';
+  const select = el('select', 'subject-select');
+  select.id = 'subject';
+  subjects.forEach(subject => {
+    const option = el('option', '', subject.nombre);
+    option.value = subject.id;
+    select.append(option);
+  });
+  const remembered = rememberedSubject();
+  if (subjects.some(subject => subject.id === remembered)) select.value = remembered;
   const label = el('label', 'field-label', 'Cantidad de preguntas');
   label.htmlFor = 'count';
   const row = el('div', 'count-row');
   const count = el('input');
-  count.id = 'count'; count.type = 'number'; count.min = '1'; count.max = String(meta.maximo); count.value = String(Math.min(20, meta.maximo));
-  row.append(count, el('span', 'limit', `De 1 a ${meta.maximo} preguntas`));
-  setup.append(label, row);
+  count.id = 'count'; count.type = 'number'; count.min = '1';
+  const limit = el('span', 'limit');
+  row.append(count, limit);
+  setup.append(subjectLabel, select, label, row);
+
+  const selected = () => subjects.find(subject => subject.id === select.value);
+  function showSubject() {
+    const subject = selected();
+    count.max = String(subject.maximo);
+    count.value = String(Math.min(20, subject.maximo));
+    limit.textContent = subject.maximo === 1 ? '1 pregunta disponible' : `De 1 a ${subject.maximo} preguntas`;
+    info.replaceChildren();
+    info.append(el('h2', '', subject.nombre));
+    info.append(el('p', '', subject.descripcion || 'Banco de preguntas editable para practicar esta materia.'));
+    info.append(el('div', 'stat', String(subject.cantidad)), el('div', 'stat-label', subject.cantidad === 1 ? 'pregunta en el banco editable' : 'preguntas en el banco editable'));
+    info.append(folders());
+  }
+  select.addEventListener('change', () => { rememberSubject(select.value); showSubject(); });
+  showSubject();
+
   setup.append(button('Comenzar cuestionario →', 'button primary start-button', async () => {
     const amount = Number(count.value);
-    if (!Number.isInteger(amount) || amount < 1 || amount > meta.maximo) { count.focus(); return; }
+    if (!Number.isInteger(amount) || amount < 1 || amount > selected().maximo) { count.focus(); return; }
     try {
-      quiz = await post('/api/quiz', { cantidad: amount });
+      quiz = await post('/api/quiz', { materia: select.value, cantidad: amount });
+      rememberSubject(select.value);
       answers = {}; current = 0; report = null; message = '';
       showQuiz();
     } catch (error) { showError(error); }
   }));
-  if (quiz) setup.append(button('Retomar cuestionario en curso', 'button secondary start-button', showQuiz));
-  const info = el('aside', 'panel info-panel');
-  info.append(el('h2', '', 'Tu espacio de práctica'));
-  info.append(el('p', '', 'Preguntas del campus y ejercicios adicionales sobre Java, colecciones, excepciones, patrones y arquitectura.'));
-  info.append(el('div', 'stat', String(meta.cantidad)), el('div', 'stat-label', 'preguntas en el banco editable'));
-  const path = el('div', 'path');
-  path.append(el('strong', '', 'Historial en esta computadora'), el('span', '', meta.carpeta_historial));
-  info.append(path);
+  if (quiz) setup.append(button(`Retomar cuestionario en curso (${quiz.materia.nombre})`, 'button secondary start-button', showQuiz));
   grid.append(setup, info); main.append(grid);
 }
 
@@ -120,7 +174,7 @@ function showQuiz() {
   const panel = el('section', 'panel question-panel');
   const head = el('div', 'question-header');
   head.append(el('span', 'question-counter', `Pregunta ${current + 1} de ${quiz.preguntas.length}`));
-  head.append(el('span', 'tag', q.tema || 'Java'));
+  head.append(el('span', 'tag', [quiz.materia.nombre, q.tema].filter(Boolean).join(' · ')));
   panel.append(head, questionContent(q.pregunta));
   const selected = answers[q.id] || [];
   const multiple = q.correctas_count > 1;
@@ -188,7 +242,7 @@ function showReport(data) {
   top.append(el('h1', '', 'Tu resultado'));
   const score = el('div', 'score');
   score.append(document.createTextNode(String(data.aciertos)), el('small', '', ` / ${data.total}`));
-  top.append(score, el('div', 'result-meta', `${data.porcentaje}% de los puntos · ${formatDate(data.fecha)}`));
+  top.append(score, el('div', 'result-meta', [data.materia && data.materia.nombre, `${data.porcentaje}% de los puntos`, formatDate(data.fecha)].filter(Boolean).join(' · ')));
   const controls = el('div'); controls.style.marginTop = '25px';
   controls.append(button('Nuevo cuestionario', 'button primary', showHome), document.createTextNode(' '), button('Ver historial', 'button secondary', showHistory));
   top.append(controls); page.append(top);
@@ -238,7 +292,7 @@ async function showHistory() {
         catch (error) { showError(error); }
       });
       const left = el('div');
-      left.append(el('strong', '', formatDate(record.fecha)), el('span', '', `${record.total} preguntas · Abrir revisión`));
+      left.append(el('strong', '', formatDate(record.fecha)), el('span', '', [record.materia && record.materia.nombre, `${record.total} preguntas`, 'Abrir revisión'].filter(Boolean).join(' · ')));
       item.append(left, el('div', 'history-score', `${record.aciertos}/${record.total} puntos · ${record.porcentaje}%`));
       list.append(item);
     });
@@ -261,7 +315,7 @@ document.querySelector('#home-link').addEventListener('keydown', e => { if (e.ke
   try {
     meta = await api('/api/meta');
     document.querySelector('#nav-exit').hidden = !meta.compilada;
-    showHome();
+    await showHome();
   }
   catch (error) { main.append(el('div', 'error', `No se pudo iniciar la aplicación: ${error.message}`)); }
 })();

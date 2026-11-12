@@ -151,7 +151,7 @@ def extract(path):
 
 
 def main():
-    source = Path(__file__).resolve().parents[2] / 'cuestionarios-P1'
+    source = Path(__file__).resolve().parents[3] / 'cuestionarios-P1'
     all_rows = []
     for file in sorted(source.glob('*.html')):
         rows = extract(file)
@@ -163,7 +163,7 @@ def main():
         if key not in unique or (not unique[key]['explicacion'] and row['explicacion']):
             unique[key] = row
     print('Únicas:', len(unique))
-    out = Path(__file__).resolve().parents[1] / 'tools' / 'originales_extraidas.json'
+    out = Path(__file__).resolve().parent / 'originales_extraidas.json'
     out.write_text(json.dumps(list(unique.values()), ensure_ascii=False, indent=2), encoding='utf-8')
 
 
