@@ -15,12 +15,16 @@ import webbrowser
 from datetime import datetime
 from fractions import Fraction
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 
 APP_NAME = "Repasario"
 LEGACY_DATA_DIRS = ("CuestionariosJava",)
 MAX_QUESTIONS = 50
+MAX_ANSWER_LENGTH = 5000
+# Imagen dentro de un texto: ![descripción](ruta relativa a la carpeta de materias).
+IMAGE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)\)")
+IMAGE_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp", ".svg": "image/svg+xml"}
 
 if getattr(sys, "frozen", False):
     ROOT = Path(sys._MEIPASS)
@@ -98,6 +102,25 @@ def list_subjects() -> list[dict]:
     return subjects
 
 
+def image_file(relative: str) -> Path | None:
+    """Archivo de imagen dentro de la carpeta de materias, o None si la ruta no es válida."""
+    if relative.startswith(("/", "\\")) or ":" in relative:
+        return None
+    base = SUBJECTS.resolve()
+    file = (base / relative).resolve()
+    if base not in file.parents or file.suffix.lower() not in IMAGE_TYPES:
+        return None
+    return file
+
+
+def validate_images(texts, question_id: str, origin: str) -> None:
+    for text in texts:
+        for match in IMAGE.finditer(text if isinstance(text, str) else ""):
+            file = image_file(match.group(2))
+            if file is None or not file.is_file():
+                raise ValueError(f"No se encontró la imagen {match.group(2)} en {question_id} ({origin}); la ruta es relativa a la carpeta de materias")
+
+
 def validate_questions(data, origin: str) -> list[dict]:
     if not isinstance(data, list) or not data:
         raise ValueError(f"{origin} debe contener una lista no vacía de preguntas")
@@ -108,6 +131,14 @@ def validate_questions(data, origin: str) -> list[dict]:
         seen.add(q["id"])
         if not isinstance(q.get("pregunta"), str) or not q["pregunta"].strip():
             raise ValueError(f"Enunciado vacío en {q['id']} ({origin})")
+        if q.get("tipo", "opciones") not in ("opciones", "desarrollo"):
+            raise ValueError(f"\"tipo\" debe ser \"opciones\" o \"desarrollo\" en {q['id']} ({origin})")
+        validate_images([q["pregunta"], q.get("explicacion"), q.get("respuesta"), *(q.get("opciones") or [])], q["id"], origin)
+        if q.get("tipo") == "desarrollo":
+            # Respuesta libre: se compara con la respuesta modelo y no suma puntaje automático.
+            if not isinstance(q.get("respuesta"), str) or not q["respuesta"].strip():
+                raise ValueError(f"Falta la respuesta modelo en la pregunta de desarrollo {q['id']} ({origin})")
+            continue
         options = q.get("opciones")
         correct = q.get("correctas")
         if not isinstance(options, list) or not 2 <= len(options) <= 8 or any(not isinstance(x, str) or not x.strip() for x in options):
@@ -125,9 +156,9 @@ FIXED_OPTION = re.compile(r"\b(todas|todos|ninguna|ninguno)\s+(de\s+)?(las|los)\
 
 def shuffle_options(q: dict, rng: random.Random) -> dict:
     """Devuelve una copia con las opciones en orden aleatorio y los índices correctos reubicados."""
-    options = q["opciones"]
-    if q.get("mezclar") is False:
+    if q.get("tipo") == "desarrollo" or q.get("mezclar") is False:
         return q
+    options = q["opciones"]
     movable = [i for i, text in enumerate(options) if not FIXED_OPTION.search(text)]
     shuffled = movable[:]
     rng.shuffle(shuffled)
@@ -138,7 +169,8 @@ def shuffle_options(q: dict, rng: random.Random) -> dict:
 
 
 def public_question(q: dict) -> dict:
-    return {**{key: q.get(key) for key in ("id", "pregunta", "opciones", "tema", "origen")}, "correctas_count": len(q["correctas"])}
+    tipo = q.get("tipo", "opciones")
+    return {**{key: q.get(key) for key in ("id", "pregunta", "opciones", "tema", "origen")}, "tipo": tipo, "correctas_count": len(q.get("correctas") or [])}
 
 
 def score_attempt(questions: list[dict], answers: dict) -> dict:
@@ -148,6 +180,11 @@ def score_attempt(questions: list[dict], answers: dict) -> dict:
     total_points = Fraction(0)
     for q in questions:
         selected = answers[q["id"]]
+        if q.get("tipo") == "desarrollo":
+            if not isinstance(selected, str) or not selected.strip() or len(selected) > MAX_ANSWER_LENGTH:
+                raise ValueError(f"Escribí una respuesta de hasta {MAX_ANSWER_LENGTH} caracteres en {q['id']}")
+            details.append({**q, "respuesta_usuario": selected.strip(), "acierto": None, "puntaje": None})
+            continue
         if not isinstance(selected, list) or not selected or len(set(map(str, selected))) != len(selected) or any(type(i) is not int or i < 0 or i >= len(q["opciones"]) for i in selected):
             raise ValueError(f"Respuesta inválida en {q['id']}")
         if len(q["correctas"]) == 1 and len(selected) != 1:
@@ -159,7 +196,9 @@ def score_attempt(questions: list[dict], answers: dict) -> dict:
         points = Fraction(max(0, hits - errors), len(correct))
         total_points += points
         details.append({**q, "seleccionadas": sorted(selected), "acierto": sorted(selected) == correct, "puntaje": round(float(points), 2)})
-    return {"aciertos": round(float(total_points), 2), "total": len(details), "porcentaje": round(float(total_points * 100 / len(details)), 1), "preguntas": details}
+    # Las preguntas de desarrollo no tienen corrección automática: quedan fuera del puntaje.
+    total = sum(1 for d in details if d.get("tipo") != "desarrollo")
+    return {"aciertos": round(float(total_points), 2), "total": total, "desarrollo": len(details) - total, "porcentaje": round(float(total_points * 100 / total), 1) if total else None, "preguntas": details}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -179,7 +218,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.headers.get("Content-Type", "").split(";")[0].strip() != "application/json":
             raise ValueError("Se requiere Content-Type: application/json")
         length = int(self.headers.get("Content-Length", "0"))
-        if length <= 0 or length > 100_000:
+        if length <= 0 or length > 2_000_000:
             raise ValueError("Tamaño de solicitud inválido")
         return json.loads(self.rfile.read(length))
 
@@ -206,6 +245,17 @@ class Handler(BaseHTTPRequestHandler):
                 if not file.is_file():
                     return self.send_error_json("Intento no encontrado", 404)
                 return self.send_json(json.loads(file.read_text(encoding="utf-8")))
+            if path.startswith("/materias/"):
+                file = image_file(unquote(path[len("/materias/"):]))
+                if file is None or not file.is_file():
+                    return self.send_error_json("Imagen no encontrada", 404)
+                raw = file.read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", IMAGE_TYPES[file.suffix.lower()])
+                self.send_header("Content-Length", str(len(raw)))
+                self.end_headers()
+                self.wfile.write(raw)
+                return
             assets = {"/": ("index.html", "text/html"), "/app.js": ("app.js", "text/javascript"), "/style.css": ("style.css", "text/css")}
             if path in assets:
                 name, mime = assets[path]
