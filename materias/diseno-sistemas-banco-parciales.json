@@ -1,0 +1,1021 @@
+{
+  "nombre": "Diseño de Sistemas – Banco de parciales",
+  "descripcion": "60 preguntas de parciales anteriores (patrones, GRASP, DAO/DTO, diagramas UML, arquitectura, SCM, implementación y testing), con diagramas y preguntas de desarrollo.",
+  "preguntas": [
+    {
+      "id": "bp-001",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "¿Cuál/es de las siguientes afirmaciones son correctas acerca del uso de patrones de diseño?",
+      "opciones": [
+        "Permiten mejorar la flexibilidad y la mantenibilidad del software.",
+        "Los patrones son recetas que deben seguirse al pie de la letra.",
+        "Solo pueden aplicarlos programadores avanzados.",
+        "Están diseñados para reemplazar cualquier tipo de documentación.",
+        "Los patrones de diseño formalizan un lenguaje común entre los diseñadores."
+      ],
+      "correctas": [
+        0,
+        4
+      ],
+      "explicacion": "Los patrones de diseño son soluciones probadas y reutilizables a problemas comunes. Mejoran la flexibilidad y la mantenibilidad y establecen un vocabulario común entre diseñadores. No son recetas rígidas, puede aplicarlos cualquier desarrollador capacitado y no reemplazan la documentación.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 1 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-002",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "¿Qué principio/s SOLID favorecen una alta cohesión?",
+      "opciones": [
+        "Principio de abierto/cerrado (OCP).",
+        "Principio de segregación de interfaces (ISP).",
+        "Principio de sustitución de Liskov (LSP).",
+        "Principio de responsabilidad única (SRP)."
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "El Principio de Responsabilidad Única (SRP) establece que una clase debe tener una sola razón para cambiar, con un propósito único y bien delimitado: es la definición fundamental de alta cohesión. ISP ayuda a nivel de interfaces especializadas, pero el principio primordial de alta cohesión es SRP.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 2 (repetida en 4 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-003",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "Una aplicación de música tiene un reproductor con tres estados: Reproduciendo, Pausado y Detenido.\n- Si el reproductor está Reproduciendo, al presionar el “botón principal” se pausa la música.\n- Si está Pausado, al presionar el “botón principal” se reanuda la reproducción.\n- Si está Detenido, al presionar el “botón principal” se inicia una nueva canción.\nSe definió una clase abstracta y tres clases concretas (Reproduciendo, Pausado, Detenido) que heredan de la misma.\nSi se desea aplicar el patrón State, ¿qué métodos tendría la clase abstracta?",
+      "opciones": [
+        "PresionarBotón()",
+        "Reproducir(), Pausar(), Detener()",
+        "Reproducir(), Pausar(), Detener(), PresionarBotón()",
+        "Ninguno de los anteriores, cada clase concreta definiría sus propios métodos."
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "En el patrón State, la clase abstracta de Estado define los métodos correspondientes a los eventos que recibe el contexto. Aquí el único evento externo es la pulsación del botón principal (PresionarBotón()); cada subclase concreta implementa cómo responde a esa acción y efectúa la transición al estado siguiente.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 3 (repetida en 2 exámenes: Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-004",
+      "tema": "Patrones de diseño y GRASP",
+      "tipo": "desarrollo",
+      "pregunta": "¿Qué condición/es deben darse para que una clase pueda ser singleton?",
+      "respuesta": "Debe requerirse una única instancia de la clase, accesible globalmente, y sin estado mutable compartido que genere conflictos.",
+      "explicacion": "1) Debe ser estrictamente necesario garantizar que exista una única instancia de la clase durante toda la ejecución (por ejemplo, un gestor de configuración o un pool de recursos). 2) Debe proporcionar un punto de acceso global y único a esa instancia. 3) Comentario de cátedra: preferentemente no debe poseer estado mutable compartido que cause condiciones de carrera o acoplamiento oculto.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 4"
+    },
+    {
+      "id": "bp-005",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "Dada la definición de Patrón Adaptador, seleccione cuáles serían sus posibles escenarios de aplicación:\n(Nota: en el examen original, la selección incorrecta descuenta puntaje)",
+      "opciones": [
+        "Comunicación con sistemas legados: Es un sistema que sigue en uso a pesar de estar obsoleto o basado en tecnologías antiguas, normalmente porque cumple funciones críticas y reemplazarlo sería costoso, riesgoso o complejo.",
+        "Integración con sistemas externos: Permite que la aplicación principal se comunique con sistemas externos o librerías de terceros, adaptando sus interfaces para que sean compatibles con los requisitos de la aplicación.",
+        "Creación de productos configurables: Ayudan a reducir la complejidad al momento de crear objetos con múltiples configuraciones.",
+        "Integración con extensiones: Extensiones o plugins que amplían las capacidades originales de una aplicación.",
+        "Configuración global de la aplicación: Proporcionar un punto de acceso central para poder acceder a una configuración global utilizada en diferentes partes.",
+        "Gestión de conexiones de base de datos: Limitar el número de conexiones abiertas o reutilizar una única conexión en toda la aplicación.",
+        "Compatibilidad con diferentes formatos de datos o protocolos: Cuando tu aplicación necesita consumir o producir información en distintos formatos.",
+        "Sistemas de monitoreo y alertas: Cuando se necesita notificar a varios componentes o usuarios sobre eventos críticos, cambios de estado o alertas."
+      ],
+      "correctas": [
+        0,
+        1,
+        3,
+        6
+      ],
+      "explicacion": "El Adaptador se usa cuando una clase existente no encaja con la interfaz que espera el cliente: sistemas legados, sistemas externos o librerías de terceros, integración de extensiones/plugins y compatibilidad de formatos o protocolos. Los productos configurables corresponden a Builder/Abstract Factory; la configuración global y la gestión de conexiones, a Singleton; el monitoreo y alertas, a Observer.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 5"
+    },
+    {
+      "id": "bp-006",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "Dada la definición del Patrón Estrategia, seleccione cuáles serían sus posibles escenarios de aplicación:\n(Nota: en el examen original, la selección incorrecta descuenta puntaje)",
+      "opciones": [
+        "Creación de productos configurables: Ayudan a reducir la complejidad al momento de crear objetos con múltiples configuraciones.",
+        "Cálculo de precios dinámicos: Cuando la forma de calcular un precio depende de factores como el tipo de cliente, descuentos o temporada, y se desea cambiar el algoritmo sin modificar el código principal.",
+        "Selección de algoritmos de encriptación: En aplicaciones que necesitan cifrar datos, donde diferentes situaciones requieren el uso de diferentes algoritmos de aplicación.",
+        "Compatibilidad con diferentes formatos de datos o protocolos: Cuando tu aplicación necesita consumir información en distintos formatos.",
+        "Selección de algoritmos de ordenamiento: Cuando una aplicación necesita ordenar datos de distintas formas según el tamaño o tipo de colección.",
+        "Procesamiento de pagos con distintos métodos: Cuando el usuario puede elegir entre varios modos de pago (tarjeta, PayPal, transferencia) y se quiere mantener el mismo flujo general.",
+        "Conversión de formatos de archivos: Cuando se necesita traducir datos entre distintos formatos para lograr compatibilidad."
+      ],
+      "correctas": [
+        1,
+        4
+      ],
+      "explicacion": "Estrategia encapsula familias de algoritmos intercambiables para una misma tarea: cálculo de precios dinámicos y algoritmos de ordenamiento. Según la cátedra, la encriptación y los métodos de pago suelen requerir Adaptador porque usan librerías o APIs externas con interfaces distintas; la conversión de formatos y la compatibilidad de formatos de datos también corresponden a Adaptador, y los productos configurables a patrones creacionales.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 6"
+    },
+    {
+      "id": "bp-007",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "El nombre de los adaptadores concretos debe ser:",
+      "opciones": [
+        "El nombre de a quién/qué se conectan.",
+        "El nombre de quién las utiliza.",
+        "El nombre del problema que resuelven y con quién/qué se conectan.",
+        "Ninguna de las opciones es correcta."
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Según la convención de la cátedra, el adaptador concreto debe evidenciar tanto el rol o interfaz que adapta como el sistema o tecnología externa que envuelve (por ejemplo, RepositorioExamenBitbucketAdapter o ServicioPagoMercadoPagoAdapter).",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 7"
+    },
+    {
+      "id": "bp-008",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "El nombre de las estrategias concretas debe ser:",
+      "opciones": [
+        "En base a quién utiliza las estrategias.",
+        "En base a quién crea las estrategias.",
+        "En base a la lógica de las estrategias.",
+        "En base a la lógica del caso de uso.",
+        "Todas las opciones son correctas.",
+        "Ninguna de las opciones es correcta."
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Las estrategias concretas se nombran según el algoritmo o política que encapsulan (por ejemplo, AsignacionPorIntervencion o CalculoDescuentoTemporadaAlta), sin atarse a quién las invoca o las crea.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 8"
+    },
+    {
+      "id": "bp-009",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "El principio de Variaciones Protegidas se centra en identificar los caminos alternativos en el sistema y encapsularlos en interfaces.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Variaciones Protegidas no se enfoca en los caminos alternativos de un caso de uso, sino en identificar los puntos de inestabilidad o cambio previsible (variabilidad) y encapsularlos detrás de una interfaz o abstracción estable.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 9"
+    },
+    {
+      "id": "bp-010",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "El principio de variaciones protegidas se centra en identificar los puntos de variabilidad en el sistema y encapsularlos detrás de interfaces o abstracciones.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Es la definición del principio GRASP de Variaciones Protegidas: identificar puntos de cambio, evolución o inestabilidad y crear una interfaz estable alrededor de ellos.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 10"
+    },
+    {
+      "id": "bp-011",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "Seleccione en qué caso se usa el principio de variaciones protegidas:",
+      "opciones": [
+        "Inestabilidad.",
+        "Variación.",
+        "Evolución.",
+        "Todas las opciones son correctas.",
+        "Ninguna de las opciones es correcta."
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "Variaciones Protegidas protege al sistema contra la inestabilidad de componentes externos o dependencias, la variación de requerimientos o reglas de negocio y la evolución tecnológica futura.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 11"
+    },
+    {
+      "id": "bp-012",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "Mientras más se utilice el principio de variaciones protegidas, podemos decir que facilita el desarrollo en el corto plazo.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "En el corto plazo, diseñar abstracciones, interfaces y puntos de extensión aumenta la complejidad inicial. El beneficio de Variaciones Protegidas se obtiene en el mediano y largo plazo, al reducir el costo de mantenimiento y evolución.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 12"
+    },
+    {
+      "id": "bp-013",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "Mientras menos se utilice el principio de variaciones protegidas, podemos decir que complejiza el desarrollo a largo plazo.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Si no se aíslan los puntos de variación, cualquier cambio en una dependencia o requerimiento impacta en cascada sobre muchos componentes, lo que encarece y complica el mantenimiento a largo plazo.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 13"
+    },
+    {
+      "id": "bp-014",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "La clase del estereotipo de control Experto<CasoUso> es una aplicación del patrón experto de la información.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La clase experta del caso de uso corresponde al patrón Controlador (o Fabricación Pura que orquesta la lógica del caso de uso), no al Experto en Información, que asigna responsabilidades a las clases de dominio que poseen los datos necesarios.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 14"
+    },
+    {
+      "id": "bp-015",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "El resultado de aplicar el principio de alta cohesión y bajo acoplamiento es:",
+      "opciones": [
+        "Un sistema con menos líneas de código.",
+        "Un sistema mantenible y escalable.",
+        "Un sistema con menor tiempo de respuesta (más performante).",
+        "Un sistema más seguro.",
+        "Todas las opciones son correctas."
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Maximizar la cohesión y minimizar el acoplamiento produce un diseño modular, comprensible y fácil de mantener, extender y escalar. No necesariamente reduce líneas de código ni mejora por sí solo el rendimiento o la seguridad.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 15"
+    },
+    {
+      "id": "bp-016",
+      "tema": "Patrones de diseño y GRASP",
+      "pregunta": "En base a las definiciones de cohesión y acoplamiento, se puede decir que:\n(Nota: en el examen original, las opciones incorrectas descuentan puntaje)",
+      "opciones": [
+        "Incrementar la cohesión implica un aumento del acoplamiento.",
+        "Incrementar la cohesión implica una disminución del acoplamiento.",
+        "Una disminución de la cohesión implica un aumento del acoplamiento.",
+        "Una disminución de la cohesión implica una disminución del acoplamiento.",
+        "La cohesión y el acoplamiento son independientes entre sí."
+      ],
+      "correctas": [
+        1,
+        2
+      ],
+      "explicacion": "Alta cohesión y bajo acoplamiento son principios sinérgicos: clases con responsabilidades acotadas interactúan a través de interfaces mínimas, lo que reduce las dependencias. Por eso aumentar la cohesión disminuye el acoplamiento y disminuirla lo aumenta.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 16"
+    },
+    {
+      "id": "bp-017",
+      "tema": "Diseño de clases y patrones",
+      "pregunta": "Un grupo de profesionales del rubro de la construcción integra una cooperativa de trabajo que ofrece servicios a los socios de las empresas constructoras del medio. Dichos servicios son: entregas de vouchers de compras y órdenes de asistencia médica. Los vouchers de compra son QRs generados automáticamente por el sistema al momento de la entrega.\nPara la generación del QR actualmente hay dos opciones:\n- Utilizando un servicio Web\n- Utilizando librería zxing\nEn base a lo antes mencionado, se le indica a nuestro diseñador que implemente la solución de cómo resolvería en Diagrama de Clases del modelo de comportamiento en lo que refiere a la generación de vouchers, ya que actualmente hay dos opciones pero se debe tener en cuenta que pueden agregar nuevas opciones en un futuro.\n\nSeleccione la opción de Diagrama de Clases correcta:",
+      "opciones": [
+        "![Diagrama de clases propuesto](imagenes/diseno-sistemas-banco-parciales/p17-a.png)",
+        "![Diagrama de clases propuesto](imagenes/diseno-sistemas-banco-parciales/p17-b.png)",
+        "![Diagrama de clases propuesto](imagenes/diseno-sistemas-banco-parciales/p17-c.png)",
+        "![Diagrama de clases propuesto](imagenes/diseno-sistemas-banco-parciales/p17-d.png)",
+        "![Diagrama de clases propuesto](imagenes/diseno-sistemas-banco-parciales/p17-e.png)",
+        "Ninguna de las opciones"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El diagrama correcto aplica el patrón Adaptador: el experto depende solo de la interfaz AdaptadorGenQR y de la FabricaAdaptadorGenQR (singleton); AdaptadorQRWeb y AdaptadorLibreriaZxing realizan la interfaz (línea punteada con triángulo) y la fábrica depende de ellos para crearlos. Las demás variantes fallan: usan asociaciones en lugar de realización, hacen que el experto dependa de los adaptadores concretos, invierten las relaciones (los adaptadores realizan la fábrica) o asocian la fábrica con los adaptadores en lugar de depender de ellos. Así se pueden agregar nuevas opciones sin modificar el experto (Variaciones Protegidas y Abierto/Cerrado).",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 17"
+    },
+    {
+      "id": "bp-018",
+      "tema": "Diseño de clases y patrones",
+      "pregunta": "Se solicitó a nuestro desarrollador implementar una solución que permita enviar alarmas personalizadas. Inicialmente el sistema debe estar diseñado para ser capaz de enviar mensajes por correo electrónico, mensajes SMS y alertas tipo Push. Sin embargo, se espera agregar nuevos tipos de mensajería a futuro. A continuación, la solución implementada:\n![Solución implementada: ServicioNotificacion como interfaz](imagenes/diseno-sistemas-banco-parciales/p18.png)\nSiguiendo el concepto de bajo acoplamiento, seleccione la respuesta correcta:",
+      "opciones": [
+        "La solución implementada no presenta fallos en diseño ya que cumple con el patrón de bajo acoplamiento.",
+        "La solución implementada incumple el patrón de bajo acoplamiento dado que ServicioNotificacion depende de Cliente.",
+        "Ninguna de las opciones.",
+        "La implementación presenta fallos en diseño ya que el tipo de relación entre ServicioEmail/ServicioSMS/ServicioPush con respecto a ServicioNotificacion no debería ser realización sino una asociación directa."
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Cliente usa la interfaz ServicioNotificacion y ServicioEmail, ServicioSMS y ServicioPush la realizan. Cliente no depende de ninguna implementación concreta, por lo que se pueden agregar nuevos canales sin modificarlo: cumple con bajo acoplamiento. ServicioNotificacion no depende de Cliente (la relación es en sentido inverso) y la realización es la relación correcta.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 18"
+    },
+    {
+      "id": "bp-019",
+      "tema": "Diseño de clases y patrones",
+      "pregunta": "Se solicitó a nuestro desarrollador implementar una solución que permita enviar alarmas personalizadas. Inicialmente el sistema debe estar diseñado para ser capaz de enviar mensajes por correo electrónico, mensajes SMS y alertas tipo Push. Sin embargo, se espera agregar nuevos tipos de mensajería a futuro. A continuación, la solución implementada:\n![Solución implementada: ServicioNotificacion con dependencias concretas](imagenes/diseno-sistemas-banco-parciales/p19.png)\nSiguiendo el concepto de bajo acoplamiento, seleccione la respuesta correcta:",
+      "opciones": [
+        "Ninguna de las opciones.",
+        "Si ServicioNotificacion no dependiera de Cliente se puede decir que cumple con el patrón de bajo acoplamiento.",
+        "La solución implementada no presenta fallos en diseño ya que cumple con el patrón de bajo acoplamiento.",
+        "Si ServicioNotificacion no dependiera de TipoServicio se puede decir que cumple con el patrón de bajo acoplamiento.",
+        "La solución implementada presenta fallos en diseño ya que incumple el patrón de bajo acoplamiento dado que ServicioNotificacion y Cliente tienen 4 y 2 dependencias externas respectivamente."
+      ],
+      "correctas": [
+        4
+      ],
+      "explicacion": "ServicioNotificacion se acopla directamente a cada canal concreto (ServicioEmail, ServicioSMS, ServicioPush) y a TipoServicio, y Cliente depende de ServicioNotificacion y de TipoServicio. Esas dependencias concretas violan Bajo Acoplamiento y obligan a modificar el código para agregar nuevos canales; quitar una sola de ellas no alcanza para cumplirlo.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 19"
+    },
+    {
+      "id": "bp-020",
+      "tema": "Diseño de clases y patrones",
+      "pregunta": "La Clínica Santa María posee un sector de internación el cual es gestionado por un encargado, el cual recibe a los pacientes y les asigna una habitación en base a la disponibilidad de camas. El sistema en base al tipo de prestación del paciente establece el tipo de habitación que le corresponde y da las camas disponibles para su asignación.\nSe le pidió a nuestro diseñador que implemente una solución en Diagrama de Clases del modelo de comportamiento que responda a la situación mencionada teniendo en cuenta las siguientes consideraciones:\n- No se conoce exactamente el algoritmo o política con la cual se determina el tipo de habitación.\n- La política de asignación podría cambiar en el tiempo (depende directamente del tipo de intervención, u obra social, plan).\n- Ambas políticas podrían ser válidas y la gerencia determina cuál aplicar en un momento dado.\n\nNuestro diseñador presentó la siguiente propuesta (Variante A):\n![Propuesta del diseñador, variante A](imagenes/diseno-sistemas-banco-parciales/p20.png)\nSeleccione la opción correcta para evaluar su feedback:",
+      "opciones": [
+        "La solución planteada por el diseñador es incorrecta ya que existe acoplamiento entre el experto y las estrategias (alto acoplamiento).",
+        "La solución planteada por el diseñador es incorrecta ya que el experto es quién conoce la política a aplicar (baja cohesión).",
+        "La solución planteada por el diseñador es incorrecta ya que la responsabilidad de crear objetos cuando hay consideraciones especiales se debe asignar a un objeto de fabricación pura.",
+        "Todas las opciones mencionadas son correctas."
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "En esta propuesta el experto está acoplado directamente a las estrategias concretas y decide cuál instanciar. Eso produce alto acoplamiento, baja cohesión en el experto (que además conoce la política) y la falta de una Fabricación Pura (factoría) que se encargue de crear la estrategia adecuada.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 20"
+    },
+    {
+      "id": "bp-021",
+      "tema": "Diseño de clases y patrones",
+      "pregunta": "La Clínica Santa María posee un sector de internación el cual es gestionado por un encargado, el cual recibe a los pacientes y les asigna una habitación en base a la disponibilidad de camas. El sistema en base al tipo de prestación del paciente establece el tipo de habitación que le corresponde y da las camas disponibles para su asignación.\nSe le pidió a nuestro diseñador que implemente una solución en Diagrama de Clases del modelo de comportamiento que responda a la situación con políticas de asignación variables.\n\nNuestro diseñador presentó la siguiente propuesta (Variante B):\n![Propuesta del diseñador, variante B](imagenes/diseno-sistemas-banco-parciales/p21.png)\nSeleccione la opción correcta para evaluar su feedback:",
+      "opciones": [
+        "La solución es correcta, aplica el principio GRASP al desacoplar el experto de la lógica de las estrategias.",
+        "La solución es correcta, aplica el patrón factoría para manejar la creación de las estrategias.",
+        "La solución es correcta, aplica el patrón estrategia para cada algoritmo en una clase independiente con una interfaz común.",
+        "Todas las opciones son válidas."
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "La propuesta aplica Estrategia (cada algoritmo de asignación en una clase que realiza la interfaz EstrategiaCamasDisponibles), una factoría singleton (Fabricación Pura) que crea la estrategia sin acoplar al experto, y con eso los principios GRASP de bajo acoplamiento y alta cohesión. Todas las afirmaciones son válidas.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 21"
+    },
+    {
+      "id": "bp-022",
+      "tema": "Diseño de clases y patrones",
+      "tipo": "desarrollo",
+      "pregunta": "Los municipios realizan programas en los que se evalúa a los candidatos inscriptos. En cada programa se toma una serie de exámenes de donde se selecciona a aquellos que cumplan con una nota mínima. Al final de todos los exámenes el candidato debe resolver un ejercicio de programación, para lo cual debe adjuntar un único archivo con el código fuente desarrollado.\nSe requiere poder almacenar los distintos entregables de cada candidato en un repositorio central. Actualmente la empresa se maneja con Bitbucket pero se planea que a futuro se migre a Azure o a AWS.\nEn base a lo mencionado, se solicitó una propuesta de Diagrama de Clases del modelo de comportamiento para la sección de entrega del código.\n\nPropuesta A:\n![Propuesta A](imagenes/diseno-sistemas-banco-parciales/p22.png)\nIngrese su feedback indicando si la propuesta es correcta o incorrecta y su justificación.",
+      "respuesta": "La propuesta es incorrecta: falta aplicar el patrón Adaptador (y una factoría) para los distintos repositorios.",
+      "explicacion": "Comentario de cátedra: la propuesta es incorrecta porque debería aplicar el patrón adaptador para manejar los diferentes servicios de repositorio actuales y futuros (Bitbucket, Azure, AWS). Cada servicio externo tiene una API distinta; sin un adaptador y una factoría, el experto queda fuertemente acoplado a la tecnología concreta.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 22"
+    },
+    {
+      "id": "bp-023",
+      "tema": "Diseño de clases y patrones",
+      "tipo": "desarrollo",
+      "pregunta": "Los municipios realizan programas en los que se evalúa a los candidatos inscriptos. Se requiere almacenar los entregables de código en un repositorio central (Bitbucket actualmente, con migración prevista a Azure o AWS).\n\nPropuesta B:\n![Propuesta B](imagenes/diseno-sistemas-banco-parciales/p23.png)\nIngrese su feedback indicando si la propuesta es correcta o incorrecta y su justificación.",
+      "respuesta": "La propuesta es incorrecta: el patrón Adaptador no está bien aplicado.",
+      "explicacion": "Comentario de cátedra: es incorrecta porque no maneja la creación ni la abstracción adecuada de los adaptadores de repositorio. No se desacopla la lógica del caso de uso de las implementaciones particulares, lo que generará problemas al incorporar nuevos proveedores.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 23"
+    },
+    {
+      "id": "bp-024",
+      "tema": "Diseño de clases y patrones",
+      "tipo": "desarrollo",
+      "pregunta": "Los municipios realizan programas en los que se evalúa a los candidatos inscriptos. Se requiere almacenar los entregables de código en un repositorio central (Bitbucket actualmente, con migración prevista a Azure o AWS).\n\nPropuesta C:\n![Propuesta C](imagenes/diseno-sistemas-banco-parciales/p24.png)\nIngrese su feedback indicando si la propuesta es correcta o incorrecta y su justificación.",
+      "respuesta": "La propuesta es correcta: aplica correctamente los patrones Adaptador y Factoría.",
+      "explicacion": "Comentario de cátedra: es correcta porque define una interfaz unificada para el repositorio y maneja la creación de los distintos adaptadores específicos (Bitbucket, Azure, AWS) a través de una factoría, lo que permite cambiar o agregar proveedores sin afectar al resto del sistema.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 24"
+    },
+    {
+      "id": "bp-025",
+      "tema": "Persistencia y DTO",
+      "pregunta": "¿Qué consecuencia puede tener un sistema si no se implementa el patrón DAO u otro patrón de persistencia?",
+      "opciones": [
+        "Mejor rendimiento en el acceso a la base de datos.",
+        "Incremento de la cohesión entre capas.",
+        "Fuerte dependencia de la capa de negocio respecto a la capa de acceso a datos.",
+        "Disminución del acoplamiento entre componentes."
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "DAO abstrae y encapsula el acceso a la fuente de datos. Sin él, la lógica de negocio se mezcla con consultas SQL y llamadas a la API de persistencia, lo que crea una fuerte dependencia entre la capa de negocio y la base de datos.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 25 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-026",
+      "tema": "Persistencia y DTO",
+      "pregunta": "En una arquitectura con DAO y Factory, ¿qué sucede si se quiere agregar soporte para una nueva base de datos?",
+      "opciones": [
+        "No es posible agregar nuevas bases de datos sin reescribir toda la capa de acceso a datos.",
+        "Es necesario modificar la lógica de negocio para aceptar el nuevo tipo de conexión.",
+        "Solo se implementan los nuevos DAOs y una nueva Factory que los provea.",
+        "Se deben modificar todas las clases DAO existentes."
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Con Abstract Factory y DAO, para una nueva base de datos solo se implementa la familia de DAOs concretos y una fábrica concreta (por ejemplo, PostgreSQLDAOFactory). La capa de negocio trabaja con interfaces y no cambia.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 26 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-027",
+      "tema": "Persistencia y DTO",
+      "pregunta": "¿Qué beneficio principal ofrece el patrón DAO al cambiar el tipo de base de datos (por ejemplo, de MySQL a PostgreSQL)?",
+      "opciones": [
+        "No requiere modificar el código de la capa de acceso a datos.",
+        "Permite mantener las mismas conexiones abiertas.",
+        "Evita la necesidad de transacciones.",
+        "No requiere modificar el código de la capa de negocio."
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "El beneficio de DAO es desacoplar el negocio de la tecnología de persistencia: al cambiar de motor de base de datos se modifica la capa de acceso a datos, pero la capa de negocio no cambia.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 27 (repetida en 2 exámenes: Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-028",
+      "tema": "Persistencia y DTO",
+      "pregunta": "Seleccione los objetivos de un esquema de persistencia:\n(Nota: en el examen original, las opciones incorrectas descuentan puntaje)",
+      "opciones": [
+        "Permitir el uso de componentes y transacciones distribuidas.",
+        "Recuperar objetos de un mecanismo persistente.",
+        "Optimizar el rendimiento gráfico de la interfaz de usuario.",
+        "Guardar objetos en un mecanismo persistente.",
+        "Definir las reglas de negocio dentro del modelo de dominio.",
+        "Asegurar la consistencia visual de los datos mostrados en pantalla.",
+        "Facilitar la comunicación entre la capa de presentación y la capa de usuario.",
+        "Administrar las operaciones persistentes con el fin de asegurar que sean atómicas."
+      ],
+      "correctas": [
+        0,
+        1,
+        3,
+        7
+      ],
+      "explicacion": "Los objetivos de un esquema de persistencia son guardar objetos, recuperar objetos persistidos, administrar transacciones atómicas y soportar componentes y transacciones distribuidas. Las demás opciones corresponden a la interfaz de usuario o a las reglas de negocio.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 28"
+    },
+    {
+      "id": "bp-029",
+      "tema": "Persistencia y DTO",
+      "pregunta": "Indirección Persistencia: En la condición de búsqueda de un objeto solo puedo usar atributos de las clases a la que pertenece, no de las relacionadas.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "En el esquema de indirección de persistencia de la cátedra, los criterios de búsqueda operan sobre los atributos propios de la clase buscada; las búsquedas por relaciones se resuelven con métodos especializados.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 29"
+    },
+    {
+      "id": "bp-030",
+      "tema": "Persistencia y DTO",
+      "pregunta": "Si hay un cambio en el framework de persistencia y contamos con una indirección persistencia, ¿cuál es el impacto sobre el sistema?",
+      "opciones": [
+        "Se debe cambiar la lógica de todos los expertos del negocio.",
+        "Solo se ve afectada la capa de indirección persistencia.",
+        "Se debe rediseñar la interfaz gráfica de usuario.",
+        "Es necesario migrar toda la lógica del controlador."
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La Indirección de Persistencia encapsula el acceso al framework ORM o motor de base de datos. Si el framework cambia, solo se adapta la indirección; expertos y controladores no se modifican.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 30 (repetida en 2 exámenes: diseñoMC1.pdf, diseñoMC2.pdf)"
+    },
+    {
+      "id": "bp-031",
+      "tema": "Persistencia y DTO",
+      "pregunta": "Un DTO siempre debe tener métodos de acceso a la base de datos (ej. save, findById).",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Un DTO (Data Transfer Object) es un objeto plano que solo transporta datos entre capas o procesos. No contiene lógica de negocio ni métodos de persistencia.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 31"
+    },
+    {
+      "id": "bp-032",
+      "tema": "Persistencia y DTO",
+      "pregunta": "¿Qué tipo de contenido suele tener un objeto DTO?",
+      "opciones": [
+        "Atributos simples y métodos getters/setters.",
+        "Consultas SQL directas a la base de datos.",
+        "Listeners y observadores de eventos.",
+        "Reglas de negocio complejas.",
+        "Lógica de negocio para validar los datos."
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Un DTO contiene atributos simples o serializables con sus constructores y getters/setters, sin lógica de negocio ni persistencia.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 32"
+    },
+    {
+      "id": "bp-033",
+      "tema": "Persistencia y DTO",
+      "pregunta": "Un DTO puede tener una relación de tipo asociativa con clases de entidad:",
+      "opciones": [
+        "Sí, porque solo se retornan DTO's a la interfaz.",
+        "Sí, porque se evita el acoplamiento directo con la entidad.",
+        "No, porque un DTO no puede tener relaciones con clases de entidad.",
+        "No, porque no cumpliría con el principio de alta cohesión.",
+        "Ninguna de las opciones es correcta."
+      ],
+      "correctas": [
+        4
+      ],
+      "explicacion": "La respuesta validada por la cátedra es «Ninguna de las opciones es correcta». Un DTO existe para desacoplar capas; ninguna de las justificaciones dadas es la correcta.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 33"
+    },
+    {
+      "id": "bp-034",
+      "tema": "Persistencia y DTO",
+      "tipo": "desarrollo",
+      "pregunta": "Dado el siguiente código:\n```\npublic class UserEntity {\n    private Long id;\n    private String name;\n    private String password;\n    private String email;\n}\n```\ny este DTO:\n```\npublic class UserDTO {\n    private String name;\n    private String email;\n}\n```\n¿Cuál es el beneficio de usar UserDTO en lugar de UserEntity al exponer datos?",
+      "respuesta": "Desacopla las capas, porque no expone la estructura interna de la entidad, y protege datos sensibles como la contraseña.",
+      "explicacion": "Comentario de cátedra: en forma general, sirve para no exponer la estructura interna de las entidades, desacoplándolas de otras capas. Además aporta seguridad (no transmite atributos confidenciales como password ni el id interno) y eficiencia (envía solo los datos que necesita la interfaz).",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 34"
+    },
+    {
+      "id": "bp-035",
+      "tema": "Persistencia y DTO",
+      "tipo": "desarrollo",
+      "pregunta": "Explique por qué es recomendable utilizar distintos DTO para la entrada de datos —es decir, el ingreso de información desde la interfaz hacia el sistema (CrearUsuarioDTO)— y para la salida de datos —la información que el sistema envía hacia la interfaz (UsuarioDTO)—.",
+      "respuesta": "Porque la entrada y la salida necesitan datos distintos: separar los DTO da seguridad (no se exponen datos sensibles) y flexibilidad (cada contrato evoluciona por separado).",
+      "explicacion": "Al crear un usuario, el DTO de entrada necesita, por ejemplo, la contraseña para encriptarla, pero todavía no tiene id. Al devolver información, el DTO de salida incluye el id generado y omite la contraseña. Separarlos adapta el contrato de datos a cada contexto sin exponer atributos innecesarios o sensibles.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 35"
+    },
+    {
+      "id": "bp-036",
+      "tema": "Persistencia y DTO",
+      "pregunta": "Si hay un cambio en el protocolo de comunicación entre la capa de presentación y la capa de negocio, ¿qué clases se verían afectadas?",
+      "opciones": [
+        "El controlador y la interfaz de usuario.",
+        "El experto y el controlador.",
+        "El controlador y los DTO's.",
+        "El experto y los DTO's.",
+        "La interfaz y los DTO's.",
+        "Solo el controlador.",
+        "Solo el experto.",
+        "Todas las opciones son correctas."
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El protocolo de comunicación entre presentación y negocio es la frontera entre la interfaz de usuario y el controlador del caso de uso. Si cambia (por ejemplo, de REST a WebSocket), se ven afectados la interfaz y el controlador que recibe la petición.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 36"
+    },
+    {
+      "id": "bp-037",
+      "tema": "Persistencia y DTO",
+      "pregunta": "En el diagrama de clases del modelo de comportamiento, el Controlador del caso de uso puede tener relaciones de tipo asociativas con clases del negocio.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El Controlador es intermediario entre la presentación y el Experto del caso de uso. No tiene asociaciones directas con las entidades del negocio: delega la lógica en el Experto.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 37"
+    },
+    {
+      "id": "bp-038",
+      "tema": "Persistencia y DTO",
+      "pregunta": "En el diagrama de clases del modelo de comportamiento, el Experto del caso de uso puede tener relaciones de tipo asociativa con clases del negocio y DTO's (que se retornen a la interfaz).",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Comentario de cátedra: el Experto solo puede tener relaciones de tipo asociativa con clases del negocio, y únicamente de dependencia con los DTO que se retornan a la interfaz.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 38"
+    },
+    {
+      "id": "bp-039",
+      "tema": "Diagramas UML",
+      "pregunta": "En un diagrama de secuencia, ¿cuáles de las siguientes afirmaciones son correctas?",
+      "opciones": [
+        "Los mensajes de retorno pueden omitirse si no aportan información relevante al flujo.",
+        "Un mensaje asíncrono bloquea siempre al emisor hasta recibir respuesta.",
+        "Un diagrama de secuencia puede generarse a partir de la ingeniería inversa de código fuente.",
+        "Las barras de activación representan períodos durante los cuales un objeto está ejecutando una operación.",
+        "Un mensaje síncrono implica que el emisor espera la finalización de la operación antes de continuar."
+      ],
+      "correctas": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "explicacion": "Los retornos son opcionales cuando son obvios; las herramientas CASE generan secuencias desde el código por ingeniería inversa; las barras de activación muestran ejecución activa, y un mensaje síncrono bloquea al emisor hasta la respuesta. Es falso que un mensaje asíncrono bloquee al emisor.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 39 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-040",
+      "tema": "Diagramas UML",
+      "pregunta": "Los diagramas de secuencia se pueden utilizar para mostrar cómo van a interactuar los objetos para llevar a cabo fragmentos de funcionalidades o los casos de uso.",
+      "opciones": [
+        "Verdadero",
+        "Falso"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El diagrama de secuencia modela las interacciones entre líneas de vida a lo largo del tiempo para realizar un caso de uso o un escenario específico.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 40 (repetida en 2 exámenes: diseñoMC1.pdf, diseñoMC2.pdf)"
+    },
+    {
+      "id": "bp-041",
+      "tema": "Diagramas UML",
+      "pregunta": "En un diagrama de secuencia, se utiliza un fragmento combinado para representar comportamientos complejos. ¿Cuál de las siguientes afirmaciones describe correctamente el uso de estos fragmentos?",
+      "opciones": [
+        "El operador loop tiene condiciones de iteración en el bloque.",
+        "El operador opt representa una alternativa obligatoria.",
+        "El operador alt permite representar decisiones exclusivas entre varios flujos.",
+        "El operador par indica ejecución concurrente de las interacciones internas."
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "loop representa bucles con condición de iteración; alt, decisiones mutuamente excluyentes (if-else); par, ejecución concurrente. Es falso que opt sea obligatorio: representa una rama opcional (un if sin else).",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 41 (repetida en 2 exámenes: Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-042",
+      "tema": "Diagramas UML",
+      "tipo": "desarrollo",
+      "pregunta": "Dado el siguiente fragmento de secuencia, se puede notar que está incompleto. Complete los parámetros/métodos que correspondan a los espacios remarcados en los rectángulos morados.\n![Fragmento de secuencia con búsqueda de especialista](imagenes/diseno-sistemas-banco-parciales/p42.png)\nIndique nombre de parámetro, método y tipo de retorno:",
+      "respuesta": "Parámetro: nroLegajoEspecialista. Método: obtenerEspecialista(nroLegajoEspecialista). Retorno: DTOEspecialista (un único objeto, no una lista).",
+      "explicacion": "Comentario de cátedra: se envía como parámetro el identificador del especialista (nroLegajoEspecialista). El método busca a ese especialista y retorna un único DTOEspecialista, no una lista, porque la búsqueda es por clave única.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 42"
+    },
+    {
+      "id": "bp-043",
+      "tema": "Diagramas UML",
+      "tipo": "desarrollo",
+      "pregunta": "Dado el siguiente fragmento de secuencia incompleto (variante 2), complete los parámetros/métodos correspondientes a los espacios remarcados en los rectángulos morados.\n![Fragmento de secuencia: selección de caso y especialista](imagenes/diseno-sistemas-banco-parciales/p43.png)",
+      "respuesta": "Parámetro: pNroEspecialista. Método: seleccionarCaso(pNroEspecialista). Retorno: el DTO correspondiente.",
+      "explicacion": "Se modela el paso del número o legajo del especialista seleccionado y la invocación de la operación del caso de uso, que devuelve la información estructurada en el DTO correspondiente.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 43"
+    },
+    {
+      "id": "bp-044",
+      "tema": "Diagramas UML",
+      "pregunta": "Dado el siguiente fragmento de flujo de sucesos, indique el fragmento de secuencia correspondiente:\n![Flujo de sucesos: camino básico](imagenes/diseno-sistemas-banco-parciales/p44-flujo.png)\nSeleccione la opción correcta de diagrama de secuencia:",
+      "opciones": [
+        "![Diagrama de secuencia propuesto](imagenes/diseno-sistemas-banco-parciales/p44-a.png)",
+        "![Diagrama de secuencia propuesto](imagenes/diseno-sistemas-banco-parciales/p44-b.png)",
+        "![Diagrama de secuencia propuesto](imagenes/diseno-sistemas-banco-parciales/p44-c.png)",
+        "![Diagrama de secuencia propuesto](imagenes/diseno-sistemas-banco-parciales/p44-d.png)",
+        "![Diagrama de secuencia propuesto](imagenes/diseno-sistemas-banco-parciales/p44-e.png)"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El diagrama correcto respeta el orden UI → Controlador → Experto, busca el Servicio por numeroServicio, busca el EstadoServicio «Entregado» vigente (fechaHoraFinVigenciaES = null) y asigna esa instancia con setEstado(estadoEntregado). Las demás variantes omiten la búsqueda del estado, asignan el estado como texto (\"Entregado\") en lugar de la instancia, invierten Controlador y Experto u omiten la condición de vigencia.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 44"
+    },
+    {
+      "id": "bp-045",
+      "tema": "Diagramas UML",
+      "tipo": "desarrollo",
+      "pregunta": "Dado el siguiente fragmento del flujo de sucesos y el diagrama de secuencia realizado por un alumno, revise el diagrama e indique qué observa o qué ajustes consideraría necesarios.\n![Flujo de sucesos](imagenes/diseno-sistemas-banco-parciales/p45-flujo.png)\n![Diagrama de secuencia del alumno](imagenes/diseno-sistemas-banco-parciales/p45-secuencia.png)",
+      "respuesta": "Falta el fragmento combinado loop (bucle) que recorra las instancias de inscripción.",
+      "explicacion": "Comentario de cátedra: en el diagrama de secuencia falta el fragmento combinado loop que recorre las instancias de inscripción para validar y procesar cada una según lo establecido en el flujo de sucesos.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 45 (repetida en 2 exámenes: diseñoMC1.pdf, diseñoMC2.pdf)"
+    },
+    {
+      "id": "bp-046",
+      "tema": "Diagramas UML",
+      "pregunta": "En un diagrama de actividad, un nodo final de flujo se diferencia de un nodo final de actividad porque:",
+      "opciones": [
+        "Ambos terminan la ejecución completa del diagrama.",
+        "El nodo final de flujo solo detiene una secuencia de flujo específica, mientras que el nodo final de actividad finaliza toda la actividad.",
+        "No existe diferencia entre ambos.",
+        "El nodo final de flujo se usa solo en diagramas concurrentes."
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El nodo final de flujo (círculo con una X) termina solo el flujo que llega a él y deja continuar los demás flujos concurrentes. El nodo final de actividad (círculo relleno dentro de un anillo) termina toda la actividad.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 46 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-047",
+      "tema": "Arquitectura y SCM",
+      "pregunta": "¿Cuál de las siguientes afirmaciones describe qué es una arquitectura de software?",
+      "opciones": [
+        "El conjunto de decisiones técnicas que definen cómo se organiza y comunica el sistema internamente.",
+        "El cronograma de desarrollo y las tareas asignadas al equipo durante el proyecto.",
+        "El resultado de las decisiones de diseño que impactan en atributos como rendimiento, seguridad y mantenibilidad.",
+        "La estructura fundamental de un sistema, que define sus componentes, sus relaciones y los principios que guían su evolución.",
+        "El diseño gráfico de la interfaz de usuario, incluyendo colores, tipografía y disposición visual."
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "La definición canónica (IEEE 1471 / ISO 42010) es la estructura fundamental de un sistema: sus componentes, sus relaciones entre sí y con el entorno, y los principios que guían su diseño y evolución. Las decisiones técnicas y su impacto en los atributos de calidad son aspectos complementarios, pero no la definición integradora.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 47 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-048",
+      "tema": "Arquitectura y SCM",
+      "pregunta": "En una institución educativa que usa un aplicativo Web, se detecta que los usuarios experimentan lentitud en horas pico. Se evalúan distintas soluciones para mejorar el rendimiento del sistema:\n(a) Migrar el servidor a una máquina con más CPU y memoria.\n(b) Instalar varios servidores web y usar un balanceador de carga.\n(c) Replicar la base de datos para distribuir lecturas.\n(d) Optimizar la interfaz visual reduciendo imágenes.\n\n¿Cuáles de estas medidas representan escalabilidad horizontal?",
+      "opciones": [
+        "Solo la b y c",
+        "Solo la a y c",
+        "Solo la a y d",
+        "Solo la b"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "La escalabilidad horizontal agrega nodos o instancias en paralelo: varios servidores web con balanceador (b) y réplicas de la base de datos (c). Migrar a una máquina más potente (a) es escalabilidad vertical, y reducir imágenes (d) es una optimización.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 48 (repetida en 4 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-049",
+      "tema": "Arquitectura y SCM",
+      "pregunta": "En la Administración de la Configuración, ¿cuáles de las siguientes afirmaciones son verdaderas respecto a las líneas base?",
+      "opciones": [
+        "No pueden modificarse bajo ninguna circunstancia.",
+        "Pueden actualizarse mediante un proceso formal de control de cambios.",
+        "Incluyen elementos aprobados como código, documentación y pruebas.",
+        "Sirven como referencia para comparar versiones posteriores."
+      ],
+      "correctas": [
+        1,
+        2,
+        3
+      ],
+      "explicacion": "Una línea base agrupa ítems de configuración revisados y aprobados y sirve de referencia para desarrollos y comparaciones posteriores. Sí puede modificarse, pero solo mediante un proceso formal de control de cambios.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 49 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-050",
+      "tema": "Arquitectura y SCM",
+      "pregunta": "En el contexto de la Administración de la Configuración de Software (Software Configuration Management, SCM), ¿cuáles de los siguientes elementos pueden considerarse ítems de configuración?",
+      "opciones": [
+        "Casos de prueba y planes de testing.",
+        "Código fuente del sistema.",
+        "Equipos del laboratorio de pruebas.",
+        "Scripts de despliegue y archivos de configuración del entorno.",
+        "Manuales de usuario y documentación técnica.",
+        "Calendario de reuniones del equipo de desarrollo."
+      ],
+      "correctas": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "explicacion": "Un ítem de configuración es cualquier artefacto de software sujeto a control de versiones y cambios: código fuente, planes y casos de prueba, scripts de despliegue y configuración, y documentación. El hardware del laboratorio y el calendario de reuniones no lo son.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 50 (repetida en 4 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-051",
+      "tema": "Arquitectura y SCM",
+      "pregunta": "¿Cuál de los siguientes síntomas puede indicar que un software necesita rejuvenecimiento?",
+      "opciones": [
+        "Nuevo requerimiento de negocio.",
+        "Aumento en los recursos de la infraestructura tecnológica.",
+        "Aumento en el número de usuarios.",
+        "Todas las anteriores.",
+        "Lentitud progresiva en la ejecución de tareas."
+      ],
+      "correctas": [
+        4
+      ],
+      "explicacion": "El envejecimiento del software se manifiesta como degradación progresiva del rendimiento (lentitud acumulada, fugas de memoria, fragmentación de recursos). El rejuvenecimiento busca contrarrestarla antes de una falla crítica.",
+      "mezclar": false,
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 51 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-052",
+      "tema": "Arquitectura y SCM",
+      "pregunta": "En el contexto del rejuvenecimiento del software, la ingeniería inversa se utiliza principalmente para:",
+      "opciones": [
+        "Mejorar el rendimiento del sistema ejecutando procesos más rápidos.",
+        "Migrar automáticamente el software a una nueva plataforma tecnológica.",
+        "Comprender el diseño y la lógica interna de un sistema del cual no se tiene documentación.",
+        "Eliminar componentes obsoletos del software sin afectar su funcionalidad."
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La ingeniería inversa analiza un sistema existente para identificar sus componentes y relaciones y crear representaciones de mayor nivel de abstracción, lo que permite comprender su diseño cuando la documentación es deficiente o inexistente.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 52 (repetida en 2 exámenes: Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-053",
+      "tema": "Arquitectura y SCM",
+      "pregunta": "Un equipo de desarrollo de software decide realizar una refactorización de una funcionalidad crítica del sistema. ¿Qué tipo de rejuvenecimiento estaría llevando a cabo?",
+      "opciones": [
+        "Reestructuración",
+        "Ingeniería inversa",
+        "Redocumentación",
+        "Todas las anteriores"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "La refactorización modifica la estructura interna del código sin alterar su comportamiento externo; en el rejuvenecimiento del software esa actividad se llama reestructuración.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 53 (repetida en 2 exámenes: Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-054",
+      "tema": "Implementación y testing",
+      "pregunta": "Un hospital está incorporando un nuevo módulo digital para el área de emergencias. Sin embargo, el área de facturación seguirá con el sistema anterior en una primera etapa. El objetivo es que el personal se acostumbre progresivamente al nuevo sistema, mientras el resto del sistema sigue funcionando.\n\n¿Qué tipo de implementación sería la más apropiada?",
+      "opciones": [
+        "Total (Directa)",
+        "Por prototipado",
+        "Paralela",
+        "Gradual (Por etapas / Por fases)"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "La implementación gradual introduce el sistema por módulos o áreas (primero emergencias y luego facturación), lo que permite una adaptación progresiva y reduce el riesgo operativo.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 54 (repetida en 4 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-055",
+      "tema": "Implementación y testing",
+      "pregunta": "Una empresa multinacional desea reemplazar su sistema de gestión de recursos humanos. El sistema actual funciona bien pero es obsoleto, y es vital que el nuevo sistema no interrumpa la operación diaria. Se debe garantizar que el nuevo sistema liquide los sueldos sin errores. El sistema es muy complejo y afecta a más de 5 áreas organizacionales.\n\n¿Qué tipo de implementación sería la más apropiada?",
+      "opciones": [
+        "Por prototipado",
+        "Total",
+        "Paralela",
+        "Gradual"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Con tolerancia cero al error (liquidación de sueldos), la implementación paralela ejecuta el sistema viejo y el nuevo a la vez durante un período. Así se comparan los resultados y, si el nuevo falla, la operación no se interrumpe.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 55 (repetida en 4 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-056",
+      "tema": "Implementación y testing",
+      "pregunta": "¿Cuáles de los siguientes tipos de mantenimiento pueden involucrar cambios en el código fuente del software? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Preventivo",
+        "Perfectivo",
+        "Correctivo",
+        "Adaptativo"
+      ],
+      "correctas": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "explicacion": "Los cuatro tipos de mantenimiento pueden requerir cambios en el código: correctivo (reparar defectos), adaptativo (nuevos entornos), perfectivo (mejoras o rendimiento) y preventivo (refactorización para evitar fallas futuras).",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 56 (repetida en 4 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-057",
+      "tema": "Implementación y testing",
+      "pregunta": "Una empresa debe actualizar su sistema para que sea compatible con una nueva versión del sistema operativo. ¿Qué tipo de mantenimiento se está realizando?",
+      "opciones": [
+        "Adaptativo",
+        "Preventivo",
+        "Perfectivo",
+        "Correctivo"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El mantenimiento adaptativo modifica el software para que siga funcionando ante cambios en su entorno: nuevo sistema operativo, nuevas versiones de bases de datos, librerías, hardware o plataformas.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 57 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-058",
+      "tema": "Implementación y testing",
+      "pregunta": "¿Qué técnicas o herramientas pueden ayudar a realizar el debugging? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Análisis de logs.",
+        "Depurador integrado (IDE debugger).",
+        "Uso de breakpoints.",
+        "Pruebas unitarias."
+      ],
+      "correctas": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "explicacion": "El debugging se apoya en el depurador del IDE con breakpoints para pausar la ejecución, en el análisis de logs para rastrear eventos y errores, y en las pruebas unitarias para aislar y reproducir defectos.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 58 (repetida en 4 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, Preguntas de parcial 2.docx, parcialsere.txt)"
+    },
+    {
+      "id": "bp-059",
+      "tema": "Implementación y testing",
+      "pregunta": "¿Cuáles de los siguientes tipos de pruebas se consideran pruebas no funcionales? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Pruebas de rendimiento.",
+        "Pruebas de integración.",
+        "Pruebas de stress.",
+        "Pruebas de unidad.",
+        "Pruebas de seguridad."
+      ],
+      "correctas": [
+        0,
+        2,
+        4
+      ],
+      "explicacion": "Las pruebas funcionales (unidad, integración, sistema, aceptación) verifican qué hace el sistema. Las no funcionales verifican atributos de calidad: rendimiento, stress y seguridad.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 59 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    },
+    {
+      "id": "bp-060",
+      "tema": "Implementación y testing",
+      "pregunta": "Luego de terminar todas las funcionalidades, un equipo de QA valida que el sistema completo cumpla con los requisitos especificados. Este proceso corresponde a:",
+      "opciones": [
+        "Pruebas de sistema.",
+        "Pruebas de integración.",
+        "Pruebas unitarias.",
+        "Pruebas de regresión."
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Las pruebas de sistema evalúan el producto completo e integrado de punta a punta y validan que cumpla los requisitos funcionales y no funcionales especificados.",
+      "origen": "Parcial anterior",
+      "fuente": "Banco unificado de preguntas de parcial – Pregunta 60 (repetida en 3 exámenes: Preguntas Parcial 2.docx, parcialgerva.txt, parcialsere.txt)"
+    }
+  ]
+}
