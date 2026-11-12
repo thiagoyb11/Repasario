@@ -1,0 +1,2244 @@
+{
+  "nombre": "Diseño de Sistemas – Parcial 2",
+  "descripcion": "Unidades 4, 5 y 6: máquinas de estado, componentes y despliegue, secuencia, Git, patrones, DAO/DTO, SOLID, arquitectura, pruebas, debugging, implementación y releases. Incluye preguntas de parciales anteriores.",
+  "preguntas": [
+    {
+      "id": "p2-001",
+      "tema": "Máquinas de estado",
+      "pregunta": "¿Qué modela un diagrama de máquina de estados?",
+      "opciones": [
+        "La interacción entre varios objetos para resolver un caso de uso",
+        "El flujo de trabajo entre acciones de distintos actores",
+        "El comportamiento de un único objeto: sus estados y cómo reacciona ante eventos",
+        "La distribución del sistema en nodos de procesamiento"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La vista de máquina de estados modela el ciclo de vida de una sola unidad (un objeto) como entidad aislada que detecta eventos y responde. La interacción entre varios objetos es el diagrama de secuencia y el flujo de trabajo es el diagrama de actividades.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Máquinas de estado"
+    },
+    {
+      "id": "p2-002",
+      "tema": "Máquinas de estado",
+      "pregunta": "¿Cuáles son partes de una transición? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Estado origen",
+        "Barra de activación",
+        "Evento de disparo",
+        "Condición de guarda",
+        "Acción",
+        "Estado destino"
+      ],
+      "correctas": [
+        0,
+        2,
+        3,
+        4,
+        5
+      ],
+      "explicacion": "Las cinco partes son estado origen, evento de disparo, condición de guarda, acción y estado destino (notación: evento [condición] / acción). La barra de activación pertenece al diagrama de secuencia.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Las cinco partes de una transición"
+    },
+    {
+      "id": "p2-003",
+      "tema": "Máquinas de estado",
+      "pregunta": "Respecto de los estados inicial y final de una máquina de estados:",
+      "opciones": [
+        "Puede haber varios estados iniciales y siempre hay un final",
+        "Siempre hay estado inicial; puede haber varios estados finales o ninguno",
+        "Siempre hay exactamente un inicial y exactamente un final",
+        "Ninguno de los dos es obligatorio"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El estado inicial (círculo negro) siempre existe. El final (círculo negro dentro de uno blanco) puede aparecer varias veces o no aparecer.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Estado inicial y final"
+    },
+    {
+      "id": "p2-004",
+      "tema": "Máquinas de estado",
+      "pregunta": "Una impresora está en el estado \"Sin papel\", que declara \"imprimir / defer\". Llega un pedido de impresión. ¿Qué ocurre?",
+      "opciones": [
+        "El pedido se descarta porque el estado no lo maneja",
+        "Se produce un error y la máquina pasa al estado final",
+        "El evento se encola y se atiende cuando la impresora pasa a un estado que lo procese (por ejemplo, Lista)",
+        "La impresora pasa inmediatamente al estado Lista"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Un evento diferido no se pierde: se encola y el objeto lo maneja más tarde, en otro estado.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Eventos diferidos"
+    },
+    {
+      "id": "p2-005",
+      "tema": "Máquinas de estado",
+      "pregunta": "¿Qué es una transición λ (lambda)?",
+      "opciones": [
+        "Una transición que no cambia de estado",
+        "Una transición que se produce automáticamente, sin evento, al desaparecer la condición que identifica al estado",
+        "Una transición disparada sólo por el paso del tiempo",
+        "Una transición que sólo existe entre subestados concurrentes"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La transición λ no requiere la ocurrencia de un evento. La que no cambia de estado es la transición interna.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Transición λ"
+    },
+    {
+      "id": "p2-006",
+      "tema": "Máquinas de estado",
+      "pregunta": "¿Cuáles de las siguientes afirmaciones sobre las acciones de una máquina de estados son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "La acción de una transición es atómica: no puede ser interrumpida por un evento",
+        "Una transición interna provoca un cambio de estado",
+        "La acción entry se ejecuta al entrar al estado y la exit al salir",
+        "La condición de guarda debe evaluarse verdadera para que la transición se dispare"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "Las transiciones internas justamente no causan cambio de estado. El resto es correcto: acción atómica, entry/exit y guarda booleana que mantiene la máquina determinística.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Acciones"
+    },
+    {
+      "id": "p2-007",
+      "tema": "Máquinas de estado",
+      "pregunta": "En el cajero automático, el superestado Activo tiene los subestados Validación → Selección → Procesamiento → Impresión y un estado de historia H. Estando en Procesamiento, el cajero pasa a Mantenimiento; al finalizar, la transición vuelve a H. ¿En qué subestado queda?",
+      "opciones": [
+        "Validación, porque es el subestado inicial",
+        "Inactivo",
+        "Impresión",
+        "Procesamiento, el último subestado visitado"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "H memoriza el último subestado visitado y lo recupera al volver. Sólo si todavía no hay historia se sigue el arco por defecto.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Estados con historia"
+    },
+    {
+      "id": "p2-008",
+      "tema": "Máquinas de estado",
+      "pregunta": "¿Cuál es la diferencia entre H y H*?",
+      "opciones": [
+        "H recuerda sólo el primer nivel de subestados; H* recuerda el subestado a cualquier nivel de anidamiento",
+        "H* recuerda sólo el primer nivel; H recuerda todos los niveles",
+        "H se usa en estados concurrentes y H* en secuenciales",
+        "No hay diferencia; son dos notaciones del mismo pseudoestado"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "H es historia superficial y H* es historia profunda.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Estados con historia"
+    },
+    {
+      "id": "p2-009",
+      "tema": "Máquinas de estado",
+      "pregunta": "Un estado compuesto tiene dos regiones concurrentes. ¿Cuándo se considera completo?",
+      "opciones": [
+        "Cuando cualquiera de las regiones llega a su estado final",
+        "Cuando la primera región dibujada termina",
+        "Cuando todas sus regiones llegan a su estado final",
+        "Nunca; los estados concurrentes no terminan"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Cada región evoluciona en paralelo y de forma independiente. El compuesto termina sólo cuando todas sus regiones llegan a su estado final.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Subestados concurrentes"
+    },
+    {
+      "id": "p2-010",
+      "tema": "Máquinas de estado",
+      "pregunta": "¿Qué puede ser un evento en una máquina de estados? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Una señal (comunicación asincrónica)",
+        "Una llamada (requerimiento sincrónico)",
+        "Una generalización entre clases",
+        "El paso del tiempo",
+        "Un cambio en el estado"
+      ],
+      "correctas": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "explicacion": "Los eventos pueden ser señal, llamada, paso del tiempo o cambio de estado. La generalización es una relación del diagrama de clases.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Evento"
+    },
+    {
+      "id": "p2-011",
+      "tema": "Máquinas de estado",
+      "pregunta": "Una transición llega al borde de un superestado que NO tiene subestado inicial. ¿Qué ocurre?",
+      "opciones": [
+        "Entra al primer subestado dibujado",
+        "Es inválida: no se sabe en qué subestado queda",
+        "Entra al último subestado visitado",
+        "Sale inmediatamente del superestado"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Si la transición llega al borde, se necesita un subestado inicial. Sin él, la transición es inválida, salvo que llegue a un subestado concreto o al estado H.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Complemento Booch cap. 22"
+    },
+    {
+      "id": "p2-012",
+      "tema": "Componentes y despliegue",
+      "pregunta": "¿Cuáles de las siguientes características corresponden a un componente? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Es una parte modular, desplegable y reemplazable del sistema",
+        "Es puramente conceptual: no existe en ejecución",
+        "Encapsula su implementación y expone un conjunto de interfaces",
+        "Es cohesivo: denota un bloque significativo de comportamiento"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "El que es puramente conceptual y no existe en ejecución es el paquete, no el componente.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Componentes"
+    },
+    {
+      "id": "p2-013",
+      "tema": "Componentes y despliegue",
+      "pregunta": "En un diagrama de componentes, ¿qué representa el símbolo de círculo (\"chupetín\" o paleta)?",
+      "opciones": [
+        "Una interfaz requerida",
+        "Un artefacto desplegado",
+        "Un nodo de procesamiento",
+        "Una interfaz proporcionada"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "El círculo es la interfaz proporcionada (lo que el componente ofrece). El semicírculo o socket es la interfaz requerida.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Componentes"
+    },
+    {
+      "id": "p2-014",
+      "tema": "Componentes y despliegue",
+      "pregunta": "¿Qué es un subsistema?",
+      "opciones": [
+        "Un nodo físico donde se despliegan artefactos",
+        "Un paquete que exhibe comportamiento a través de interfaces y cuyos elementos internos no son accesibles desde afuera",
+        "Un artefacto que materializa un componente",
+        "Un componente sin interfaces"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El subsistema es un paquete estereotipado «subsystem» que expone interfaces y oculta su implementación interna.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Subsistema"
+    },
+    {
+      "id": "p2-015",
+      "tema": "Componentes y despliegue",
+      "pregunta": "En el ejercicio CampusCoffee, el pago se hace con una pasarela externa (MercadoPago) detrás de una interfaz propia. ¿Qué parte conviene modelar como subsistema?",
+      "opciones": [
+        "La pantalla de cocina",
+        "La base de datos PostgreSQL",
+        "El módulo de pagos, que ofrece una interfaz propia y oculta la integración externa",
+        "La app móvil del cliente"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "El subsistema de pagos expone una interfaz propia y encapsula la integración con la pasarela externa.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Ejercicio CampusCoffee"
+    },
+    {
+      "id": "p2-016",
+      "tema": "Componentes y despliegue",
+      "pregunta": "El método A() le pasa a B() una bandera que decide qué lógica ejecuta B. ¿Qué tipo de acoplamiento es?",
+      "opciones": [
+        "De control",
+        "De contenido",
+        "Externo",
+        "De comunicación"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Acoplamiento de control: una bandera dirige la lógica del otro módulo. El de contenido modifica datos internos ajenos; el externo se da con la infraestructura (SO, BD).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Cohesión y acoplamiento"
+    },
+    {
+      "id": "p2-017",
+      "tema": "Componentes y despliegue",
+      "pregunta": "¿Cuáles de los siguientes son tipos de COHESIÓN? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "De contenido",
+        "Funcional",
+        "De capa",
+        "De control",
+        "De comunicación"
+      ],
+      "correctas": [
+        1,
+        2,
+        4
+      ],
+      "explicacion": "Los tipos de cohesión son funcional, de capa y de comunicación. Contenido, control y externo son tipos de acoplamiento.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Cohesión y acoplamiento"
+    },
+    {
+      "id": "p2-018",
+      "tema": "Componentes y despliegue",
+      "pregunta": "\"Las clases que cambian juntas deben estar juntas.\" ¿Qué principio de empaquetado es?",
+      "opciones": [
+        "PER – Equivalencia de reutilización/liberación",
+        "PRC – Reutilización común",
+        "PCC – Cierre común",
+        "OCP – Abierto/cerrado"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "PCC: cierre común. PER dice que el gránulo de reutilización es el de liberación; PRC, que las clases que no se reutilizan juntas no deben agruparse.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Principios de empaquetado"
+    },
+    {
+      "id": "p2-019",
+      "tema": "Componentes y despliegue",
+      "pregunta": "El archivo app.war implementa físicamente el componente Pedidos y se instala en Tomcat. ¿Qué relaciones corresponden en el diagrama de despliegue?",
+      "opciones": [
+        "app.war «deploy» Pedidos y app.war «manifest» Tomcat",
+        "app.war «manifest» Pedidos y app.war «deploy» Tomcat",
+        "Ambas son «deploy»",
+        "Ambas son «manifest»"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "«manifest» indica que el artefacto materializa un componente; «deploy» indica que el artefacto se despliega en un nodo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Diagrama de despliegue"
+    },
+    {
+      "id": "p2-020",
+      "tema": "Componentes y despliegue",
+      "pregunta": "¿Qué elementos pertenecen a un diagrama de despliegue? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Nodos (por ejemplo «device» o «executionEnvironment»)",
+        "Líneas de vida",
+        "Artefactos (.jar, .war, .exe)",
+        "Rutas de comunicación con su protocolo",
+        "Fragmentos combinados alt/opt"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "Las líneas de vida y los fragmentos son del diagrama de secuencia.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Diagrama de despliegue"
+    },
+    {
+      "id": "p2-021",
+      "tema": "Componentes y despliegue",
+      "pregunta": "¿Cuál es la diferencia entre layers y tiers?",
+      "opciones": [
+        "Los layers son capas físicas y los tiers son capas lógicas",
+        "Son sinónimos",
+        "Los layers son capas lógicas; los tiers son capas físicas desplegadas en nodos distintos",
+        "Los tiers sólo se usan en MVC"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Ambos se modelan como paquetes estereotipados. En el diagrama de despliegue, los tiers aparecen como nodos distintos.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Capas lógicas y físicas"
+    },
+    {
+      "id": "p2-022",
+      "tema": "Componentes y despliegue",
+      "pregunta": "¿Cuáles de las siguientes afirmaciones sobre los paquetes UML son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Cada elemento pertenece a un solo paquete",
+        "El paquete existe en tiempo de ejecución",
+        "Si se borra el paquete, se borran sus elementos",
+        "Un paquete puede contener otros paquetes",
+        "Un elemento privado puede usarse desde cualquier paquete"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "El paquete es puramente conceptual y no existe en ejecución. Un elemento privado sólo es visible dentro de su paquete.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Paquetes de diseño"
+    },
+    {
+      "id": "p2-023",
+      "tema": "Diagrama de secuencia",
+      "pregunta": "¿Cuáles de las siguientes afirmaciones sobre los fragmentos combinados son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "alt representa decisiones exclusivas: sólo una de las secuencias se ejecuta",
+        "opt representa una alternativa obligatoria",
+        "par indica que las interacciones internas ocurren en forma concurrente",
+        "loop representa una secuencia que se repite",
+        "opt equivale a un if/else con dos ramas"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "opt es opcional: se ejecuta sólo si se cumple la condición, como un if sin else. El if/else es alt.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Tipos de fragmentos"
+    },
+    {
+      "id": "p2-024",
+      "tema": "Diagrama de secuencia",
+      "pregunta": "En un diagrama de secuencia, ¿cuáles de las siguientes afirmaciones son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Los mensajes de retorno pueden omitirse si no aportan información relevante al flujo",
+        "Un mensaje asíncrono siempre bloquea al emisor hasta recibir respuesta",
+        "Un diagrama de secuencia puede generarse a partir de la ingeniería inversa de código fuente",
+        "Las barras de activación representan los períodos en que un objeto está ejecutando una operación",
+        "Un mensaje síncrono implica que el emisor espera la finalización de la operación antes de continuar"
+      ],
+      "correctas": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "explicacion": "El mensaje asíncrono es justamente el que NO bloquea al emisor.",
+      "origen": "Parcial anterior",
+      "fuente": "Copia de Preguntas parcial 1 y 2 diseño.pdf"
+    },
+    {
+      "id": "p2-025",
+      "tema": "Diagrama de secuencia",
+      "pregunta": "Un objeto envía un mensaje y continúa con su flujo sin esperar a que el receptor termine. ¿Qué tipo de mensaje es?",
+      "opciones": [
+        "Síncrono",
+        "Asíncrono",
+        "De respuesta",
+        "De creación"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Asíncrono: el llamante no espera (flecha de punta abierta). En el síncrono, el llamante espera (punta llena).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Tipos de mensajes"
+    },
+    {
+      "id": "p2-026",
+      "tema": "Diagrama de secuencia",
+      "pregunta": "¿Cómo se representa la destrucción de un objeto en un diagrama de secuencia?",
+      "opciones": [
+        "Con una flecha punteada",
+        "Con el estereotipo «create»",
+        "Con una X al final de su línea de vida",
+        "Con un fragmento opt"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La X marca el fin de la línea de vida. La flecha punteada es un mensaje de respuesta.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Tipos de mensajes"
+    },
+    {
+      "id": "p2-027",
+      "tema": "Diagrama de secuencia",
+      "pregunta": "¿En qué se basa el flujo de mensajes de un diagrama de secuencia?",
+      "opciones": [
+        "En el diagrama de despliegue",
+        "En la narración (descripción) del caso de uso",
+        "En el modelo en V",
+        "En la nota de release"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Antes de dibujar hay que tener una descripción exhaustiva del caso de uso. El diagrama de clases indica qué objetos interactúan.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Vinculación con otros diagramas"
+    },
+    {
+      "id": "p2-028",
+      "tema": "Git y GitFlow",
+      "pregunta": "En GitFlow, ¿cuál es la única rama que parte de master?",
+      "opciones": [
+        "feature/task",
+        "release",
+        "develop",
+        "hotfix"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "hotfix es la rama de los \"bomberos en producción\": parte de master y se mergea a master y a develop.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – GitFlow"
+    },
+    {
+      "id": "p2-029",
+      "tema": "Git y GitFlow",
+      "pregunta": "En GitFlow, una rama release aprobada se mergea a:",
+      "opciones": [
+        "Sólo master",
+        "Sólo develop",
+        "master y develop",
+        "Ninguna; se elimina"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La release nace de develop y, al aprobarse, se integra a master (producción) y a develop (para no perder los fixes).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – GitFlow"
+    },
+    {
+      "id": "p2-030",
+      "tema": "Git y GitFlow",
+      "pregunta": "Comparando Git con SVN, ¿qué afirmaciones son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Git es distribuido; SVN es centralizado",
+        "En Git, cada máquina tiene un repositorio completo",
+        "SVN permite trabajo offline total con commits locales",
+        "En Git, las ramas son livianas y económicas"
+      ],
+      "correctas": [
+        0,
+        1,
+        3
+      ],
+      "explicacion": "El trabajo offline total con commits locales es una ventaja de Git; en SVN es limitado.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Git"
+    },
+    {
+      "id": "p2-031",
+      "tema": "Git y GitFlow",
+      "pregunta": "¿Cuáles son buenas prácticas para los commits y las ramas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Hacer push directo a develop para ahorrar tiempo",
+        "Hacer commits pequeños y atómicos",
+        "Escribir el asunto en modo imperativo, de hasta 50 caracteres y sin punto final",
+        "Integrar todo mediante Pull Request revisado",
+        "Agrupar muchos cambios no relacionados en un solo commit"
+      ],
+      "correctas": [
+        1,
+        2,
+        3
+      ],
+      "explicacion": "La regla de oro es no hacer nunca push directo a master ni a develop: todo entra por Pull Request.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 4 – Git"
+    },
+    {
+      "id": "p2-032",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Cuál o cuáles de las siguientes afirmaciones son correctas acerca del uso de patrones de diseño?",
+      "opciones": [
+        "Permiten mejorar la flexibilidad y la mantenibilidad del software",
+        "Los patrones son recetas que deben seguirse al pie de la letra",
+        "Sólo pueden aplicarlos programadores avanzados",
+        "Están diseñados para reemplazar cualquier tipo de documentación",
+        "Formalizan un lenguaje común entre los diseñadores"
+      ],
+      "correctas": [
+        0,
+        4
+      ],
+      "explicacion": "Los patrones son guías estructurales, no recetas ni código para copiar. No son obligatorios: forzarlos puede ser un error.",
+      "origen": "Parcial anterior",
+      "fuente": "Copia de Preguntas parcial 1 y 2 diseño.pdf"
+    },
+    {
+      "id": "p2-033",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Cuáles de estos patrones son DE CREACIÓN? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Adapter",
+        "Singleton",
+        "State",
+        "Factory Method",
+        "Abstract Factory",
+        "Bridge"
+      ],
+      "correctas": [
+        1,
+        3,
+        4
+      ],
+      "explicacion": "Adapter y Bridge son estructurales; State es de comportamiento.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Catálogo GoF"
+    },
+    {
+      "id": "p2-034",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Cuáles de estos patrones son ESTRUCTURALES? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Facade",
+        "Mediator",
+        "Bridge",
+        "Singleton",
+        "Adapter",
+        "State"
+      ],
+      "correctas": [
+        0,
+        2,
+        4
+      ],
+      "explicacion": "Mediator y State son de comportamiento; Singleton es de creación.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Catálogo GoF"
+    },
+    {
+      "id": "p2-035",
+      "tema": "Patrones de diseño",
+      "pregunta": "Una aplicación de música tiene un reproductor con tres estados: Reproduciendo, Pausado y Detenido. Si está Reproduciendo, el \"botón principal\" pausa; si está Pausado, reanuda; si está Detenido, inicia una nueva canción. Se definió una clase abstracta y tres clases concretas que heredan de ella. Si se aplica el patrón State, ¿qué métodos tendría la clase abstracta?",
+      "opciones": [
+        "PresionarBotón()",
+        "Reproducir(), Pausar(), Detener()",
+        "Reproducir(), Pausar(), Detener(), PresionarBotón()",
+        "Ninguno; cada clase concreta definiría sus propios métodos"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "La interfaz de estado declara las operaciones comunes cuyo comportamiento varía según el estado: el evento PresionarBotón(). Cada estado concreto lo implementa a su manera y decide la transición.",
+      "origen": "Parcial anterior",
+      "fuente": "Preguntas de parcial 2 (dragged).pdf"
+    },
+    {
+      "id": "p2-036",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Qué elementos forman la implementación típica de un Singleton? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Constructor privado",
+        "Constructor público para crear instancias libremente",
+        "Atributo estático que guarda la única instancia",
+        "Método estático getInstance() que la crea la primera vez y siempre la devuelve",
+        "Implementar clone() para poder copiarlo"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "El Singleton no debe ser clonable: clone() debe lanzar CloneNotSupportedException. Además, conviene declarar la clase final.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Singleton"
+    },
+    {
+      "id": "p2-037",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Para qué se declara synchronized el método getInstance() de un Singleton?",
+      "opciones": [
+        "Para mejorar el rendimiento",
+        "Para permitir que subclases lo hereden",
+        "Para evitar que dos hilos creen dos instancias a la vez",
+        "Para que la instancia se serialice automáticamente"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Sin sincronización, dos hilos podrían encontrar la instancia en null al mismo tiempo y crear dos.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Singleton"
+    },
+    {
+      "id": "p2-038",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Cuál es la diferencia clave entre Factory Method y Abstract Factory?",
+      "opciones": [
+        "Factory Method crea familias de productos; Abstract Factory, uno solo",
+        "Son el mismo patrón con distinto nombre",
+        "Factory Method crea un único producto y la decisión la toma una subclase; Abstract Factory crea una familia de productos compatibles y la decisión es qué fábrica concreta se usa",
+        "Abstract Factory sólo se usa con bases de datos"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Abstract Factory es un \"kit\" que agrupa varios factory methods y garantiza que los productos sean compatibles entre sí.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Abstract Factory"
+    },
+    {
+      "id": "p2-039",
+      "tema": "Patrones de diseño",
+      "pregunta": "Con Abstract Factory (BaseDatosFactory con crearConexion, crearComando y crearTransaccion), se quiere agregar un nuevo TIPO de producto, crearBackup(). ¿Qué implica?",
+      "opciones": [
+        "Sólo crear una nueva fábrica concreta",
+        "Modificar la interfaz de la fábrica y todas sus implementaciones",
+        "No requiere cambios",
+        "Sólo modificar el cliente"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Es la desventaja principal de Abstract Factory: agregar un tipo de producto es difícil. En cambio, agregar una familia nueva sólo requiere una fábrica concreta.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Abstract Factory"
+    },
+    {
+      "id": "p2-040",
+      "tema": "Patrones de diseño",
+      "pregunta": "Un servicio de streaming funciona en Smart TV, Móvil y Web. Cada dispositivo tiene su ReproductorVideo, su MenuNavegacion y su ControlVolumen, y no se pueden mezclar componentes de distintos dispositivos. ¿Qué patrón conviene?",
+      "opciones": [
+        "Singleton",
+        "Mediator",
+        "Adapter",
+        "Abstract Factory"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "Hay que crear familias de objetos relacionados que deben usarse juntos: es Abstract Factory, con una fábrica por dispositivo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Ejercicio de clase Abstract Factory"
+    },
+    {
+      "id": "p2-041",
+      "tema": "Patrones de diseño",
+      "pregunta": "El carrito de compras usa la interfaz ProcesadorPago.pagar(monto, moneda). Se quiere usar el SDK de PayPal, que no se puede modificar y ofrece iniciarTransaccion(centavos) y confirmarTransaccion(moneda). ¿Qué patrón corresponde?",
+      "opciones": [
+        "Bridge",
+        "Adapter",
+        "Facade",
+        "State"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El Adapter implementa la interfaz objetivo y delega en la clase adaptada traduciendo la llamada (monto a centavos). El cliente nunca usa la clase adaptada directamente.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Adapter"
+    },
+    {
+      "id": "p2-042",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Qué variante de Adapter se prefiere en Java y por qué?",
+      "opciones": [
+        "De clase, porque usa herencia múltiple",
+        "De objeto (composición): el adaptador contiene una referencia al adaptado y le delega, sin requerir herencia múltiple",
+        "De clase, porque evita crear objetos",
+        "Ninguna; Java no permite Adapter"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El Adapter de clase hereda del objetivo y del adaptado, lo que requiere herencia múltiple. Java no la tiene para clases.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Adapter"
+    },
+    {
+      "id": "p2-043",
+      "tema": "Patrones de diseño",
+      "pregunta": "La apertura de cuentas bancarias usa una AperturaCuentaFacade que coordina verificación de identidad, riesgo crediticio, creación de la cuenta y notificaciones. Si se agrega un ServicioAntiFraude, ¿qué cambia?",
+      "opciones": [
+        "Sólo la fachada; el cliente no cambia",
+        "El cliente y la fachada",
+        "Todos los servicios del subsistema",
+        "Nada, porque el cliente llama directamente a los servicios"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El cliente sólo conoce a la fachada, así que el cambio queda encapsulado en ella. Esto es bajo acoplamiento.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Facade"
+    },
+    {
+      "id": "p2-044",
+      "tema": "Patrones de diseño",
+      "pregunta": "Sobre el patrón Fachada, ¿qué afirmaciones son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Las clases del subsistema no conocen a la fachada",
+        "La fachada impide que un cliente use directamente las clases del subsistema",
+        "Promueve el bajo acoplamiento entre el subsistema y sus clientes",
+        "Proporciona una interfaz unificada para un conjunto de interfaces de un subsistema"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "La fachada oculta el subsistema, pero no lo elimina: un cliente avanzado puede seguir usando sus clases directamente.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Facade"
+    },
+    {
+      "id": "p2-045",
+      "tema": "Patrones de diseño",
+      "pregunta": "Hay 3 tipos de reporte (Ventas, Empleados, Inventario) y 3 formatos (PDF, Excel, HTML). ¿Cuántas clases concretas se necesitan sin y con el patrón Bridge?",
+      "opciones": [
+        "9 sin Bridge y 9 con Bridge",
+        "3 sin Bridge y 6 con Bridge",
+        "9 sin Bridge y 6 (3 + 3) con Bridge",
+        "6 sin Bridge y 9 con Bridge"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Sin Bridge, cada combinación es una clase (3 × 3). Con Bridge, la abstracción (reporte) y la implementación (formato) varían por separado (3 + 3) y se combinan en tiempo de ejecución.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Bridge"
+    },
+    {
+      "id": "p2-046",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Cuál es la intención del patrón Bridge?",
+      "opciones": [
+        "Convertir la interfaz de una clase en la que el cliente espera",
+        "Desacoplar una abstracción de su implementación para que ambas puedan variar independientemente",
+        "Asegurar una única instancia",
+        "Centralizar la comunicación entre objetos"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Bridge usa composición en lugar de herencia cuando hay varias dimensiones de variación.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Bridge"
+    },
+    {
+      "id": "p2-047",
+      "tema": "Patrones de diseño",
+      "pregunta": "En el control de tráfico aéreo, los aviones no se comunican entre sí: lo hacen a través de la torre de control, que coordina pistas y servicios en tierra. ¿Qué patrón representa la torre?",
+      "opciones": [
+        "Facade",
+        "Singleton",
+        "Mediator",
+        "Adapter"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La torre es el ConcreteMediator y los aviones y pistas son los colegas. El mediador reduce el acoplamiento directo entre objetos.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Mediator"
+    },
+    {
+      "id": "p2-048",
+      "tema": "Patrones de diseño",
+      "pregunta": "¿Qué diferencia a Facade de Mediator?",
+      "opciones": [
+        "En Mediator, los colegas conocen al mediador y se comunican a través de él; en Facade, las clases del subsistema no conocen a la fachada",
+        "En Facade, las clases del subsistema conocen a la fachada; en Mediator, no",
+        "Mediator es un patrón estructural y Facade de comportamiento",
+        "No hay diferencia"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "La fachada simplifica un acceso unidireccional al subsistema. El mediador coordina la comunicación entre colegas.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Facade vs. Mediator"
+    },
+    {
+      "id": "p2-049",
+      "tema": "Patrones de diseño",
+      "pregunta": "Un Pedido maneja sus estados con switch/if en cada método. Agregar el estado EN_CAMINO obliga a modificar todos los métodos. ¿Qué principio se viola y qué patrón lo resuelve?",
+      "opciones": [
+        "Liskov; se resuelve con Adapter",
+        "Abierto/Cerrado; se resuelve con State",
+        "Segregación de interfaces; se resuelve con Facade",
+        "Ninguno; es la solución recomendada"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Con State, agregar EN_CAMINO es crear una clase nueva y cambiar sólo la transición de Listo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – State"
+    },
+    {
+      "id": "p2-050",
+      "tema": "Patrones de diseño",
+      "pregunta": "En el patrón State aplicado a Pedido, ¿quién decide a qué estado se pasa?",
+      "opciones": [
+        "El cliente que usa el Pedido",
+        "El Context, con un switch",
+        "Cada estado concreto (ConcreteState), que llama a setEstado del contexto",
+        "La base de datos"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "El Context (Pedido) delega en el estado actual. Cada ConcreteState implementa su comportamiento y define la transición, por ejemplo Listo.avanzar → Entregado.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – State"
+    },
+    {
+      "id": "p2-051",
+      "tema": "DAO y DTO",
+      "pregunta": "¿Qué beneficio principal ofrece el patrón DAO al cambiar el tipo de base de datos (por ejemplo, de MySQL a PostgreSQL)?",
+      "opciones": [
+        "No requiere modificar el código de la capa de acceso a datos",
+        "Permite mantener las mismas conexiones abiertas",
+        "Evita la necesidad de transacciones",
+        "No requiere modificar el código de la capa de negocio"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "La lógica de negocio depende de la interfaz DAO. Se escribe una nueva implementación del DAO (la capa de datos sí cambia), pero el negocio no se toca.",
+      "origen": "Parcial anterior",
+      "fuente": "Preguntas de parcial 2 (dragged).pdf"
+    },
+    {
+      "id": "p2-052",
+      "tema": "DAO y DTO",
+      "pregunta": "¿Qué consecuencia puede tener un sistema si no implementa el patrón DAO u otro patrón de persistencia?",
+      "opciones": [
+        "Mejor rendimiento en el acceso a la base de datos",
+        "Mayor cohesión entre capas",
+        "Fuerte dependencia de la capa de negocio respecto de la capa de acceso a datos",
+        "Menor acoplamiento entre componentes"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Sin DAO, el negocio queda acoplado a la tecnología de persistencia.",
+      "origen": "Parcial anterior",
+      "fuente": "Copia de Preguntas parcial 1 y 2 diseño.pdf"
+    },
+    {
+      "id": "p2-053",
+      "tema": "DAO y DTO",
+      "pregunta": "En una arquitectura con DAO y Factory, ¿qué pasa si se quiere agregar soporte para una nueva base de datos?",
+      "opciones": [
+        "No es posible sin reescribir toda la capa de acceso a datos",
+        "Hay que modificar la lógica de negocio para aceptar el nuevo tipo de conexión",
+        "Sólo se implementan los nuevos DAOs y una nueva Factory que los provea",
+        "Hay que modificar todas las clases DAO existentes"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Se extiende sin modificar lo existente (Open/Closed): nuevas implementaciones y una nueva fábrica concreta.",
+      "origen": "Parcial anterior",
+      "fuente": "Copia de Preguntas parcial 1 y 2 diseño.pdf"
+    },
+    {
+      "id": "p2-054",
+      "tema": "DAO y DTO",
+      "pregunta": "Se le agrega a LibroDTO un método calcularPrecioConIVA() que consulta otra clase. ¿Qué ocurre?",
+      "opciones": [
+        "Sigue siendo un DTO",
+        "Se convierte en un DAO",
+        "Pasa a ser un Singleton",
+        "Deja de ser un DTO"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "Regla de oro: si un DTO calcula, valida o llama a otra clase, dejó de ser un DTO. Es una \"valija\" sin lógica.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – DTO"
+    },
+    {
+      "id": "p2-055",
+      "tema": "DAO y DTO",
+      "pregunta": "Si ya existe la entidad Libro, ¿por qué usar un LibroDTO para enviar los datos a la interfaz?",
+      "opciones": [
+        "Para filtrar lo que viaja y no exponer datos internos o sensibles, como precio_costo",
+        "Porque el DTO accede a la base de datos más rápido",
+        "Porque lo exige el motor de base de datos",
+        "Para agregar lógica de negocio en la vista"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El DTO es el filtro: transporta sólo lo que tiene que viajar entre capas.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – DTO"
+    },
+    {
+      "id": "p2-056",
+      "tema": "DAO y DTO",
+      "pregunta": "¿Qué debería devolver LibroDAO.buscarPorIsbn(isbn)?",
+      "opciones": [
+        "Un LibroDTO listo para la pantalla",
+        "Un String JSON",
+        "La entidad Libro; cada caso de uso arma el DTO que necesite",
+        "Un ResultSet de JDBC"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Que el DAO devuelva un DTO es un error típico: mezcla responsabilidades y ata a una sola vista.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – DAO"
+    },
+    {
+      "id": "p2-057",
+      "tema": "DAO y DTO",
+      "pregunta": "Que la lógica de negocio dependa de la interfaz LibroDAO, y no de LibroDAOMySQL, es una aplicación de:",
+      "opciones": [
+        "El principio de inversión de dependencias (DIP)",
+        "El principio de sustitución de Liskov",
+        "El principio de segregación de interfaces",
+        "El patrón Singleton"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Los módulos de alto nivel dependen de abstracciones, no de detalles.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – DAO"
+    },
+    {
+      "id": "p2-058",
+      "tema": "DAO y DTO",
+      "pregunta": "¿Cuáles son ventajas de definir el DAO como interfaz con varias implementaciones (MySQL, Mongo, Fake)? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Cambiar la base de datos sin tocar el resto",
+        "Testear sin una base de datos real",
+        "Eliminar la necesidad de una capa de negocio",
+        "Desarrollar en paralelo mientras se decide el motor"
+      ],
+      "correctas": [
+        0,
+        1,
+        3
+      ],
+      "explicacion": "La capa de negocio sigue existiendo: depende de la interfaz.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – DAO"
+    },
+    {
+      "id": "p2-059",
+      "tema": "SOLID",
+      "pregunta": "¿Qué principios SOLID favorecen una alta cohesión?",
+      "opciones": [
+        "Principio de responsabilidad única",
+        "Principio de abierto/cerrado",
+        "Principio de segregación de interfaces",
+        "Principio de sustitución de Liskov"
+      ],
+      "correctas": [
+        0,
+        2
+      ],
+      "explicacion": "SRP (una sola razón para cambiar) se relaciona con la cohesión. ISP (interfaces chicas y específicas) da alta cohesión y menor acoplamiento.",
+      "origen": "Parcial anterior",
+      "fuente": "Preguntas de parcial 2 (dragged).pdf"
+    },
+    {
+      "id": "p2-060",
+      "tema": "SOLID",
+      "pregunta": "Pinguino hereda de Ave, pero su método Volar() lanza NotImplementedException. ¿Qué principio se viola?",
+      "opciones": [
+        "Responsabilidad única",
+        "Abierto/cerrado",
+        "Sustitución de Liskov",
+        "Inversión de dependencias"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Un Pinguino no puede sustituir a un Ave sin romper el programa. La solución es una interfaz IVolador sólo para las aves que vuelan.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – LSP"
+    },
+    {
+      "id": "p2-061",
+      "tema": "SOLID",
+      "pregunta": "Un ReportManager genera el informe, lo guarda en un archivo y lo envía por mail. ¿Qué principio viola?",
+      "opciones": [
+        "Responsabilidad única",
+        "Segregación de interfaces",
+        "Sustitución de Liskov",
+        "Ninguno"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Tiene tres razones para cambiar. Se separa en ReportGenerator, ReportSaver y EmailService.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – SRP"
+    },
+    {
+      "id": "p2-062",
+      "tema": "SOLID",
+      "pregunta": "La interfaz IVehiculo declara Conducir(), Volar() y Navegar(), y la clase Auto implementa Volar() y Navegar() lanzando excepciones. ¿Qué principio se viola?",
+      "opciones": [
+        "Inversión de dependencias",
+        "Segregación de interfaces",
+        "Abierto/cerrado",
+        "Responsabilidad única"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Una clase no debería depender de métodos que no usa. Se separa en IConducible, IVolador e INavegable.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – ISP"
+    },
+    {
+      "id": "p2-063",
+      "tema": "SOLID",
+      "pregunta": "CalculadoraDeArea usa if (figura is Circulo) ... else if (figura is Rectangulo) ..., así que cada figura nueva obliga a modificarla. ¿Qué principio se viola?",
+      "opciones": [
+        "Sustitución de Liskov",
+        "Segregación de interfaces",
+        "Abierto/cerrado",
+        "Inversión de dependencias"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Debería estar abierta a extensión y cerrada a modificación: con una interfaz IFigura y CalcularArea(), agregar una figura es agregar una clase.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – OCP"
+    },
+    {
+      "id": "p2-064",
+      "tema": "SOLID",
+      "pregunta": "¿Cuál es la relación entre IoC (inversión de control) y DI (inyección de dependencias)?",
+      "opciones": [
+        "Toda IoC usa DI",
+        "Son conceptos opuestos",
+        "No tienen relación",
+        "Toda DI aplica IoC, pero no toda IoC usa DI"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "La DI es una forma concreta de IoC. Los callbacks o eventos también son IoC sin ser DI.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – DIP"
+    },
+    {
+      "id": "p2-065",
+      "tema": "SOLID",
+      "pregunta": "¿Cuáles son tipos de inyección de dependencias? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Por constructor",
+        "Por herencia",
+        "Por propiedad",
+        "Por método"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "Los tres tipos son por constructor, por propiedad y por método.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – DIP"
+    },
+    {
+      "id": "p2-066",
+      "tema": "Arquitectura",
+      "pregunta": "Una institución educativa usa un aplicativo web que se pone lento en horas pico. Se evalúan estas soluciones: (a) migrar el servidor a una máquina con más CPU y memoria; (b) instalar varios servidores web con un balanceador de carga; (c) replicar la base de datos para distribuir las lecturas; (d) optimizar la interfaz reduciendo imágenes. ¿Cuáles representan escalabilidad horizontal?",
+      "opciones": [
+        "Sólo la a y la c",
+        "Sólo la b y la c",
+        "Sólo la b",
+        "Sólo la a y la d"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La escalabilidad horizontal agrega nodos o servidores que trabajan como un todo (b y c). La opción a es escalabilidad vertical y la d es una optimización.",
+      "origen": "Parcial anterior",
+      "fuente": "Preguntas de parcial 2 (dragged).pdf"
+    },
+    {
+      "id": "p2-067",
+      "tema": "Arquitectura",
+      "pregunta": "Para Black Friday se reemplaza el servidor por otro con el doble de CPU y RAM. ¿Qué tipo de escalamiento es y cuál es su limitación?",
+      "opciones": [
+        "Horizontal; requiere un servidor primario que administre el cluster",
+        "Vertical; tiene el tope del hardware y sigue siendo un único punto de falla",
+        "Horizontal; no tiene límites",
+        "Vertical; obliga a reescribir el software"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El escalamiento vertical agrega recursos al mismo servidor. Requiere un esfuerzo mínimo, pero está atado al techo del hardware.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Escalabilidad"
+    },
+    {
+      "id": "p2-068",
+      "tema": "Arquitectura",
+      "pregunta": "El servicio de Pedidos llama a Pagos sin timeouts ni reintentos porque \"siempre responde\". ¿Qué falacia de la computación distribuida se comete?",
+      "opciones": [
+        "La latencia es cero",
+        "La red es homogénea",
+        "El ancho de banda es infinito",
+        "La red es confiable"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "Suponer que la llamada siempre llega y responde es asumir que la red es confiable.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Falacias de la computación distribuida"
+    },
+    {
+      "id": "p2-069",
+      "tema": "Arquitectura",
+      "pregunta": "Una panadería online tiene 3 desarrolladores, poco presupuesto y 3 meses de plazo. ¿Qué estilo arquitectónico conviene?",
+      "opciones": [
+        "Microservicios",
+        "Monolito en capas",
+        "Basada en eventos con broker",
+        "Microkernel"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El monolito en capas es simple, barato y rápido de construir.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Preguntas de la clase"
+    },
+    {
+      "id": "p2-070",
+      "tema": "Arquitectura",
+      "pregunta": "Un editor de código tiene un núcleo mínimo y permite agregar extensiones de terceros. ¿Qué estilo arquitectónico es?",
+      "opciones": [
+        "Tubería y filtros",
+        "MVC",
+        "Microkernel (plug-in)",
+        "Centrada en los datos"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "El microkernel combina un sistema central mínimo con componentes plug-in que agregan funcionalidad.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Preguntas de la clase"
+    },
+    {
+      "id": "p2-071",
+      "tema": "Arquitectura",
+      "pregunta": "Un sistema procesa logs: los limpia, filtra, transforma a JSON y agrega, y cada paso usa la salida del anterior. ¿Qué estilo arquitectónico es?",
+      "opciones": [
+        "Flujo de datos (tubería y filtros)",
+        "Solicitud-respuesta orquestada",
+        "Basada en servicios",
+        "En capas cerradas"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Los filtros transforman los datos y se conectan por tubos. Cada filtro recibe sólo la salida del anterior y no conoce a sus vecinos.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Preguntas de la clase"
+    },
+    {
+      "id": "p2-072",
+      "tema": "Arquitectura",
+      "pregunta": "¿Qué distingue a los microservicios de la arquitectura basada en servicios?",
+      "opciones": [
+        "En microservicios, cada servicio tiene su propia base de datos; en la basada en servicios, los servicios de dominio (de grano grueso) comparten una base",
+        "En la basada en servicios, cada servicio tiene su propia base",
+        "Los microservicios no se despliegan en forma independiente",
+        "No hay diferencia"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Ambos estilos son distribuidos. La base compartida y el grano grueso caracterizan a la arquitectura basada en servicios.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Estilos arquitectónicos"
+    },
+    {
+      "id": "p2-073",
+      "tema": "Arquitectura",
+      "pregunta": "En una arquitectura basada en eventos, ¿qué diferencia hay entre la topología broker y la topología mediador?",
+      "opciones": [
+        "El broker tiene un orquestador central; el mediador no",
+        "El broker no tiene coordinador central (coreografía entre procesadores); el mediador orquesta los pasos en orden",
+        "Ambas usan una base de datos por servicio",
+        "El mediador no usa colas"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "En el broker, los procesadores toman eventos del canal y publican otros. En el mediador, un mediador de eventos envía cada paso a su canal.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Estilos arquitectónicos"
+    },
+    {
+      "id": "p2-074",
+      "tema": "Arquitectura",
+      "pregunta": "¿Cuáles son las dimensiones de una arquitectura de software? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Estructura (estilos usados)",
+        "Cronograma del proyecto",
+        "Características (las \"-ilities\")",
+        "Decisiones arquitectónicas",
+        "Principios de diseño"
+      ],
+      "correctas": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "explicacion": "El cronograma no forma parte de la arquitectura.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Cuatro dimensiones"
+    },
+    {
+      "id": "p2-075",
+      "tema": "Arquitectura",
+      "pregunta": "\"Siempre que sea posible, usar mensajería asíncrona entre servicios para mejorar el rendimiento.\" ¿Qué es?",
+      "opciones": [
+        "Una decisión arquitectónica",
+        "Una característica de la arquitectura",
+        "Un principio de diseño",
+        "Un estilo arquitectónico"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Los principios son guías, no reglas estrictas. Una decisión es una regla, por ejemplo \"sólo negocio y servicios acceden a la persistencia\".",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Cuatro dimensiones"
+    },
+    {
+      "id": "p2-076",
+      "tema": "Arquitectura",
+      "pregunta": "En una arquitectura de capas cerradas, la capa de presentación quiere consultar directamente la persistencia. ¿Qué consecuencia tiene?",
+      "opciones": [
+        "Mejora el aislamiento entre capas",
+        "Rompe el aislamiento: aumenta el acoplamiento y los cambios en la persistencia impactan en la presentación",
+        "No tiene consecuencias porque las capas cerradas lo permiten",
+        "Convierte la arquitectura en microservicios"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "En capas cerradas, cada capa sólo habla con la inmediata inferior. Saltearlas viola una decisión arquitectónica.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Preguntas de la clase"
+    },
+    {
+      "id": "p2-077",
+      "tema": "Arquitectura",
+      "pregunta": "¿Cuáles son falacias de la computación distribuida? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "La red es confiable",
+        "La latencia es cero",
+        "La memoria RAM es infinita",
+        "La red es segura",
+        "La topología de la red no cambia"
+      ],
+      "correctas": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "explicacion": "Las 8 falacias son: la red es confiable, la latencia es cero, el ancho de banda es infinito, la red es segura, la topología no cambia, hay un solo administrador, el transporte no tiene costo y la red es homogénea.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 5 – Monolítico vs. distribuido"
+    },
+    {
+      "id": "p2-078",
+      "tema": "Fundamentos de prueba",
+      "pregunta": "Según Myers, ¿qué es probar?",
+      "opciones": [
+        "Demostrar que el programa no tiene errores",
+        "Mostrar que el programa hace correctamente lo esperado",
+        "Ejecutar un programa con la intención de encontrar errores",
+        "Lograr confianza en que el programa hará lo que debe"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Es una actividad destructiva: un caso exitoso es el que descubre un error. \"Las pruebas muestran la presencia de errores, nunca su ausencia\" (Dijkstra).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – ¿Qué significa probar?"
+    },
+    {
+      "id": "p2-079",
+      "tema": "Fundamentos de prueba",
+      "pregunta": "Al ejecutar el programa del triángulo, un isósceles válido es rechazado. Esto es:",
+      "opciones": [
+        "Un error (mistake)",
+        "Un defecto (bug)",
+        "Una falla (failure)",
+        "Un caso de prueba inválido"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La falla se observa al ejecutar. El defecto está en el código (por ejemplo, un desborde de a + b) y el error es la equivocación de una persona.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Error, defecto y falla"
+    },
+    {
+      "id": "p2-080",
+      "tema": "Fundamentos de prueba",
+      "pregunta": "¿Qué componentes debe tener un caso de prueba? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Entradas",
+        "Nombre del programador que escribió el código",
+        "Condiciones de ejecución",
+        "Resultado esperado"
+      ],
+      "correctas": [
+        0,
+        2,
+        3
+      ],
+      "explicacion": "Sin resultado esperado no se puede decidir si hubo una falla.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Caso de prueba"
+    },
+    {
+      "id": "p2-081",
+      "tema": "Fundamentos de prueba",
+      "pregunta": "¿Cuáles son principios de la prueba? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Evitar que el autor pruebe su propio programa",
+        "Definir el resultado esperado antes de ejecutar",
+        "Los errores se agrupan: cuantos más errores hay en una sección, más probable es que queden otros",
+        "Descartar los casos después de usarlos",
+        "Probar sólo con entradas válidas"
+      ],
+      "correctas": [
+        0,
+        1,
+        2
+      ],
+      "explicacion": "Hay que conservar y automatizar los casos (sirven para la regresión) y probar también entradas inválidas e inesperadas.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Los 10 principios"
+    },
+    {
+      "id": "p2-082",
+      "tema": "Caja negra y caja blanca",
+      "pregunta": "En particiones de equivalencia, ¿cuántas clases inválidas debe cubrir cada caso de prueba inválido?",
+      "opciones": [
+        "Todas las posibles, para ahorrar casos",
+        "Una y sólo una",
+        "Al menos dos",
+        "Ninguna"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Si un caso combina dos clases inválidas, por ejemplo (XXX, 0), el programa puede salir en la primera validación y la segunda nunca se prueba.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Particiones de equivalencia"
+    },
+    {
+      "id": "p2-083",
+      "tema": "Caja negra y caja blanca",
+      "pregunta": "La condición de entrada es \"cantidad entre 1 y 999\". ¿Cuántas clases de equivalencia se definen?",
+      "opciones": [
+        "1 válida y 1 inválida",
+        "2 válidas y 1 inválida",
+        "1 válida y 2 inválidas",
+        "3 válidas"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Para un rango hay una clase válida (1 ≤ cant ≤ 999) y dos inválidas (cant < 1 y cant > 999).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Particiones de equivalencia"
+    },
+    {
+      "id": "p2-084",
+      "tema": "Caja negra y caja blanca",
+      "pregunta": "Para un entero en el rango 1 a 255, ¿qué valores propone el análisis de valores límite?",
+      "opciones": [
+        "1 y 255",
+        "1, 128 y 255",
+        "0 y 256",
+        "0, 1, 255 y 256"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "Se prueban los bordes y los valores justo afuera (borde ± 1).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Valores límite"
+    },
+    {
+      "id": "p2-085",
+      "tema": "Caja negra y caja blanca",
+      "pregunta": "¿Cuáles son técnicas de caja NEGRA? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Particiones de equivalencia",
+        "Cobertura de decisiones",
+        "Análisis de valores límite",
+        "Cobertura de sentencias",
+        "Conjetura de errores"
+      ],
+      "correctas": [
+        0,
+        2,
+        4
+      ],
+      "explicacion": "Las coberturas (de sentencias, decisiones y condiciones) son técnicas de caja blanca, porque miran el código.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Caja negra y caja blanca"
+    },
+    {
+      "id": "p2-086",
+      "tema": "Caja negra y caja blanca",
+      "pregunta": "Para if (a > 0 || b > 0) se usan los casos (1, -1) y (-1, 1). ¿Qué se logra?",
+      "opciones": [
+        "Cobertura de condición/decisión",
+        "Cobertura de condiciones, pero no de decisiones: la decisión fue siempre verdadera y nunca se probó la rama falsa",
+        "Cobertura de decisiones únicamente",
+        "Ninguna cobertura"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Cada condición toma V y F, pero la decisión siempre da V. Para condición/decisión se usarían (1, 1) y (-1, -1).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Cobertura lógica"
+    },
+    {
+      "id": "p2-087",
+      "tema": "Caja negra y caja blanca",
+      "pregunta": "¿Cuál es el criterio de cobertura lógica más débil?",
+      "opciones": [
+        "Cobertura de decisiones",
+        "Cobertura de condición/decisión",
+        "Cobertura de condiciones",
+        "Cobertura de sentencias"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "Con cobertura de sentencias, en if (x > 0) basta x = 1 para cubrir el 100 %, aunque nunca se pruebe x ≤ 0.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Cobertura lógica"
+    },
+    {
+      "id": "p2-088",
+      "tema": "Caja negra y caja blanca",
+      "pregunta": "En el cotizador de envíos, el peso tiene un decimal y va de 0,1 a 30,0 kg; es liviano hasta 5,0 y pesado desde 5,1. ¿Qué valores límite corresponden al peso?",
+      "opciones": [
+        "0,1 y 30,0",
+        "0,0 · 0,1 · 5,0 · 5,1 · 30,0 · 30,1",
+        "1 · 5 · 30",
+        "0,1 · 15,0 · 30,0"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Hay que probar cada margen de cada clase, incluido el límite interno liviano/pesado, con los valores justo adentro y justo afuera.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Práctica cotizador"
+    },
+    {
+      "id": "p2-089",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Cuáles de los siguientes tipos de prueba se consideran pruebas no funcionales? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Pruebas de rendimiento",
+        "Pruebas de integración",
+        "Pruebas de stress",
+        "Pruebas de unidad",
+        "Pruebas de seguridad"
+      ],
+      "correctas": [
+        0,
+        2,
+        4
+      ],
+      "explicacion": "Integración y unidad son niveles de prueba, no atributos no funcionales.",
+      "origen": "Parcial anterior",
+      "fuente": "Copia de Preguntas parcial 1 y 2 diseño.pdf"
+    },
+    {
+      "id": "p2-090",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "Después de terminar todas las funcionalidades, un equipo de QA valida que el sistema completo cumpla con los requisitos especificados. Este proceso corresponde a:",
+      "opciones": [
+        "Pruebas de sistema",
+        "Pruebas de integración",
+        "Pruebas unitarias",
+        "Pruebas de regresión"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Las pruebas de sistema comparan el sistema completo con sus objetivos, en un entorno parecido a producción.",
+      "origen": "Parcial anterior",
+      "fuente": "Copia de Preguntas parcial 1 y 2 diseño.pdf"
+    },
+    {
+      "id": "p2-091",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "Tras corregir el cálculo de descuentos, se vuelven a ejecutar las pruebas del carrito y de facturación. ¿Qué tipo de prueba es?",
+      "opciones": [
+        "Humo",
+        "Regresión",
+        "Sanidad",
+        "Aceptación"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La regresión verifica que no se haya roto algo que andaba. Es amplia y profunda y se hace después de cada cambio.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Humo, sanidad y regresión"
+    },
+    {
+      "id": "p2-092",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "En cada despliegue se verifica rápidamente que la app abra, que se pueda iniciar sesión y buscar. ¿Qué tipo de prueba es?",
+      "opciones": [
+        "Regresión",
+        "Volumen",
+        "Humo (smoke)",
+        "Sistema"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La prueba de humo es amplia y superficial: verifica si arranca y funciona lo básico.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Humo, sanidad y regresión"
+    },
+    {
+      "id": "p2-093",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "Con JMeter se simula que 5.000 usuarios inician sesión en 1 minuto, sin un tiempo de respuesta objetivo. ¿Qué tipo de prueba es?",
+      "opciones": [
+        "Performance",
+        "Volumen",
+        "Esfuerzo (stress)",
+        "Usabilidad"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "El esfuerzo simula un pico de carga en poco tiempo. Si hubiera un tiempo objetivo con la carga prevista, sería performance.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Pruebas de sistema"
+    },
+    {
+      "id": "p2-094",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "Se carga la base de un hotel con 20 millones de huéspedes para ver si el sistema maneja lo especificado. ¿Qué prueba es?",
+      "opciones": [
+        "Volumen",
+        "Esfuerzo",
+        "Performance",
+        "Instalación"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "La prueba de volumen aumenta la cantidad de datos.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Pruebas de sistema"
+    },
+    {
+      "id": "p2-095",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "Se verifica que, con 500 usuarios concurrentes, el sistema responda en menos de 2 segundos. ¿Qué prueba es?",
+      "opciones": [
+        "Esfuerzo",
+        "Volumen",
+        "Humo",
+        "Performance"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "La performance verifica si se cumplen los tiempos objetivo con la carga prevista.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Pruebas de sistema"
+    },
+    {
+      "id": "p2-096",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "Los módulos de Reservas y Pagos, ya probados por separado, se prueban juntos. ¿Qué nivel de prueba es?",
+      "opciones": [
+        "Unidad",
+        "Integración",
+        "Aceptación",
+        "Sistema"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La integración verifica que módulos ya probados en forma aislada funcionen bien juntos (contratos de datos, orden, errores y configuración).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Integración"
+    },
+    {
+      "id": "p2-097",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "En el modelo en V, ¿con qué etapa de desarrollo se contrasta cada nivel de prueba?",
+      "opciones": [
+        "Aceptación ↔ requisitos del usuario; sistema ↔ objetivos del sistema; integración ↔ diseño de módulos; unidad ↔ codificación",
+        "Aceptación ↔ codificación; unidad ↔ requisitos del usuario",
+        "Sistema ↔ diseño de módulos; integración ↔ objetivos",
+        "Todos los niveles se contrastan con la codificación"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Cada nivel valida la etapa simétrica del lado del desarrollo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Modelo en V"
+    },
+    {
+      "id": "p2-098",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "En las pruebas de integración, ¿qué diferencia hay entre un driver y un stub?",
+      "opciones": [
+        "El driver simula al módulo llamado y el stub, al llamador",
+        "Son lo mismo",
+        "El driver simula al llamador del módulo bajo prueba y el stub, al módulo llamado",
+        "El stub sólo se usa en las pruebas de aceptación"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La integración descendente (top-down) usa stubs; la ascendente (bottom-up) usa drivers.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Integración"
+    },
+    {
+      "id": "p2-099",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Qué ventajas tiene la integración incremental frente a la big-bang? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "La falla suele apuntar al último módulo agregado",
+        "Los errores de interfaz aparecen antes",
+        "Permite probar todos los módulos en paralelo y combinarlos al final",
+        "Los primeros módulos se prueban más veces"
+      ],
+      "correctas": [
+        0,
+        1,
+        3
+      ],
+      "explicacion": "Probar en paralelo y combinar al final es la ventaja de la big-bang (no incremental).",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Integración"
+    },
+    {
+      "id": "p2-100",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Qué diferencia a un mock de un stub?",
+      "opciones": [
+        "El mock, además de reemplazar la dependencia, verifica cómo fue usado (por ejemplo, que se llamó una vez)",
+        "El stub verifica las llamadas y el mock no",
+        "El mock usa una base de datos real",
+        "No hay diferencia"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El stub sólo devuelve datos preparados.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Pruebas de unidad"
+    },
+    {
+      "id": "p2-101",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Qué significa la regla FIRST de las pruebas de unidad?",
+      "opciones": [
+        "Functional, Integrated, Reliable, Secure, Tested",
+        "Fast, Independent, Repeatable, Self-validating, Timely",
+        "First, Iterative, Regression, Smoke, Test",
+        "Fast, Integrated, Robust, Simple, Typed"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Rápidas, independientes, repetibles, que se autoevalúan y escritas a tiempo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Pruebas de unidad"
+    },
+    {
+      "id": "p2-102",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Cómo es la pirámide de pruebas recomendada?",
+      "opciones": [
+        "Muchas pruebas de extremo a extremo y pocas de unidad",
+        "La misma cantidad de cada tipo",
+        "Muchas pruebas de unidad en la base, algunas de integración y pocas de extremo a extremo (UI) arriba",
+        "Sólo pruebas de integración"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Una pirámide invertida hace que cada cambio sea lento y caro.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Pruebas de unidad"
+    },
+    {
+      "id": "p2-103",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Cuáles son variantes de la prueba de aceptación (UAT)? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Contractual",
+        "Alfa (dentro de la organización)",
+        "Humo",
+        "Beta (con usuarios reales)"
+      ],
+      "correctas": [
+        0,
+        1,
+        3
+      ],
+      "explicacion": "La UAT la realiza el usuario final o el cliente antes de pasar a producción. La prueba de humo es otro tipo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Aceptación"
+    },
+    {
+      "id": "p2-104",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Qué criterios tienen sentido para terminar las pruebas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Cuando se acaba el tiempo",
+        "Cuando la curva de errores encontrados por unidad de tiempo se aplana",
+        "Cuando se ejecutaron todos los casos sin detectar errores",
+        "Cuando se alcanzaron los objetivos de calidad (cobertura y cero defectos críticos abiertos)",
+        "Cuando se halló la proporción prevista de los errores estimados"
+      ],
+      "correctas": [
+        1,
+        3,
+        4
+      ],
+      "explicacion": "\"Se acabó el tiempo\" y \"todos los casos pasan\" son criterios de poco sentido.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – ¿Cuándo terminar?"
+    },
+    {
+      "id": "p2-105",
+      "tema": "Niveles y tipos de prueba",
+      "pregunta": "¿Qué afirmaciones sobre las pruebas de sistema son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Comparan el sistema con sus objetivos originales",
+        "Son las más difíciles y las peor interpretadas",
+        "Consisten en repetir las pruebas funcionales y de integración",
+        "La prueba de alcance puede hacerse sin computadora"
+      ],
+      "correctas": [
+        0,
+        1,
+        3
+      ],
+      "explicacion": "La prueba de sistema no es repetir las funcionales: incluye requisitos no funcionales y se diseña a partir de los objetivos.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Pruebas de sistema"
+    },
+    {
+      "id": "p2-106",
+      "tema": "Debugging",
+      "pregunta": "¿Qué técnicas o herramientas pueden ayudar a hacer debugging? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Pruebas unitarias",
+        "Análisis de logs",
+        "Uso de breakpoints",
+        "Depurador integrado (IDE debugger)"
+      ],
+      "correctas": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "explicacion": "Todas sirven: depurar por medio de pruebas, esparcir sentencias o logs y usar debuggers con breakpoints.",
+      "origen": "Parcial anterior",
+      "fuente": "Preguntas de parcial 2 (dragged).pdf"
+    },
+    {
+      "id": "p2-107",
+      "tema": "Debugging",
+      "pregunta": "¿Cuál es el método de debugging por fuerza bruta MÁS ineficiente?",
+      "opciones": [
+        "El vuelco de memoria (dump)",
+        "Los debuggers con breakpoints",
+        "El rastreo hacia atrás",
+        "La inducción"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El dump da una imagen estática con mucha información irrelevante y no ofrece un método para encontrar la causa.",
+      "origen": "Generada del material",
+      "fuente": "Resumen P2 completo – Debugging"
+    },
+    {
+      "id": "p2-108",
+      "tema": "Debugging",
+      "pregunta": "Se enumeran las causas posibles de un error y se usan los datos para descartarlas hasta que queda una. ¿Qué método es?",
+      "opciones": [
+        "Inducción",
+        "Deducción",
+        "Backtracking",
+        "Fuerza bruta"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La deducción va de lo general a lo particular, por eliminación. La inducción parte de los síntomas para formular una hipótesis.",
+      "origen": "Generada del material",
+      "fuente": "Resumen P2 completo – Debugging"
+    },
+    {
+      "id": "p2-109",
+      "tema": "Debugging",
+      "pregunta": "¿Cuáles son principios de reparación de errores? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Donde hay un error probablemente haya otro",
+        "Hay que arreglar el error, no sólo un síntoma",
+        "Una corrección es correcta al 100 % y no necesita probarse",
+        "Una corrección puede introducir errores nuevos, así que hay que hacer una prueba de regresión"
+      ],
+      "correctas": [
+        0,
+        1,
+        3
+      ],
+      "explicacion": "Una corrección es más propensa a errores que el código original.",
+      "origen": "Generada del material",
+      "fuente": "Resumen P2 completo – Debugging"
+    },
+    {
+      "id": "p2-110",
+      "tema": "Debugging",
+      "pregunta": "¿Qué ventaja tiene un debugger frente a esparcir sentencias print?",
+      "opciones": [
+        "Analiza la dinámica sin modificar el programa y permite usar breakpoints",
+        "Genera más información de salida",
+        "Encuentra el error automáticamente",
+        "No tiene ventajas"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Los prints modifican el programa y pueden enmascarar el error.",
+      "origen": "Generada del material",
+      "fuente": "Resumen P2 completo – Debugging"
+    },
+    {
+      "id": "p2-111",
+      "tema": "Implementación",
+      "pregunta": "Un hospital incorpora un nuevo módulo digital para el área de emergencias, mientras que facturación seguirá con el sistema anterior en una primera etapa. El objetivo es que el personal se acostumbre progresivamente al nuevo sistema mientras el resto sigue funcionando. ¿Qué tipo de implementación es la más apropiada?",
+      "opciones": [
+        "Por prototipado",
+        "Total",
+        "Paralela",
+        "Gradual"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "En la implementación gradual, los componentes nuevos sustituyen uno a uno a los viejos y los usuarios se adaptan de a poco.",
+      "origen": "Parcial anterior",
+      "fuente": "Preguntas de parcial 2 (dragged).pdf"
+    },
+    {
+      "id": "p2-112",
+      "tema": "Implementación",
+      "pregunta": "Una multinacional quiere reemplazar su sistema de recursos humanos. El actual funciona bien pero es obsoleto, y es vital no interrumpir la operación diaria. Se debe garantizar que el nuevo sistema liquide los sueldos sin errores. El sistema es muy complejo y afecta a más de 5 áreas. ¿Qué tipo de implementación es la más apropiada?",
+      "opciones": [
+        "Total",
+        "Paralela",
+        "Gradual",
+        "Por prototipado"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "En un sistema crítico, donde un error es inaceptable (sueldos), se usa la implementación en paralelo: ambos sistemas funcionan y se comparan los resultados.",
+      "origen": "Parcial anterior",
+      "fuente": "Preguntas de parcial 2 (dragged).pdf"
+    },
+    {
+      "id": "p2-113",
+      "tema": "Implementación",
+      "pregunta": "Una cadena de 120 farmacias de distinto tamaño implanta un nuevo sistema. ¿Qué estrategia conviene?",
+      "opciones": [
+        "Total",
+        "Por prototipado",
+        "Distribuida (sede por sede, empezando por las más chicas)",
+        "Paralela"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Se estabiliza donde el impacto es menor y se escala con la experiencia.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Implementación"
+    },
+    {
+      "id": "p2-114",
+      "tema": "Implementación",
+      "pregunta": "La facturación electrónica nueva es obligatoria por ley desde el 1/1. ¿Qué estrategia de implementación conviene?",
+      "opciones": [
+        "Gradual",
+        "Total (big bang)",
+        "Por prototipado",
+        "Distribuida"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "La total conviene si la fecha es impuesta, el sistema es simple o el anterior colapsó.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Implementación"
+    },
+    {
+      "id": "p2-115",
+      "tema": "Implementación",
+      "pregunta": "Un municipio quiere un portal para vecinos, pero sus necesidades son difusas y cambiantes. ¿Qué estrategia conviene?",
+      "opciones": [
+        "Por prototipado",
+        "Total",
+        "Paralela",
+        "Distribuida"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "Los prototipos evolutivos descubren problemas de requerimientos desde el inicio.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Implementación"
+    },
+    {
+      "id": "p2-116",
+      "tema": "Implementación",
+      "pregunta": "¿Cuáles son etapas de la implementación? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "Conversión de programas",
+        "Conversión de datos",
+        "Pruebas de unidad",
+        "Conversión de procedimientos",
+        "Capacitación a usuarios",
+        "Evaluación final"
+      ],
+      "correctas": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ],
+      "explicacion": "Las cinco etapas se hacen en paralelo a la gestión de liberaciones. Las pruebas de unidad son previas.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Implementación"
+    },
+    {
+      "id": "p2-117",
+      "tema": "Implementación",
+      "pregunta": "En una migración de datos, ¿qué significa reconciliar?",
+      "opciones": [
+        "Borrar los datos viejos",
+        "Verificar que la cantidad de registros y los totales del origen coincidan con los del destino",
+        "Capacitar a los usuarios",
+        "Mapear campos de origen a destino"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Las etapas son extraer, transformar, cargar y validar (reconciliar y aprobar). El mapeo de campos es un paso previo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Conversión de datos"
+    },
+    {
+      "id": "p2-118",
+      "tema": "Implementación",
+      "pregunta": "¿Qué caracteriza a la capacitación EJECUTIVA?",
+      "opciones": [
+        "Explica paso a paso cómo ejecutar cada tarea",
+        "Se hace en un sandbox con casos reales",
+        "Explica qué problemas resuelve el sistema y qué beneficios aporta; es una acción de marketing para \"vender el producto\"",
+        "Está dirigida a los usuarios operativos"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "La capacitación ejecutiva cubre el qué; la operativa, el qué y el cómo.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Capacitación"
+    },
+    {
+      "id": "p2-119",
+      "tema": "Implementación",
+      "pregunta": "¿Qué estrategia de conversión tiene vuelta atrás inmediata pero el costo más alto (doble operación)?",
+      "opciones": [
+        "Total",
+        "Gradual",
+        "Distribuida",
+        "En paralelo"
+      ],
+      "correctas": [
+        3
+      ],
+      "explicacion": "En paralelo, el viejo sistema sigue funcionando como red de seguridad.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Implementación"
+    },
+    {
+      "id": "p2-120",
+      "tema": "Release y despliegue",
+      "pregunta": "La nueva versión se libera primero a un 5 % de los usuarios para detectar problemas con poco impacto. ¿Qué estrategia de despliegue es?",
+      "opciones": [
+        "Blue-green",
+        "Rolling",
+        "Canary",
+        "Feature flags"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Blue-green usa dos entornos idénticos; rolling actualiza de a pocos servidores; los feature flags separan desplegar de liberar.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Estrategias de despliegue"
+    },
+    {
+      "id": "p2-121",
+      "tema": "Release y despliegue",
+      "pregunta": "¿Qué estrategia de despliegue separa \"desplegar\" de \"liberar\"?",
+      "opciones": [
+        "Feature flags",
+        "Canary",
+        "Blue-green",
+        "Rolling"
+      ],
+      "correctas": [
+        0
+      ],
+      "explicacion": "El código se despliega apagado y se enciende por funcionalidad.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Estrategias de despliegue"
+    },
+    {
+      "id": "p2-122",
+      "tema": "Release y despliegue",
+      "pregunta": "La versión actual es 2.1.3. Se agrega un nuevo reporte manteniendo la compatibilidad. Según el versionado semántico, ¿cuál es la próxima versión?",
+      "opciones": [
+        "3.0.0",
+        "2.1.4",
+        "2.2.0",
+        "2.1.3-beta"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Es MINOR porque agrega funcionalidad compatible. MAJOR corresponde a incompatibilidades y PATCH a correcciones.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Tipos de release"
+    },
+    {
+      "id": "p2-123",
+      "tema": "Release y despliegue",
+      "pregunta": "¿Cuál es el orden correcto de madurez de un release?",
+      "opciones": [
+        "Beta → Alpha → Release Candidate → GA",
+        "Alpha → Beta → Release Candidate → General Availability",
+        "Release Candidate → Alpha → Beta → GA",
+        "Alpha → Release Candidate → Beta → GA"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "Por ejemplo: 3.0.0-alpha.1 → 3.0.0-beta.2 → 3.0.0-rc.1 → 3.0.0.",
+      "origen": "Generada del material",
+      "fuente": "Resumen Unidad 6 – Tipos de release"
+    },
+    {
+      "id": "p2-124",
+      "tema": "Modelo de diseño",
+      "pregunta": "Comparando el modelo de análisis con el de diseño, ¿qué afirmaciones son correctas? (Seleccione todas las que correspondan)",
+      "opciones": [
+        "El modelo de análisis es conceptual y usa 3 estereotipos: interfaz, control y entidad",
+        "El modelo de diseño debe mantenerse durante todo el ciclo de vida",
+        "El modelo de diseño es genérico y aplicable a varias implementaciones",
+        "El modelo de análisis puede no mantenerse durante todo el ciclo de vida"
+      ],
+      "correctas": [
+        0,
+        1,
+        3
+      ],
+      "explicacion": "El genérico es el modelo de análisis; el de diseño corresponde a una única implementación.",
+      "origen": "Generada del material",
+      "fuente": "Resumen P2 completo – Modelo de diseño"
+    },
+    {
+      "id": "p2-125",
+      "tema": "Modelo de diseño",
+      "pregunta": "Cuando un subsistema depende de otro, ¿hacia dónde debe dirigirse la dependencia?",
+      "opciones": [
+        "Hacia las clases internas del otro subsistema",
+        "Hacia la base de datos",
+        "Hacia la interfaz del otro subsistema",
+        "Hacia el diagrama de despliegue"
+      ],
+      "correctas": [
+        2
+      ],
+      "explicacion": "Depender de la interfaz y no de los elementos internos mejora la reutilización y reduce el impacto de los cambios.",
+      "origen": "Generada del material",
+      "fuente": "Resumen P2 completo – Diseño de los subsistemas"
+    },
+    {
+      "id": "p2-126",
+      "tema": "Modelo de diseño",
+      "pregunta": "En un diagrama de actividad, ¿en qué se diferencia el nodo final de flujo del nodo final de actividad?",
+      "opciones": [
+        "Ambos terminan la ejecución completa del diagrama",
+        "El nodo final de flujo detiene sólo una secuencia de flujo específica; el nodo final de actividad finaliza toda la actividad",
+        "No hay diferencia",
+        "El nodo final de flujo sólo se usa en diagramas concurrentes"
+      ],
+      "correctas": [
+        1
+      ],
+      "explicacion": "El nodo final de flujo (círculo con una X) cierra un solo flujo. El final de actividad termina todo.",
+      "origen": "Parcial anterior",
+      "fuente": "Copia de Preguntas parcial 1 y 2 diseño.pdf"
+    }
+  ]
+}
