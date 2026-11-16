@@ -155,6 +155,40 @@ def main():
             only_essay = app.score_attempt([essay], {"d1": "texto"})
             assert only_essay["total"] == 0 and only_essay["porcentaje"] is None
 
+            # Importación en formato Aiken: vista previa, materia nueva y agregado a una existente.
+            aiken = "1. ¿Capital de Francia?\nA. Madrid\nB) París\nC. Roma\nANSWER: B\nEXPLICACION: Es París.\nTEMA: Geografía\n\n¿Qué imprime?\n```\nA. no es una opción\n```\nA. 1\nB. 2\n**ANSWER: A, B**\n"
+            assert get("/api/meta")["escribible"] is True
+            preview = post("/api/import", {"texto": "```text\n" + aiken + "```", "destino": {"tipo": "nueva", "nombre": ""}})
+            assert preview["formato"] == "Aiken" and preview["cantidad"] == 2 and "guardado" not in preview
+            first, second = preview["preguntas"]
+            assert first["pregunta"] == "¿Capital de Francia?" and first["opciones"] == ["Madrid", "París", "Roma"] and first["correctas"] == [1]
+            assert first["explicacion"] == "Es París." and first["tema"] == "Geografía"
+            assert "A. no es una opción" in second["pregunta"] and second["correctas"] == [0, 1]
+            assert not (subjects / "geografia-general.json").exists()
+            assert rejected({"texto": aiken, "destino": {"tipo": "nueva", "nombre": " "}, "guardar": True}, "/api/import"), "Se guardó sin nombre"
+            saved = post("/api/import", {"texto": aiken, "destino": {"tipo": "nueva", "nombre": "Geografía General"}, "guardar": True})
+            assert saved["guardado"] and saved["materia"]["id"] == "geografia-general" and saved["total"] == 2
+            listed = {s["id"]: s for s in get("/api/meta")["materias"]}
+            assert listed["geografia-general"]["nombre"] == "Geografía General" and listed["geografia-general"]["cantidad"] == 2
+            assert rejected({"texto": aiken, "destino": {"tipo": "nueva", "nombre": "geografía general"}, "guardar": True}, "/api/import"), "Se pisó una materia"
+            added = post("/api/import", {"texto": aiken, "destino": {"tipo": "existente", "materia": "geografia-general"}, "guardar": True})
+            assert added["total"] == 4
+            ids = [q["id"] for q in app.load_subject("geografia-general")["preguntas"]]
+            assert len(set(ids)) == 4 and ids[0] == "geografia-general-001"
+
+            # JSON tolerante: texto alrededor y comas finales; los ID repetidos se renumeran.
+            loose = 'Acá tenés:\n{"nombre": "Química", "preguntas": [' + json.dumps(question(1)) + ", " + json.dumps(question(1)) + ",]}\nSuerte."
+            json_preview = post("/api/import", {"texto": loose})
+            assert json_preview["formato"] == "JSON" and json_preview["nombre_sugerido"] == "Química" and json_preview["cantidad"] == 2
+            assert len({q["id"] for q in json_preview["preguntas"]}) == 2
+            plain_list = post("/api/import", {"texto": json.dumps([question(5)]), "destino": {"tipo": "existente", "materia": "Álgebra lineal"}, "guardar": True})
+            assert plain_list["total"] == 3 and isinstance(json.loads((subjects / "Álgebra lineal.json").read_text(encoding="utf-8")), list)
+            for broken in ("¿X?\nA. a\nC. c\nANSWER: A", "¿X?\nA. a\nB. b\n\n¿Y?", "¿X?\nA. a\nB. b\nANSWER: D", "{\"preguntas\": [", "   ",
+                           json.dumps([{**question(1), "correctas": [9]}])):
+                assert rejected({"texto": broken}, "/api/import"), f"Se aceptó {broken!r}"
+            assert rejected({"texto": aiken, "destino": {"tipo": "existente", "materia": "rota"}, "guardar": True}, "/api/import"), "Se agregó a una materia rota"
+            assert app.slugify("  Diseño de Sistemas – Parcial 2 ") == "diseno-de-sistemas-parcial-2" and app.slugify("¿?") == "materia"
+
             # Una materia agregada con la aplicación abierta aparece sin reiniciar.
             (subjects / "nueva.json").write_text(json.dumps([question(1)]), encoding="utf-8")
             assert "nueva" in {s["id"] for s in get("/api/meta")["materias"]}
