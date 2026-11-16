@@ -9,18 +9,32 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="topbar">
-      <div class="brand" id="home-link" role="button" tabindex="0" aria-label="Ir al inicio">
-        <span class="brand-mark">R</span><span>Repas<span class="brand-accent">ario</span></span>
+    <aside class="sidebar" id="sidebar" aria-label="Cuestionarios">
+      <div class="sidebar-top">
+        <div class="brand" id="home-link" role="button" tabindex="0" aria-label="Ir al inicio">
+          <span class="brand-mark">R</span><span>Repas<span class="brand-accent">ario</span></span>
+        </div>
+        <button class="icon-button sidebar-close" id="sidebar-close" type="button" aria-label="Cerrar menú">✕</button>
       </div>
-      <nav aria-label="Navegación principal">
-        <button class="nav-button" id="nav-new" type="button">Nuevo cuestionario</button>
-        <button class="nav-button" id="nav-history" type="button">Historial</button>
-        <button class="nav-button" id="nav-exit" type="button" hidden>Salir</button>
-      </nav>
-    </header>
-    <main id="main" tabindex="-1"></main>
-    <footer class="footer">Cuestionarios locales · Una materia por archivo en la carpeta <code>materias</code></footer>
+      <div class="sidebar-actions">
+        <button class="side-action primary" id="nav-new" type="button"><span aria-hidden="true">＋</span> Nuevo cuestionario</button>
+        <button class="side-action" id="nav-import" type="button"><span aria-hidden="true">⇪</span> Importar preguntas</button>
+      </div>
+      <div class="sidebar-title">Cuestionarios</div>
+      <nav class="attempts" id="attempts" aria-label="Cuestionarios por materia"></nav>
+      <div class="sidebar-bottom">
+        <button class="side-action" id="nav-exit" type="button" hidden>Salir</button>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <div class="content">
+      <header class="mobile-bar">
+        <button class="icon-button" id="sidebar-open" type="button" aria-label="Abrir menú" aria-controls="sidebar">☰</button>
+        <span class="brand"><span class="brand-mark">R</span><span>Repas<span class="brand-accent">ario</span></span></span>
+      </header>
+      <main id="main" tabindex="-1"></main>
+      <footer class="footer">Cuestionarios locales · Tus materias y tu historial quedan en esta computadora</footer>
+    </div>
   </div>
 </body>
 </html>

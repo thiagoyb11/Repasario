@@ -135,14 +135,122 @@ function rememberSubject(id) {
   try { localStorage.setItem('materia', id); } catch { /* sin almacenamiento local */ }
 }
 
+// ---------- Barra lateral: cuestionarios agrupados por materia ----------
+
+let attempts = [];
+let activeAttempt = null;
+
+function collapsedGroups() {
+  try { return new Set(JSON.parse(localStorage.getItem('grupos-cerrados') || '[]')); } catch { return new Set(); }
+}
+
+function saveCollapsed(set) {
+  try { localStorage.setItem('grupos-cerrados', JSON.stringify([...set])); } catch { /* sin almacenamiento local */ }
+}
+
+async function loadAttempts() {
+  try { attempts = await api('/api/history'); } catch { attempts = []; }
+  renderSidebar();
+}
+
+function setSidebar(open) {
+  document.body.classList.toggle('sidebar-open', open);
+  document.querySelector('#sidebar-backdrop').hidden = !open;
+}
+
+function renderSidebar() {
+  const nav = document.querySelector('#attempts');
+  const groups = new Map();
+  const group = (id, name) => {
+    if (!groups.has(id)) groups.set(id, { nombre: name, items: [] });
+    return groups.get(id);
+  };
+  // El cuestionario en curso encabeza su materia; los intentos ya vienen del más reciente al más antiguo.
+  if (quiz) group(quiz.materia.id, quiz.materia.nombre);
+  attempts.forEach(record => {
+    const subject = record.materia || { id: '', nombre: 'Sin materia' };
+    group(subject.id, subject.nombre).items.push(record);
+  });
+  nav.replaceChildren();
+  if (!groups.size) {
+    nav.append(el('p', 'sidebar-empty', 'Los cuestionarios que completes aparecen acá, ordenados por materia.'));
+    return;
+  }
+  const collapsed = collapsedGroups();
+  groups.forEach((data, id) => {
+    const details = el('details', 'attempt-group');
+    details.open = !collapsed.has(id);
+    details.addEventListener('toggle', () => {
+      const set = collapsedGroups();
+      if (details.open) set.delete(id); else set.add(id);
+      saveCollapsed(set);
+    });
+    const summary = el('summary', '');
+    summary.append(el('span', 'group-name', data.nombre), el('span', 'group-count', String(data.items.length)));
+    details.append(summary);
+    if (quiz && quiz.materia.id === id) {
+      const item = button('', `attempt-item in-progress${main.dataset.view === 'quiz' ? ' active' : ''}`, () => { setSidebar(false); showQuiz(); });
+      item.append(el('span', 'attempt-date', 'En curso'), el('span', 'attempt-score', `${countAnswered()}/${quiz.preguntas.length}`));
+      details.append(item);
+    }
+    data.items.forEach(record => {
+      const item = button('', `attempt-item${activeAttempt === record.id ? ' active' : ''}`, async () => {
+        setSidebar(false);
+        try { activeAttempt = record.id; report = await api(`/api/history/${encodeURIComponent(record.id)}`); showReport(report); }
+        catch (error) { showError(error); }
+      });
+      const score = record.porcentaje == null ? '—' : `${Math.round(record.porcentaje)}%`;
+      const level = record.porcentaje == null ? '' : record.porcentaje >= 70 ? ' good' : record.porcentaje >= 40 ? ' mid' : ' low';
+      item.title = `${formatDate(record.fecha)} · ${record.total} preguntas`;
+      item.append(el('span', 'attempt-date', formatDate(record.fecha)), el('span', `attempt-score${level}`, score));
+      details.append(item);
+    });
+    nav.append(details);
+  });
+}
+
+function setView(name) {
+  const changed = main.dataset.view !== name;
+  main.dataset.view = name;
+  if (name !== 'report') activeAttempt = null;
+  renderSidebar();
+  if (changed) { main.focus({ preventScroll: true }); window.scrollTo(0, 0); }
+}
+
+// ---------- Inicio ----------
+
+const ADVANTAGES = [
+  ['Tus preguntas son tuyas', 'El banco es un archivo en tu computadora: lo revisás, corregís y compartís pregunta por pregunta, en lugar de depender de lo que un servicio genere en ese momento.'],
+  ['Usá la IA que quieras, o ninguna', 'Generá las preguntas con ChatGPT, Claude, Gemini u otra y pegá el resultado. También podés escribirlas a mano o traerlas de Moodle en formato Aiken.'],
+  ['Sin cuenta ni conexión', 'Funciona en tu computadora, sin iniciar sesión y sin internet. Tus apuntes y tus resultados no salen de tu equipo.'],
+  ['Corrección exacta', 'Cada respuesta se corrige contra la clave del banco, con puntaje parcial en las preguntas de varias respuestas. La nota no depende de un modelo de IA.'],
+  ['Todo tu historial', 'Cada intento queda guardado con tus respuestas y la explicación de cada pregunta, ordenado por materia en la barra lateral.'],
+  ['Pensado para parciales', 'Preguntas de parciales reales, diagramas, bloques de código y preguntas de desarrollo en el mismo cuestionario.'],
+];
+
+function advantages() {
+  const section = el('section', 'advantages');
+  section.append(el('span', 'eyebrow', 'Por qué Repasario'), el('h2', '', 'Una alternativa local a NotebookLM para practicar'));
+  section.append(el('p', 'muted advantages-intro', 'NotebookLM es muy bueno para conversar con tus apuntes. Repasario se enfoca en otra cosa: practicar con un banco de preguntas que controlás vos.'));
+  const grid = el('div', 'advantage-grid');
+  ADVANTAGES.forEach(([title, text]) => {
+    const card = el('article', 'advantage');
+    card.append(el('h3', '', title), el('p', '', text));
+    grid.append(card);
+  });
+  section.append(grid);
+  return section;
+}
+
 async function showHome() {
   // Las materias se vuelven a leer para reflejar archivos agregados o editados.
   try { meta = await api('/api/meta'); } catch (error) { main.replaceChildren(); return showError(error); }
   main.replaceChildren();
+  setView('home');
   const hero = el('section', 'hero');
   hero.append(el('span', 'eyebrow', 'Práctica a tu ritmo'));
   hero.append(el('h1', '', 'Prepará tu próximo examen.'));
-  hero.append(el('p', '', 'Elegí una materia, armá un cuestionario aleatorio, respondé todas las preguntas y revisá tus resultados cuando quieras.'));
+  hero.append(el('p', '', 'Generá preguntas con tu IA favorita, pegalas acá y practicá con cuestionarios aleatorios que se corrigen solos.'));
   main.append(hero);
 
   const subjects = validSubjects();
@@ -160,11 +268,10 @@ async function showHome() {
   }
 
   if (!subjects.length) {
-    const help = el('p', 'muted', 'Todavía no hay materias disponibles. Agregá un archivo ');
-    help.append(el('code', '', '.json'), document.createTextNode(' con preguntas en la carpeta de materias y volvé a esta pantalla.'));
-    setup.append(help);
-    info.append(el('h2', '', 'Tu espacio de práctica'), el('p', '', 'Cada archivo de la carpeta de materias es un banco de preguntas independiente.'), folders());
-    grid.append(setup, info); main.append(grid);
+    setup.append(el('p', 'muted', 'Todavía no hay materias. Importá preguntas generadas por una IA, en formato Aiken o JSON, para crear la primera.'));
+    setup.append(button('Importar preguntas →', 'button primary start-button', () => showImport()));
+    info.append(el('h2', '', 'Tu espacio de práctica'), el('p', '', 'Cada materia es un archivo de la carpeta de materias con su banco de preguntas.'), folders());
+    grid.append(setup, info); main.append(grid, advantages());
     return;
   }
 
@@ -199,6 +306,7 @@ async function showHome() {
     info.append(el('h2', '', subject.nombre));
     info.append(el('p', '', subject.descripcion || 'Banco de preguntas editable para practicar esta materia.'));
     info.append(el('div', 'stat', String(subject.cantidad)), el('div', 'stat-label', subject.cantidad === 1 ? 'pregunta en el banco editable' : 'preguntas en el banco editable'));
+    info.append(button('＋ Agregar preguntas a esta materia', 'button info-button', () => showImport(subject.id)));
     info.append(folders());
   }
   select.addEventListener('change', () => { rememberSubject(select.value); showSubject(); });
@@ -215,7 +323,207 @@ async function showHome() {
     } catch (error) { showError(error); }
   }));
   if (quiz) setup.append(button(`Retomar cuestionario en curso (${quiz.materia.nombre})`, 'button secondary start-button', showQuiz));
-  grid.append(setup, info); main.append(grid);
+  grid.append(setup, info); main.append(grid, advantages());
+}
+
+// ---------- Importar preguntas ----------
+
+function aikenPrompt(amount) {
+  return `Generá ${amount} preguntas de opción múltiple para repasar el material que te adjunto. Respondé solo con las preguntas, sin texto antes ni después, en este formato exacto:
+
+¿Enunciado de la pregunta?
+A. Primera opción
+B. Segunda opción
+C. Tercera opción
+D. Cuarta opción
+ANSWER: B
+EXPLICACION: Por qué esa respuesta es la correcta, en una o dos oraciones.
+TEMA: Tema o unidad de la pregunta
+
+Reglas:
+- Dejá una línea en blanco entre preguntas.
+- Entre 2 y 8 opciones por pregunta, con letras mayúsculas consecutivas desde A seguidas de un punto.
+- ANSWER lleva la letra de la opción correcta. Si hay varias correctas, separalas con comas (ANSWER: A, C).
+- Las opciones incorrectas tienen que ser plausibles. Evitá "Todas las anteriores" salvo que sea necesario.
+- Si una pregunta incluye código, ponelo entre dos líneas con tres acentos graves (\`\`\`), dentro del enunciado.
+- No uses negritas, numeración ni otro formato Markdown.
+- Basate solo en el material adjunto. Si te pido más preguntas, no repitas las anteriores.`;
+}
+
+const PLACEHOLDER = `Pegá acá lo que te devolvió la IA. Por ejemplo:
+
+¿En qué año se declaró la independencia argentina?
+A. 1810
+B. 1816
+C. 1853
+ANSWER: B
+EXPLICACION: Se declaró el 9 de julio de 1816 en Tucumán.
+
+También se acepta el JSON de una materia.`;
+
+function copyText(text, trigger) {
+  const done = () => { const label = trigger.textContent; trigger.textContent = '✓ Copiado'; setTimeout(() => { trigger.textContent = label; }, 1600); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+}
+
+function fallbackCopy(text, done) {
+  const area = el('textarea');
+  area.value = text; area.style.position = 'fixed'; area.style.opacity = '0';
+  document.body.append(area); area.select();
+  try { document.execCommand('copy'); done(); } catch { /* el usuario puede copiar a mano desde la vista previa */ }
+  area.remove();
+}
+
+async function showImport(targetId = null) {
+  try { meta = await api('/api/meta'); } catch (error) { main.replaceChildren(); return showError(error); }
+  main.replaceChildren();
+  setView('import');
+  const page = el('div', 'import-page');
+  const head = el('div', 'page-head');
+  head.append(el('span', 'eyebrow', 'Importar'), el('h1', '', 'Sumá preguntas en un minuto'));
+  head.append(el('p', 'muted', 'Pedile las preguntas a la IA que uses, pegá su respuesta y revisá el resultado antes de guardarlo. También podés abrir un archivo .txt en formato Aiken (el de Moodle) o el .json de una materia.'));
+  page.append(head);
+  if (!meta.escribible) page.append(el('div', 'error', `La aplicación no puede guardar materias porque no encuentra la carpeta materias junto a ella. Descomprimí el ZIP completo y, en macOS, mové la carpeta fuera de Descargas antes de abrir la aplicación.`));
+
+  // Paso 1: prompt para la IA.
+  const step1 = el('section', 'panel import-step');
+  step1.append(el('div', 'step-number', '1'), el('h2', '', 'Pedile las preguntas a tu IA'));
+  step1.append(el('p', 'muted', 'Copiá este pedido y pegalo en ChatGPT, Claude, Gemini u otra IA, junto con tu apunte o PDF.'));
+  const amountRow = el('div', 'inline-row');
+  const amountLabel = el('label', 'field-label', 'Cantidad de preguntas');
+  amountLabel.htmlFor = 'prompt-amount';
+  const amount = el('input', 'small-input');
+  amount.id = 'prompt-amount'; amount.type = 'number'; amount.min = '1'; amount.max = '100'; amount.value = '25';
+  const promptView = el('pre', 'prompt-view', aikenPrompt(25));
+  amount.addEventListener('input', () => { promptView.textContent = aikenPrompt(Math.max(1, Math.min(100, Number(amount.value) || 25))); });
+  const copy = button('Copiar pedido', 'button secondary', () => copyText(promptView.textContent, copy));
+  amountRow.append(amountLabel, amount, copy);
+  step1.append(amountRow, promptView);
+  page.append(step1);
+
+  // Paso 2: texto pegado o archivo.
+  const step2 = el('section', 'panel import-step');
+  step2.append(el('div', 'step-number', '2'), el('h2', '', 'Pegá la respuesta'));
+  const area = el('textarea', 'import-text');
+  area.placeholder = PLACEHOLDER; area.rows = 14; area.spellcheck = false;
+  area.setAttribute('aria-label', 'Texto con las preguntas');
+  const fileInput = el('input');
+  fileInput.type = 'file'; fileInput.accept = '.txt,.json,.gift,text/plain,application/json'; fileInput.hidden = true;
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    area.value = await file.text();
+    if (!nameInput.value && file.name) nameInput.value = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+    invalidate();
+  });
+  const fileRow = el('div', 'inline-row');
+  fileRow.append(button('Abrir archivo…', 'button ghost', () => fileInput.click()), el('span', 'limit', 'Archivos .txt (Aiken) o .json'), fileInput);
+  step2.append(area, fileRow);
+  page.append(step2);
+
+  // Paso 3: destino.
+  const step3 = el('section', 'panel import-step');
+  step3.append(el('div', 'step-number', '3'), el('h2', '', 'Elegí dónde guardarlas'));
+  const subjects = validSubjects();
+  const modes = el('div', 'mode-row');
+  const radio = (value, text) => {
+    const label = el('label', 'mode-option');
+    const input = el('input');
+    input.type = 'radio'; input.name = 'destino'; input.value = value;
+    label.append(input, el('span', '', text));
+    modes.append(label);
+    return input;
+  };
+  const newMode = radio('nueva', 'Materia nueva');
+  const existingMode = subjects.length ? radio('existente', 'Agregar a una materia existente') : null;
+  const newFields = el('div', 'dest-fields');
+  const nameLabel = el('label', 'field-label', 'Nombre de la materia');
+  nameLabel.htmlFor = 'import-name';
+  const nameInput = el('input', 'text-input');
+  nameInput.id = 'import-name'; nameInput.placeholder = 'Por ejemplo: Historia Argentina';
+  const descLabel = el('label', 'field-label', 'Descripción (opcional)');
+  descLabel.htmlFor = 'import-desc';
+  const descInput = el('input', 'text-input');
+  descInput.id = 'import-desc'; descInput.placeholder = 'Unidades 1 a 4';
+  newFields.append(nameLabel, nameInput, descLabel, descInput);
+  const existingFields = el('div', 'dest-fields');
+  const select = el('select', 'subject-select');
+  select.setAttribute('aria-label', 'Materia de destino');
+  subjects.forEach(subject => { const option = el('option', '', `${subject.nombre} (${subject.cantidad} preguntas)`); option.value = subject.id; select.append(option); });
+  existingFields.append(select);
+  step3.append(modes, newFields, existingFields);
+  const preview = el('div', 'import-preview');
+  const actions = el('div', 'import-actions');
+  const review = button('Revisar preguntas', 'button secondary', () => send(false));
+  const save = button('Guardar', 'button primary', () => send(true));
+  save.disabled = true;
+  actions.append(review, save);
+  step3.append(actions, preview);
+  page.append(step3);
+  main.append(page);
+
+  const useExisting = () => existingMode && existingMode.checked;
+  function syncMode() { newFields.hidden = useExisting(); existingFields.hidden = !useExisting(); invalidate(); }
+  if (targetId && existingMode && subjects.some(subject => subject.id === targetId)) { existingMode.checked = true; select.value = targetId; }
+  else newMode.checked = true;
+  [newMode, existingMode].filter(Boolean).forEach(input => input.addEventListener('change', syncMode));
+  [area, nameInput, descInput, select].forEach(input => input.addEventListener('input', invalidate));
+  select.addEventListener('change', invalidate);
+  syncMode();
+
+  function invalidate() { save.disabled = true; save.textContent = 'Guardar'; preview.replaceChildren(); }
+
+  function payload(store) {
+    const destino = useExisting() ? { tipo: 'existente', materia: select.value } : { tipo: 'nueva', nombre: nameInput.value.trim(), descripcion: descInput.value.trim() };
+    return { texto: area.value, destino, guardar: store };
+  }
+
+  async function send(store) {
+    if (!area.value.trim()) { area.focus(); return; }
+    if (store && !useExisting() && !nameInput.value.trim()) { nameInput.focus(); return; }
+    review.disabled = save.disabled = true;
+    try {
+      const result = await post('/api/import', payload(store));
+      if (store) return showImported(result);
+      if (!useExisting() && !nameInput.value.trim() && result.nombre_sugerido) nameInput.value = result.nombre_sugerido;
+      renderPreview(result);
+      save.disabled = false;
+      save.textContent = `Guardar ${result.cantidad} ${result.cantidad === 1 ? 'pregunta' : 'preguntas'}`;
+    } catch (error) {
+      preview.replaceChildren(el('div', 'error import-error', error.message));
+    } finally { review.disabled = false; }
+  }
+
+  function renderPreview(result) {
+    preview.replaceChildren();
+    const summary = el('div', 'notice ok-notice', `Formato ${result.formato}: ${result.cantidad} ${result.cantidad === 1 ? 'pregunta válida' : 'preguntas válidas'}.` + (useExisting() ? ` La materia va a quedar con ${result.total}.` : ''));
+    preview.append(summary);
+    const list = el('ol', 'preview-list');
+    result.preguntas.slice(0, 5).forEach(q => {
+      const item = el('li', 'preview-item');
+      item.append(el('strong', '', plainText(q.pregunta).slice(0, 220)));
+      if (q.tipo === 'desarrollo') item.append(el('div', 'preview-option correct', `Respuesta esperada: ${plainText(q.respuesta).slice(0, 200)}`));
+      else (q.opciones || []).forEach((option, i) => item.append(el('div', `preview-option${q.correctas.includes(i) ? ' correct' : ''}`, `${String.fromCharCode(65 + i)}. ${plainText(option)}`)));
+      if (q.tema) item.append(el('span', 'tag', q.tema));
+      list.append(item);
+    });
+    preview.append(list);
+    if (result.cantidad > 5) preview.append(el('p', 'muted', `… y ${result.cantidad - 5} más.`));
+  }
+}
+
+function showImported(result) {
+  main.replaceChildren();
+  setView('import');
+  const panel = el('section', 'panel empty imported');
+  panel.append(el('span', 'eyebrow', 'Listo'), el('h1', '', `Se guardaron ${result.cantidad} ${result.cantidad === 1 ? 'pregunta' : 'preguntas'}`));
+  panel.append(el('p', 'muted', `«${result.materia.nombre}» tiene ahora ${result.total} ${result.total === 1 ? 'pregunta' : 'preguntas'}.`));
+  const row = el('div', 'inline-row centered');
+  row.append(button('Practicar ahora →', 'button primary', () => { rememberSubject(result.materia.id); showHome(); }), button('Importar más', 'button secondary', () => showImport(result.materia.id)));
+  panel.append(row);
+  main.append(panel);
 }
 
 function countAnswered() { return quiz.preguntas.filter(isAnswered).length; }
@@ -223,6 +531,7 @@ function countAnswered() { return quiz.preguntas.filter(isAnswered).length; }
 function showQuiz() {
   if (!quiz) return showHome();
   main.replaceChildren();
+  setView('quiz');
   const layout = el('div', 'quiz-layout');
   const side = el('aside', 'panel quiz-side');
   side.append(el('div', 'side-heading', 'Tu progreso'));
@@ -271,6 +580,7 @@ function showQuiz() {
 }
 
 function updateProgress() {
+  renderSidebar();
   document.querySelector('.side-count').textContent = `${countAnswered()} / ${quiz.preguntas.length}`;
   document.querySelector('.progress-bar').style.width = `${100 * countAnswered() / quiz.preguntas.length}%`;
   document.querySelectorAll('.q-nav').forEach((item, index) => {
@@ -339,7 +649,9 @@ async function submitQuiz() {
   try {
     report = await post('/api/submit', { id: quiz.id, respuestas: answers });
     quiz = null; answers = {}; message = '';
+    activeAttempt = report.id;
     showReport(report);
+    loadAttempts();
   } catch (error) { showError(error); }
   finally { submitting = false; }
 }
@@ -351,6 +663,7 @@ function formatDate(value) {
 
 function showReport(data) {
   main.replaceChildren();
+  setView('report');
   const page = el('div', 'results');
   const top = el('section', 'panel results-top');
   top.append(el('span', 'eyebrow', 'Cuestionario finalizado'));
@@ -360,7 +673,7 @@ function showReport(data) {
   const essays = data.desarrollo ? `${data.desarrollo} de desarrollo sin puntaje` : '';
   top.append(score, el('div', 'result-meta', [data.materia && data.materia.nombre, data.porcentaje == null ? '' : `${data.porcentaje}% de los puntos`, essays, formatDate(data.fecha)].filter(Boolean).join(' · ')));
   const controls = el('div'); controls.style.marginTop = '25px';
-  controls.append(button('Nuevo cuestionario', 'button primary', showHome), document.createTextNode(' '), button('Ver historial', 'button secondary', showHistory));
+  controls.append(button('Nuevo cuestionario', 'button primary', showHome));
   top.append(controls); page.append(top);
   page.append(el('h2', '', 'Revisión de respuestas'));
   const list = el('div', 'review-list');
@@ -404,50 +717,25 @@ function showReport(data) {
   window.scrollTo(0, 0);
 }
 
-async function showHistory() {
-  main.replaceChildren();
-  const page = el('div', 'history');
-  const head = el('div', 'history-head');
-  head.append(el('h1', '', 'Historial de intentos'), button('Nuevo cuestionario', 'button primary', showHome));
-  page.append(head, el('p', 'muted', `Tus resultados se guardan en ${meta.carpeta_historial}`));
-  main.append(page);
-  try {
-    const records = await api('/api/history');
-    if (!records.length) {
-      const empty = el('div', 'panel empty');
-      empty.append(el('h2', '', 'Todavía no hay intentos'), el('p', 'muted', 'Completá un cuestionario para empezar tu historial.'), button('Empezar', 'button primary', showHome));
-      page.append(empty); return;
-    }
-    const list = el('div', 'history-list');
-    records.forEach(record => {
-      const item = button('', 'history-item', async () => {
-        try { report = await api(`/api/history/${encodeURIComponent(record.id)}`); showReport(report); }
-        catch (error) { showError(error); }
-      });
-      const left = el('div');
-      left.append(el('strong', '', formatDate(record.fecha)), el('span', '', [record.materia && record.materia.nombre, `${record.total} preguntas`, 'Abrir revisión'].filter(Boolean).join(' · ')));
-      item.append(left, el('div', 'history-score', record.porcentaje == null ? 'Sin puntaje' : `${record.aciertos}/${record.total} puntos · ${record.porcentaje}%`));
-      list.append(item);
-    });
-    page.append(list);
-  } catch (error) { showError(error); }
-}
-
-document.querySelector('#nav-new').addEventListener('click', showHome);
-document.querySelector('#nav-history').addEventListener('click', showHistory);
+document.querySelector('#nav-new').addEventListener('click', () => { setSidebar(false); showHome(); });
+document.querySelector('#nav-import').addEventListener('click', () => { setSidebar(false); showImport(); });
+document.querySelector('#sidebar-open').addEventListener('click', () => setSidebar(true));
+document.querySelector('#sidebar-close').addEventListener('click', () => setSidebar(false));
+document.querySelector('#sidebar-backdrop').addEventListener('click', () => setSidebar(false));
 document.querySelector('#nav-exit').addEventListener('click', async () => {
   try {
     await post('/api/shutdown', {});
     main.replaceChildren(el('div', 'panel empty', 'La aplicación se cerró. Ya podés cerrar esta pestaña.'));
   } catch (error) { showError(error); }
 });
-document.querySelector('#home-link').addEventListener('click', showHome);
+document.querySelector('#home-link').addEventListener('click', () => { setSidebar(false); showHome(); });
 document.querySelector('#home-link').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') showHome(); });
 
 (async () => {
   try {
     meta = await api('/api/meta');
     document.querySelector('#nav-exit').hidden = !meta.compilada;
+    loadAttempts();
     await showHome();
   }
   catch (error) { main.append(el('div', 'error', `No se pudo iniciar la aplicación: ${error.message}`)); }
