@@ -36,9 +36,39 @@ Si el navegador no se abre automáticamente, utilizar la dirección que aparece 
 
 ## Materias
 
-Cada archivo `.json` de la carpeta [materias](materias) es una materia. Para agregar una, crear un archivo nuevo en esa carpeta, por ejemplo `materias/historia.json`; para quitarla, borrar o mover el archivo. La pantalla inicial permite elegir la materia del cuestionario y muestra la ubicación de la carpeta. Los cambios se aplican al volver a la pantalla inicial, sin reiniciar la aplicación.
+Cada archivo `.json` de la carpeta [materias](materias) es una materia. La forma más simple de crear una o sumarle preguntas es la pantalla **Importar preguntas** (ver más abajo). También se puede crear un archivo a mano en esa carpeta, por ejemplo `materias/historia.json`; para quitar una materia, borrar o mover su archivo. La pantalla inicial permite elegir la materia del cuestionario y muestra la ubicación de la carpeta. Los cambios se aplican al volver a la pantalla inicial, sin reiniciar la aplicación.
 
-El repositorio incluye las materias [Desarrollo de Software](materias/desarrollo-software.json), con **150 preguntas** sobre Java, [Diseño de Sistemas – Parcial 2](materias/diseno-sistemas-p2.json), con **126 preguntas**, y [Diseño de Sistemas – Banco de parciales](materias/diseno-sistemas-banco-parciales.json), con **60 preguntas** de parciales anteriores, varias con diagramas.
+El repositorio incluye como ejemplo las materias [Desarrollo de Software](materias/desarrollo-software.json), con **150 preguntas** sobre Java, [Diseño de Sistemas – Parcial 2](materias/diseno-sistemas-p2.json), con **310 preguntas**, y [Diseño de Sistemas – Banco de parciales](materias/diseno-sistemas-banco-parciales.json), con **60 preguntas** de parciales anteriores, varias con diagramas.
+
+### Importar preguntas
+
+La pantalla **Importar preguntas** de la barra lateral guía en tres pasos:
+
+1. **Pedirle las preguntas a una IA.** El botón **Copiar pedido** copia un pedido listo para pegar en ChatGPT, Claude, Gemini u otra IA, junto con el apunte o PDF. Pide las preguntas en formato Aiken.
+2. **Pegar la respuesta** en el campo de texto, o abrir un archivo `.txt` (Aiken) o `.json`.
+3. **Elegir el destino:** una materia nueva o una existente. **Revisar preguntas** muestra cuántas preguntas válidas hay y una vista previa, o los errores con su número de línea. **Guardar** las escribe en la carpeta `materias`.
+
+El formato se detecta solo. En JSON se acepta tanto el formato de una materia como una lista de preguntas, aunque la IA haya agregado texto antes o después, comas finales o un bloque ` ```json `. Los `id` faltantes o repetidos se reemplazan por `<materia>-001`, `<materia>-002`, etc.
+
+#### Formato Aiken
+
+Es el formato de texto de Moodle, así que también sirve para importar bancos exportados desde el campus:
+
+```text
+¿En qué año se declaró la independencia argentina?
+A. 1810
+B. 1816
+C. 1853
+ANSWER: B
+EXPLICACION: Se declaró el 9 de julio de 1816 en Tucumán.
+TEMA: Independencia
+```
+
+- Las opciones usan letras mayúsculas consecutivas desde `A`, seguidas de `.` o `)`; entre 2 y 8 por pregunta.
+- `ANSWER` indica la letra correcta. Como extensión de Repasario, admite varias separadas por comas (`ANSWER: A, C`).
+- Las líneas `EXPLICACION`, `TEMA` y `FUENTE`, después de `ANSWER`, son opcionales.
+- El enunciado puede ocupar varias líneas e incluir código entre dos líneas con tres acentos graves.
+- Las preguntas se separan con una línea en blanco. Se ignoran la numeración (`1.`) y las negritas que suelen agregar las IA.
 
 Cada archivo usa esta estructura:
 
@@ -81,7 +111,7 @@ Cada pregunta vale **1 punto**. Las preguntas con una sola respuesta correcta us
 
 ## Historial
 
-Al finalizar un cuestionario, se guarda un archivo JSON con la fecha, la materia, las preguntas, las respuestas, la corrección y el puntaje. La pantalla **Historial** permite consultar los intentos anteriores. La ubicación de los archivos aparece en la pantalla inicial y depende del sistema operativo:
+Al finalizar un cuestionario, se guarda un archivo JSON con la fecha, la materia, las preguntas, las respuestas, la corrección y el puntaje. La barra lateral muestra los intentos agrupados por materia, del más reciente al más antiguo, con su porcentaje; al elegir uno se abre su revisión. El cuestionario en curso aparece primero en su materia. En pantallas angostas, la barra lateral se abre con el botón ☰. La ubicación de los archivos aparece en la pantalla inicial y depende del sistema operativo:
 
 | Sistema | Carpeta |
 | --- | --- |
@@ -89,7 +119,7 @@ Al finalizar un cuestionario, se guarda un archivo JSON con la fecha, la materia
 | macOS | `~/Library/Application Support/Repasario/historial` |
 | Linux | `${XDG_DATA_HOME:-~/.local/share}/Repasario/historial` |
 
-Si existe un historial de la versión anterior (carpeta `CuestionariosJava`), la aplicación lo traslada a la carpeta nueva la primera vez que se inicia. Los intentos finalizados permanecen disponibles después de cerrar la aplicación. Los cuestionarios en curso se mantienen en memoria y se guardan al finalizar.
+Los intentos finalizados permanecen disponibles después de cerrar la aplicación. Los cuestionarios en curso se mantienen en memoria y se guardan al finalizar.
 
 ## Servidor MCP
 
@@ -105,4 +135,3 @@ Herramientas: `listar_materias`, `ver_materia`, `guardar_pregunta` (agrega o ree
 - `materias/`: un banco de preguntas editable por materia.
 - `tools/build_desktop.py`: genera un paquete compilado en el sistema operativo actual.
 - `tools/smoke_test.py`: prueba la API con materias de ejemplo, sin tocar las materias ni el historial reales.
-- `tools/java/`: scripts con los que se construyó `materias/desarrollo-software.json`.
