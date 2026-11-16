@@ -10,6 +10,7 @@ import random
 import re
 import sys
 import threading
+import unicodedata
 import uuid
 import webbrowser
 from datetime import datetime
@@ -207,6 +208,210 @@ def score_attempt(questions: list[dict], answers: dict) -> dict:
     return {"aciertos": round(float(total_points), 2), "total": total, "desarrollo": len(details) - total, "porcentaje": round(float(total_points * 100 / total), 1) if total else None, "preguntas": details}
 
 
+# ---------- Importación de preguntas: JSON o formato Aiken ----------
+
+# Aiken (formato de Moodle): enunciado, opciones "A." o "A)" y "ANSWER: B". Como extensión admite
+# varias respuestas ("ANSWER: A, C"), enunciados de varias líneas y las líneas EXPLICACION, TEMA y FUENTE.
+AIKEN_OPTION = re.compile(r"\*{0,2}([A-H])[.)]\*{0,2}\s+(.*)")
+AIKEN_ANSWER = re.compile(r"(?:ANSWER|RESPUESTAS?)\s*:\s*(.*)", re.IGNORECASE)
+AIKEN_FIELD = re.compile(r"(EXPLICACI[OÓ]N|EXPLANATION|TEMA|FUENTE)\s*:\s*(.*)", re.IGNORECASE)
+AIKEN_NUMBER = re.compile(r"^(?:\d+\s*[.)-]|pregunta\s+\d+\s*[:.)-]?)\s+", re.IGNORECASE)
+MAX_IMPORT_ERRORS = 8
+
+
+def _plain(line: str) -> str:
+    """Línea sin espacios ni marcas de negrita alrededor, para reconocer ANSWER y los campos extra."""
+    return line.strip().strip("*_").strip()
+
+
+def parse_aiken(text: str) -> list[dict]:
+    questions: list[dict] = []
+    errors: list[str] = []
+    current: dict | None = None
+
+    def finish():
+        nonlocal current
+        q, current = current, None
+        if q is None:
+            return
+        stem = "\n".join(q["lineas"]).strip()
+        if q["correctas"] is None:
+            errors.append(f"Línea {q['inicio']}: a la pregunta «{stem[:60]}» le falta la línea ANSWER")
+            return
+        if len(q["opciones"]) < 2:
+            errors.append(f"Línea {q['inicio']}: la pregunta «{stem[:60]}» necesita al menos dos opciones (A. y B.)")
+            return
+        question = {"pregunta": stem, "opciones": q["opciones"], "correctas": q["correctas"]}
+        question.update(q["extra"])
+        questions.append(question)
+
+    for n, raw in enumerate(text.splitlines(), 1):
+        line = raw.rstrip()
+        stripped = line.strip()
+        if current is None:
+            if not stripped:
+                continue
+            current = {"inicio": n, "lineas": [], "opciones": [], "correctas": None, "extra": {}, "codigo": False}
+            line = AIKEN_NUMBER.sub("", line.lstrip(), count=1)
+            stripped = line.strip()
+        elif current["correctas"] is not None:
+            field = AIKEN_FIELD.fullmatch(_plain(line))
+            if field:
+                key = {"tema": "tema", "fuente": "fuente"}.get(field.group(1).casefold(), "explicacion")
+                current["extra"][key] = field.group(2).strip()
+                continue
+            finish()
+            if not stripped:
+                continue
+            current = {"inicio": n, "lineas": [], "opciones": [], "correctas": None, "extra": {}, "codigo": False}
+            line = AIKEN_NUMBER.sub("", line.lstrip(), count=1)
+            stripped = line.strip()
+
+        # Bloque de código dentro del enunciado: sus líneas no se interpretan.
+        if current["codigo"] or (not current["opciones"] and stripped.startswith("```")):
+            if stripped.startswith("```"):
+                current["codigo"] = not current["codigo"]
+            current["lineas"].append(line)
+            continue
+        option = AIKEN_OPTION.fullmatch(stripped)
+        answer = AIKEN_ANSWER.fullmatch(_plain(line))
+        if option and current["lineas"]:
+            expected = chr(65 + len(current["opciones"]))
+            if option.group(1) != expected:
+                errors.append(f"Línea {n}: se esperaba la opción {expected}. y apareció {option.group(1)}.")
+            current["opciones"].append(option.group(2).strip())
+        elif answer and current["opciones"]:
+            letters = [part for part in re.split(r"[\s,;/]+|\by\b", answer.group(1).strip(" .*_")) if part]
+            if not letters or any(len(letter) != 1 or not "A" <= letter.upper() < chr(65 + len(current["opciones"])) for letter in letters):
+                errors.append(f"Línea {n}: «{stripped}» debe indicar letras de opciones existentes, por ejemplo ANSWER: B")
+                letters = ["A"]
+            current["correctas"] = sorted({ord(letter.upper()) - 65 for letter in letters})
+        elif current["opciones"]:
+            if not stripped:
+                errors.append(f"Línea {n}: falta la línea ANSWER antes del espacio en blanco (pregunta de la línea {current['inicio']})")
+                current = None
+                continue
+            current["opciones"][-1] += "\n" + stripped
+        else:
+            current["lineas"].append(line)
+        if len(errors) >= MAX_IMPORT_ERRORS:
+            break
+    finish()
+    if errors:
+        raise ValueError("Hay errores en el texto:\n" + "\n".join(errors[:MAX_IMPORT_ERRORS]))
+    if not questions:
+        raise ValueError("No se encontraron preguntas en el texto")
+    return questions
+
+
+def parse_json_import(text: str) -> dict:
+    """JSON de una materia o lista de preguntas; tolera texto alrededor y comas finales."""
+    starts = [i for i in (text.find("{"), text.find("[")) if i != -1]
+    ends = [i for i in (text.rfind("}"), text.rfind("]")) if i != -1]
+    chunk = text[min(starts):max(ends) + 1] if starts and ends else text
+    try:
+        data = json.loads(chunk)
+    except json.JSONDecodeError as exc:
+        try:
+            data = json.loads(re.sub(r",(\s*[}\]])", r"\1", chunk))
+        except json.JSONDecodeError:
+            raise ValueError(f"El JSON no es válido (línea {exc.lineno}, columna {exc.colno}): {exc.msg}") from None
+    if isinstance(data, list):
+        data = {"preguntas": data}
+    if not isinstance(data, dict) or not isinstance(data.get("preguntas"), list) or not data["preguntas"]:
+        raise ValueError("El JSON debe ser una lista de preguntas o un objeto con la lista \"preguntas\"")
+    name, description = data.get("nombre"), data.get("descripcion")
+    return {"preguntas": data["preguntas"], "nombre": name.strip() if isinstance(name, str) else "", "descripcion": description.strip() if isinstance(description, str) else ""}
+
+
+def parse_import(text: str) -> dict:
+    text = text.strip().lstrip("﻿")
+    # Respuesta de una IA envuelta en un único bloque ```json ... ```.
+    fenced = re.fullmatch(r"```[\w-]*[ \t]*\n(.*?)\n?```", text, re.DOTALL)
+    if fenced:
+        text = fenced.group(1).strip()
+    # JSON aunque la IA haya agregado texto antes o después.
+    if text.startswith(("{", "[")) or re.search(r'"(preguntas|pregunta|opciones)"\s*:', text):
+        return {"formato": "JSON", **parse_json_import(text)}
+    return {"formato": "Aiken", "preguntas": parse_aiken(text), "nombre": "", "descripcion": ""}
+
+
+def slugify(name: str) -> str:
+    ascii_name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]+", "-", ascii_name.lower()).strip("-")[:60].strip("-") or "materia"
+
+
+def subjects_writable() -> bool:
+    # Compilada y sin carpeta materias junto a la aplicación, solo existe la copia interna de solo lectura.
+    return not (getattr(sys, "frozen", False) and SUBJECTS.resolve() == (ROOT / "materias").resolve())
+
+
+def import_questions(body: dict) -> dict:
+    """Interpreta el texto, valida las preguntas y, con "guardar": true, las escribe en la materia de destino."""
+    text = body.get("texto")
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("Pegá el texto con las preguntas o abrí un archivo")
+    parsed = parse_import(text)
+    destination = body.get("destino") if isinstance(body.get("destino"), dict) else {}
+    save = body.get("guardar") is True
+    if destination.get("tipo") == "existente":
+        subject = load_subject(destination.get("materia"))
+        subject_id, name = subject["id"], subject["nombre"]
+        file = subject_files()[subject_id]
+        raw = json.loads(file.read_text(encoding="utf-8"))
+        existing = raw if isinstance(raw, list) else raw["preguntas"]
+    else:
+        name = str(destination.get("nombre") or parsed["nombre"]).strip()
+        description = str(destination.get("descripcion") or parsed["descripcion"]).strip()
+        subject_id = slugify(name) if name else ""
+        if save and not name:
+            raise ValueError("Escribí el nombre de la materia nueva")
+        if subject_id and subject_id.casefold() in {stem.casefold() for stem in subject_files()}:
+            raise ValueError(f"Ya existe una materia con el archivo {subject_id}.json. Elegí otro nombre o agregá las preguntas a esa materia.")
+        file = SUBJECTS / f"{subject_id}.json"
+        raw = {"nombre": name, "descripcion": description, "preguntas": []}
+        existing = []
+
+    # Los ID faltantes o repetidos se reemplazan por <materia>-NNN.
+    taken = {q.get("id") for q in existing if isinstance(q, dict)}
+    prefix = subject_id or "pregunta"
+    counter = len(existing)
+    added = []
+    for n, q in enumerate(parsed["preguntas"], 1):
+        if not isinstance(q, dict):
+            raise ValueError(f"La pregunta {n} del texto no es un objeto")
+        q = dict(q)
+        if not isinstance(q.get("id"), str) or not q["id"].strip() or q["id"] in taken:
+            counter += 1
+            while f"{prefix}-{counter:03d}" in taken:
+                counter += 1
+            q["id"] = f"{prefix}-{counter:03d}"
+        taken.add(q["id"])
+        validate_questions([q], f"la pregunta {n} del texto")
+        added.append(q)
+
+    result = {"formato": parsed["formato"], "cantidad": len(added), "total": len(existing) + len(added), "nombre_sugerido": parsed["nombre"],
+              "materia": {"id": subject_id, "nombre": name}, "preguntas": added}
+    if save:
+        if not subjects_writable():
+            raise ValueError("La aplicación no encuentra la carpeta materias junto a ella, así que no puede guardar. Descomprimí el ZIP completo y, en macOS, mové la carpeta fuera de Descargas antes de abrir la aplicación.")
+        questions = existing + added
+        validate_questions(questions, file.name)
+        if isinstance(raw, list):
+            raw = questions
+        else:
+            raw["preguntas"] = questions
+        try:
+            file.parent.mkdir(parents=True, exist_ok=True)
+            temporary = file.with_suffix(".json.tmp")
+            temporary.write_text(json.dumps(raw, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            temporary.replace(file)
+        except OSError as exc:
+            raise ValueError(f"No se pudo guardar {file}: {exc}") from None
+        result["guardado"] = True
+    return result
+
+
 class Handler(BaseHTTPRequestHandler):
     def send_json(self, payload, status=200):
         raw = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -232,7 +437,7 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         try:
             if path == "/api/meta":
-                return self.send_json({"aplicacion": APP_NAME, "materias": list_subjects(), "carpeta_materias": str(SUBJECTS), "carpeta_historial": str(history_dir()), "compilada": bool(getattr(sys, "frozen", False))})
+                return self.send_json({"aplicacion": APP_NAME, "materias": list_subjects(), "carpeta_materias": str(SUBJECTS), "carpeta_historial": str(history_dir()), "escribible": subjects_writable(), "compilada": bool(getattr(sys, "frozen", False))})
             if path == "/api/history":
                 folder = history_dir()
                 records = []
@@ -300,6 +505,8 @@ class Handler(BaseHTTPRequestHandler):
                 with LOCK:
                     SESSIONS[quiz_id] = {"materia": label, "preguntas": questions}
                 return self.send_json({"id": quiz_id, "materia": label, "preguntas": [public_question(q) for q in questions]})
+            if path == "/api/import":
+                return self.send_json(import_questions(body))
             if path == "/api/submit":
                 quiz_id = body.get("id")
                 if not isinstance(quiz_id, str):
