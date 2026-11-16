@@ -20,7 +20,6 @@ from urllib.parse import unquote, urlparse
 
 
 APP_NAME = "Repasario"
-LEGACY_DATA_DIRS = ("CuestionariosJava",)
 MAX_QUESTIONS = 50
 MAX_ANSWER_LENGTH = 5000
 # Imagen dentro de un texto: ![descripción](ruta relativa a la carpeta de materias).
@@ -55,17 +54,7 @@ def history_dir() -> Path:
         base = Path.home() / "Library" / "Application Support"
     else:
         base = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
-    folder = base / APP_NAME
-    if not folder.exists():
-        # Conserva el historial de versiones anteriores de la aplicación.
-        for legacy in LEGACY_DATA_DIRS:
-            if (base / legacy).is_dir():
-                try:
-                    (base / legacy).rename(folder)
-                except OSError:
-                    pass
-                break
-    return folder / "historial"
+    return base / APP_NAME / "historial"
 
 
 def subject_files() -> dict[str, Path]:

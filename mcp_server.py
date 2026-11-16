@@ -168,7 +168,7 @@ QUESTION_SCHEMA = {
     },
     "required": ["id", "pregunta"],
 }
-MATERIA = {"type": "string", "description": "Identificador de la materia: nombre del archivo sin .json (por ejemplo 'desarrollo-software')"}
+MATERIA = {"type": "string", "description": "Identificador de la materia: nombre del archivo sin .json (por ejemplo 'historia-argentina')"}
 
 TOOLS = {
     "listar_materias": (listar_materias, "Lista las materias disponibles con su cantidad de preguntas o el error de validación.", {}, []),
