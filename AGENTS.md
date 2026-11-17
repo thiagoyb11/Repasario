@@ -21,29 +21,29 @@ Los mensajes de commit siguen [Conventional Commits 1.0.0](https://www.conventio
 | `docs` | Solo documentación (README, AGENTS.md, comentarios). |
 | `refactor` | Cambio de código que no agrega funcionalidad ni corrige errores. |
 | `perf` | Mejora de rendimiento. |
-| `test` | Agregar o corregir pruebas (`tools/smoke_*.py`). |
-| `build` | Compilación y empaquetado: `tools/build_desktop.py`, `release/`, `Repasario-portable.zip`, `requirements-build.txt`. |
+| `test` | Agregar o corregir pruebas (`src/**/*.test.ts`). |
+| `build` | Compilación, dependencias y PWA: `package.json`, `vite.config.ts`, `tsconfig.json`. |
 | `chore` | Mantenimiento que no encaja en los anteriores (`.gitignore`, configuración). |
-| `content` | Cambios en los bancos de preguntas de `materias/`. |
+| `content` | Cambios en la materia de ejemplo de `public/ejemplos/`. |
 
 ### Alcances sugeridos
 
-`app` (servidor y corrección en `app.py`), `web` (interfaz en `web/`), `mcp` (`mcp_server.py`, `.mcp.json`), `materias` o el identificador de una materia (por ejemplo `diseno-sistemas-p2`), `build` y `tools`.
+`domain` (lógica en `src/domain/`), `db` (base de datos local en `src/db/`), `ui` (interfaz en `src/components/`, `src/pages/` y `src/lib/`), `ejemplos` o el identificador de la materia de ejemplo (`diseno-sistemas-p2`) y `build`.
 
 ### Reglas
 
-- La descripción va en español, en modo imperativo y en minúscula, sin punto final, y con 72 caracteres como máximo en total en la primera línea. Ejemplo: `feat(app): mezclar las opciones de cada pregunta`.
-- Un commit por cambio lógico. No mezclar, por ejemplo, un cambio de código con la regeneración de un banco de preguntas.
+- La descripción va en español, en modo imperativo y en minúscula, sin punto final, y con 72 caracteres como máximo en total en la primera línea. Ejemplo: `feat(domain): mezclar las opciones de cada pregunta`.
+- Un commit por cambio lógico. No mezclar, por ejemplo, un cambio de código con un cambio en la materia de ejemplo.
 - El cuerpo es opcional, va separado por una línea en blanco y explica qué cambia y por qué.
-- Un cambio incompatible (por ejemplo, en el formato de los JSON de `materias/`) se marca con `!` después del tipo o el alcance (`feat(app)!: ...`) y con un pie `BREAKING CHANGE: <descripción>`.
+- Un cambio incompatible (por ejemplo, en el formato JSON de las materias o de la copia de seguridad) se marca con `!` después del tipo o el alcance (`feat(db)!: ...`) y con un pie `BREAKING CHANGE: <descripción>`.
 
 ### Ejemplos
 
 ```text
-feat(app): mezclar las opciones de cada pregunta al azar
-fix(web): mostrar la explicación en preguntas de varias respuestas
+feat(domain): mezclar las opciones de cada pregunta al azar
+fix(ui): mostrar la explicación en preguntas de varias respuestas
 content(diseno-sistemas-p2): agregar preguntas de patrones de diseño
 docs: documentar el campo mezclar en el README
-build: actualizar la versión compilada para macOS
-test(app): cubrir la mezcla de opciones en el test de humo
+build: actualizar vite a la versión 6
+test(db): cubrir la restauración de la copia de seguridad
 ```

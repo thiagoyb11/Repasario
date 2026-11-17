@@ -1,58 +1,39 @@
 # Repasario
 
-Aplicación local de cuestionarios para repasar cualquier materia en Windows, macOS y Linux. Cada materia es un archivo JSON con su banco de preguntas. Funciona en el navegador mediante un servidor local. La versión de código fuente requiere Python 3.9 o posterior; la versión compilada no requiere instalar Python.
+Aplicación web para repasar cualquier materia con cuestionarios de opción múltiple. Las preguntas se generan con cualquier IA (ChatGPT, Claude, Gemini u otra), se pegan en la aplicación y se practican con cuestionarios aleatorios que se corrigen solos.
 
-## Versión compilada
+Funciona completamente en el navegador: no hay cuenta ni servidor, y una vez abierta funciona sin conexión. Las materias, el historial y el cuestionario en curso se guardan en el navegador (IndexedDB) y se pueden exportar como copia de seguridad.
 
-La carpeta `release/` contiene versiones compiladas para dos sistemas:
+## Desarrollo
 
-| Sistema | Archivo | Para abrir |
-| --- | --- | --- |
-| Windows (x64) | [Repasario-Windows-amd64.zip](release/Repasario-Windows-amd64.zip) | **Repasario.exe** |
-| macOS (Apple Silicon) | [Repasario-macOS-arm64.zip](release/Repasario-macOS-arm64.zip) | **Repasario.app** |
-
-Para utilizarla, descomprimir el ZIP y abrir la aplicación con doble clic. La carpeta `materias` debe permanecer junto a la aplicación para poder editar los bancos de preguntas o agregar materias. La aplicación abre el navegador y se puede cerrar con el botón **Salir**.
-
-En Windows, la aplicación no tiene firma digital, por lo que la primera vez SmartScreen puede mostrar el aviso "Windows protegió su PC". Para continuar, elegir **Más información** y luego **Ejecutar de todas formas**.
-
-Para obtener una versión compilada en Linux, en una Mac Intel o en Windows ARM, ejecutar la compilación en un equipo con ese sistema y arquitectura. PyInstaller genera binarios para el sistema en el que se ejecuta. Desde la raíz del proyecto:
+Requiere Node.js 20 o posterior.
 
 ```text
-python -m pip install -r requirements-build.txt
-python tools/build_desktop.py
+npm install
+npm run dev        # servidor de desarrollo
+npm test           # pruebas
+npm run typecheck  # verificación de tipos
+npm run build      # sitio estático en dist/
+npm run preview    # sirve dist/ para probar la versión compilada
 ```
 
-En Windows, `python` se puede reemplazar por `py -3`. El ZIP generado se guarda en `release/`.
+`npm run build` genera un sitio estático en `dist/` que se puede publicar en cualquier hosting estático (por ejemplo, GitHub Pages). Usa rutas relativas y rutas con `#`, así que funciona en cualquier carpeta. Incluye un service worker para que la aplicación funcione sin conexión y se pueda instalar como PWA.
 
-## Iniciar desde el código fuente
-
-- **Windows:** abrir `lanzar.bat` o ejecutar `py -3 app.py` en una terminal.
-- **macOS:** ejecutar `sh lanzar.command` o `python3 app.py`.
-- **Linux:** ejecutar `sh lanzar.sh` o `python3 app.py`.
-
-La aplicación abre el navegador en una dirección local `http://127.0.0.1:PUERTO/`. La terminal debe permanecer abierta durante el uso. Para detener el servidor, presionar `Ctrl+C`.
-
-Si el navegador no se abre automáticamente, utilizar la dirección que aparece en la terminal. La opción `--no-browser` evita que se abra el navegador; `--port 8765` fija el puerto.
-
-## Materias
-
-Cada archivo `.json` de la carpeta [materias](materias) es una materia. La forma más simple de crear una o sumarle preguntas es la pantalla **Importar preguntas** (ver más abajo). También se puede crear un archivo a mano en esa carpeta, por ejemplo `materias/historia.json`; para quitar una materia, borrar o mover su archivo. La pantalla inicial permite elegir la materia del cuestionario y muestra la ubicación de la carpeta. Los cambios se aplican al volver a la pantalla inicial, sin reiniciar la aplicación.
-
-El repositorio incluye como ejemplo las materias [Desarrollo de Software](materias/desarrollo-software.json), con **150 preguntas** sobre Java, [Diseño de Sistemas – Parcial 2](materias/diseno-sistemas-p2.json), con **310 preguntas**, y [Diseño de Sistemas – Banco de parciales](materias/diseno-sistemas-banco-parciales.json), con **60 preguntas** de parciales anteriores, varias con diagramas.
+## Uso
 
 ### Importar preguntas
 
-La pantalla **Importar preguntas** de la barra lateral guía en tres pasos:
+La pantalla **Importar preguntas** guía en tres pasos:
 
-1. **Pedirle las preguntas a una IA.** El botón **Copiar pedido** copia un pedido listo para pegar en ChatGPT, Claude, Gemini u otra IA, junto con el apunte o PDF. Pide las preguntas en formato Aiken.
-2. **Pegar la respuesta** en el campo de texto, o abrir un archivo `.txt` (Aiken) o `.json`.
-3. **Elegir el destino:** una materia nueva o una existente. **Revisar preguntas** muestra cuántas preguntas válidas hay y una vista previa, o los errores con su número de línea. **Guardar** las escribe en la carpeta `materias`.
+1. **Pedirle las preguntas a una IA.** El botón **Copiar pedido** copia un pedido listo para pegar junto con el apunte o PDF. Pide las preguntas en formato Aiken.
+2. **Pegar la respuesta** en el campo de texto, o abrir un archivo `.txt` (Aiken) o `.json`, junto con las imágenes que use.
+3. **Elegir el destino:** una materia nueva o una existente. **Revisar preguntas** muestra cuántas preguntas válidas hay y una vista previa, o los errores con su número de línea. Recién después se puede guardar.
 
-El formato se detecta solo. En JSON se acepta tanto el formato de una materia como una lista de preguntas, aunque la IA haya agregado texto antes o después, comas finales o un bloque ` ```json `. Los `id` faltantes o repetidos se reemplazan por `<materia>-001`, `<materia>-002`, etc.
+El formato se detecta solo. En JSON se acepta el formato de una materia o una lista de preguntas, aunque la IA haya agregado texto antes o después, comas finales o un bloque ` ```json `. Los `id` faltantes o repetidos se reemplazan por `<materia>-001`, `<materia>-002`, etc.
 
-#### Formato Aiken
+### Formato Aiken
 
-Es el formato de texto de Moodle, así que también sirve para importar bancos exportados desde el campus:
+Es el formato de texto de Moodle, así que también sirve para importar bancos exportados desde un campus:
 
 ```text
 ¿En qué año se declaró la independencia argentina?
@@ -70,7 +51,7 @@ TEMA: Independencia
 - El enunciado puede ocupar varias líneas e incluir código entre dos líneas con tres acentos graves.
 - Las preguntas se separan con una línea en blanco. Se ignoran la numeración (`1.`) y las negritas que suelen agregar las IA.
 
-Cada archivo usa esta estructura:
+### Formato JSON
 
 ```json
 {
@@ -91,47 +72,37 @@ Cada archivo usa esta estructura:
 }
 ```
 
-- `nombre` es el texto que se muestra en la aplicación. Si falta, se usa el nombre del archivo. `descripcion` es opcional.
-- `preguntas` debe tener al menos una pregunta. Cada pregunta requiere `id`, `pregunta`, `opciones` (entre 2 y 8) y `correctas`; `explicacion`, `tema`, `origen`, `fuente` y `mezclar` son opcionales.
-- `correctas` contiene índices que comienzan en **0**. Una pregunta con varias respuestas válidas puede usar varios índices, por ejemplo `[0, 2]`.
-- Las opciones se muestran en orden aleatorio en cada cuestionario. Las del tipo "Todas las anteriores" o "Ninguna de las anteriores" quedan en la posición en la que se escribieron. Para conservar el orden original de una pregunta, agregar `"mezclar": false`.
-- Cada `id` debe ser único dentro de la materia.
-- En el enunciado, el texto encerrado entre dos marcas de tres acentos graves se muestra como bloque de código.
-- El enunciado, las opciones, la explicación y la respuesta pueden incluir imágenes con la sintaxis `![descripción](imagenes/mi-materia/diagrama.png)`. La ruta es relativa a la carpeta `materias` (formatos PNG, JPG, GIF, WebP o SVG) y la imagen debe existir. Las imágenes se pueden ampliar con el botón **Ampliar**. Si alguna opción tiene una imagen, la lista de opciones tiene una altura fija con barra de desplazamiento.
+- Cada pregunta requiere `pregunta`, `opciones` (entre 2 y 8) y `correctas`; `id`, `explicacion`, `tema`, `origen`, `fuente` y `mezclar` son opcionales.
+- `correctas` contiene índices que comienzan en **0**. Con varios índices, por ejemplo `[0, 2]`, la pregunta es de respuesta múltiple.
+- Las opciones se muestran en orden aleatorio. Las del tipo "Todas las anteriores" o "Ninguna de las anteriores" quedan en su posición. `"mezclar": false` conserva el orden escrito.
 - Una pregunta con `"tipo": "desarrollo"` se responde con texto libre. En lugar de `opciones` y `correctas` lleva `respuesta`, la respuesta esperada que se muestra en la revisión.
-- El archivo también puede contener directamente la lista de preguntas, sin `nombre` ni `descripcion`.
+- En el enunciado, el texto entre dos marcas de tres acentos graves se muestra como bloque de código.
+- Los textos pueden incluir imágenes con `![descripción](imagenes/diagrama.png)` (PNG, JPG, GIF, WebP o SVG). Al importar, hay que elegir las imágenes junto con el archivo; se relacionan por el nombre del archivo.
 
-Si un archivo contiene un error, la pantalla inicial indica cuál es y las demás materias siguen disponibles.
+El botón **Exportar** de cada materia descarga su JSON en este formato, para compartirla.
 
-## Cuestionarios y puntaje
+### Cuestionarios y puntaje
 
-Cada cuestionario incluye entre 1 y 50 preguntas de la materia elegida, seleccionadas al azar y con las opciones en orden aleatorio.
+Cada cuestionario incluye entre 1 y 50 preguntas de la materia elegida, al azar. Cada pregunta vale **1 punto**. En las de varias respuestas, cada correcta marcada suma `1 / cantidad de correctas` y cada incorrecta marcada resta lo mismo, con un mínimo de **0**. Las preguntas de desarrollo no suman puntaje: la revisión muestra la respuesta escrita junto a la esperada.
 
-Cada pregunta vale **1 punto**. Las preguntas con una sola respuesta correcta usan botones de selección; las que tienen varias usan casillas. En estas últimas, cada respuesta correcta marcada suma `1 / cantidad de respuestas correctas` y cada opción incorrecta marcada resta lo mismo, con un mínimo de **0 puntos** por pregunta. Las preguntas de desarrollo no tienen corrección automática: no suman puntaje y la revisión muestra la respuesta escrita junto a la esperada. Es necesario responder todas las preguntas para finalizar. La revisión muestra las respuestas elegidas, las correctas, el puntaje de cada pregunta y una explicación.
+El cuestionario en curso se guarda en cada respuesta, así que se puede cerrar el navegador y retomarlo después.
 
-## Historial
+### Historial y datos
 
-Al finalizar un cuestionario, se guarda un archivo JSON con la fecha, la materia, las preguntas, las respuestas, la corrección y el puntaje. La barra lateral muestra los intentos agrupados por materia, del más reciente al más antiguo, con su porcentaje; al elegir uno se abre su revisión. El cuestionario en curso aparece primero en su materia. En pantallas angostas, la barra lateral se abre con el botón ☰. La ubicación de los archivos aparece en la pantalla inicial y depende del sistema operativo:
+La barra lateral muestra los intentos agrupados por materia, del más reciente al más antiguo, con su porcentaje. En pantallas angostas se abre con ☰.
 
-| Sistema | Carpeta |
-| --- | --- |
-| Windows | `%APPDATA%\Repasario\historial` |
-| macOS | `~/Library/Application Support/Repasario/historial` |
-| Linux | `${XDG_DATA_HOME:-~/.local/share}/Repasario/historial` |
+La pantalla **Datos y copia de seguridad** permite:
 
-Los intentos finalizados permanecen disponibles después de cerrar la aplicación. Los cuestionarios en curso se mantienen en memoria y se guardan al finalizar.
+- Exportar todo (materias, intentos e imágenes) en un archivo e importarlo en otro navegador o dispositivo.
+- Importar el historial de la versión anterior de Repasario, que guardaba un archivo `.json` por intento.
+- Pedir almacenamiento permanente, para que el navegador no borre los datos cuando falta espacio.
+- Cargar la materia de ejemplo, Diseño de Sistemas – Parcial 2, con 310 preguntas.
 
-## Servidor MCP
+## Estructura
 
-`mcp_server.py` permite que un asistente compatible con MCP (por ejemplo, Claude Code) consulte y edite los bancos de preguntas y abra la aplicación. No requiere dependencias adicionales. El archivo `.mcp.json` lo registra al abrir el proyecto en Claude Code; en otros clientes, configurar el comando `python3 mcp_server.py` desde la raíz del proyecto.
-
-Herramientas: `listar_materias`, `ver_materia`, `guardar_pregunta` (agrega o reemplaza por `id`), `eliminar_pregunta`, `crear_materia` y `abrir_app`. Antes de guardar, se valida el banco completo con las mismas reglas que usa la aplicación.
-
-## Archivos
-
-- `app.py`: servidor local y corrección.
-- `mcp_server.py`: servidor MCP para editar materias y abrir la aplicación.
-- `web/`: interfaz del navegador.
-- `materias/`: un banco de preguntas editable por materia.
-- `tools/build_desktop.py`: genera un paquete compilado en el sistema operativo actual.
-- `tools/smoke_test.py`: prueba la API con materias de ejemplo, sin tocar las materias ni el historial reales.
+- `src/domain/`: lógica sin dependencias de la interfaz ni de la base de datos: tipos, validación, formato Aiken, importación y corrección.
+- `src/db/`: base de datos local con [Dexie](https://dexie.org/) (materias, intentos, imágenes y cuestionario en curso) y copia de seguridad.
+- `src/components/` y `src/pages/`: interfaz en React con Tailwind CSS.
+- `src/lib/`: utilidades de la interfaz (formato de fechas, preferencias, agrupación del historial).
+- `public/ejemplos/`: materia de ejemplo.
+- Las pruebas están junto al código que prueban (`*.test.ts`) y usan Vitest con una IndexedDB simulada.
