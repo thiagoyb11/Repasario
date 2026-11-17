@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* Colores de la interfaz. Se usan como clases de Tailwind: bg-brand, text-ink, border-line, etc. */
+@theme {
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-canvas: #f4f7fb;
+  --color-ink: #172b4c;
+  --color-body: #273b59;
+  --color-muted: #677993;
+  --color-subtle: #8090a5;
+  --color-line: #e0e8f2;
+  --color-line-strong: #cdd9e8;
+
+  --color-brand: #266fd5;
+  --color-brand-strong: #155cbd;
+  --color-brand-soft: #eaf1fb;
+  --color-brand-tint: #e6f0ff;
+  --color-navy: #18396e;
+  --color-navy-mark: #213b72;
+  --color-focus: #7bb7ff;
+
+  --color-sidebar: #eef3f9;
+  --color-sidebar-hover: #e1e9f4;
+  --color-sidebar-active: #d9e6f7;
+
+  --color-ok: #21804b;
+  --color-ok-soft: #eaf7ee;
+  --color-ok-line: #bfe2cb;
+  --color-warn: #a66b18;
+  --color-warn-soft: #fff4df;
+  --color-warn-line: #f6dca9;
+  --color-bad: #bc4b4b;
+  --color-bad-soft: #fff0f0;
+  --color-bad-line: #f5c9c9;
+
+  --shadow-panel: 0 14px 40px #213b7210;
+}
+
+@layer base {
+  body {
+    @apply min-h-screen bg-canvas font-sans text-body antialiased;
+    background-image: radial-gradient(circle at 100% 0%, #e3efff 0, transparent 30%);
+  }
+
+  :focus-visible {
+    @apply outline-3 outline-offset-2 outline-focus;
+  }
+}

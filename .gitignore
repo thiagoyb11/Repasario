@@ -1,8 +1,5 @@
-.DS_Store
-__pycache__/
-*.py[cod]
-.build/
-.build-venv/
+node_modules/
 dist/
-release/*
-!release/*.zip
+dev-dist/
+.DS_Store
+*.tsbuildinfo
