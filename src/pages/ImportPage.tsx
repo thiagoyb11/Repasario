@@ -20,17 +20,8 @@ function mergeByName<T>(current: T[], added: T[], name: (item: T) => string): T[
 
 const hasFiles = (event: DragEvent | globalThis.DragEvent) => event.dataTransfer?.types.includes('Files') ?? false;
 
-/**
- * Zona donde se pueden soltar archivos. Arrastrar texto sigue funcionando como siempre: solo
- * se interceptan los archivos.
- */
-function DropZone({ onFiles, children }: { onFiles: (files: File[]) => void; children: ReactNode }) {
-  // dragenter y dragleave se disparan también al pasar por cada elemento hijo: se cuentan
-  // para saber cuándo el arrastre salió de verdad de la zona.
-  const depth = useRef(0);
-  const [over, setOver] = useState(false);
-
-  // Si el archivo cae fuera de la zona, el navegador lo abriría y se perdería lo cargado.
+/** Evita que el navegador abra un archivo soltado fuera de la zona y se pierda lo cargado. */
+function useIgnoreStrayDrops() {
   useEffect(() => {
     const ignore = (event: globalThis.DragEvent) => {
       if (hasFiles(event)) event.preventDefault();
@@ -42,10 +33,18 @@ function DropZone({ onFiles, children }: { onFiles: (files: File[]) => void; chi
       window.removeEventListener('drop', ignore);
     };
   }, []);
+}
+
+/** Recuadro donde se sueltan los archivos, con el botón para elegirlos. */
+function DropZone({ onFiles }: { onFiles: (files: File[]) => void }) {
+  // dragenter y dragleave se disparan también al pasar por cada elemento hijo: se cuentan
+  // para saber cuándo el arrastre salió de verdad del recuadro.
+  const depth = useRef(0);
+  const [over, setOver] = useState(false);
 
   return (
     <div
-      className="relative"
+      className={`mt-3.5 flex flex-col items-center gap-3 rounded-xl border-2 border-dashed px-5 py-10 text-center transition ${over ? 'border-brand bg-brand-soft' : 'border-line-strong bg-canvas'}`}
       onDragEnter={event => {
         if (!hasFiles(event)) return;
         depth.current += 1;
@@ -69,12 +68,50 @@ function DropZone({ onFiles, children }: { onFiles: (files: File[]) => void; chi
         onFiles([...event.dataTransfer.files]);
       }}
     >
-      {children}
-      {over && (
-        <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-xl border-2 border-dashed border-brand bg-brand-soft/90 text-center font-bold text-brand-strong">
-          Soltá los archivos .txt, .json o imágenes
-        </div>
-      )}
+      <p className="font-bold text-ink">{over ? 'Soltá los archivos' : 'Arrastrá los archivos acá'}</p>
+      <p className="text-[13px] text-muted">Archivos .txt (Aiken) o .json, junto con las imágenes que usen. Podés elegir varios a la vez.</p>
+      <label className="cursor-pointer">
+        <input
+          type="file"
+          multiple
+          accept=".txt,.json,image/*"
+          className="sr-only"
+          onChange={event => {
+            onFiles([...(event.target.files ?? [])]);
+            // Permite volver a elegir el mismo archivo después de quitarlo.
+            event.target.value = '';
+          }}
+        />
+        <span className={buttonClasses({ variant: 'ghost' })}>Elegir archivos…</span>
+      </label>
+    </div>
+  );
+}
+
+type Origin = 'ia' | 'archivos';
+
+const ORIGINS: { value: Origin; title: string; detail: string }[] = [
+  { value: 'ia', title: 'Con una IA', detail: 'Copiá un pedido y pegá lo que te responda' },
+  { value: 'archivos', title: 'Subir archivos', detail: 'Archivos .txt (Aiken) o .json de una materia' },
+];
+
+/** Selector de cómo se cargan las preguntas. */
+function OriginTabs({ value, onChange }: { value: Origin; onChange: (value: Origin) => void }) {
+  return (
+    <div role="tablist" aria-label="Cómo cargar las preguntas" className="mb-4 grid grid-cols-2 gap-1.5 rounded-2xl border border-line bg-white p-1.5 shadow-panel">
+      {ORIGINS.map(origin => (
+        <button
+          key={origin.value}
+          type="button"
+          role="tab"
+          aria-selected={value === origin.value}
+          onClick={() => onChange(origin.value)}
+          className={`rounded-xl px-4 py-3 text-left transition ${value === origin.value ? 'bg-brand-soft' : 'hover:bg-canvas'}`}
+        >
+          <span className={`block font-extrabold ${value === origin.value ? 'text-brand-strong' : 'text-ink'}`}>{origin.title}</span>
+          <span className="mt-0.5 hidden text-[13px] text-muted sm:block">{origin.detail}</span>
+        </button>
+      ))}
     </div>
   );
 }
@@ -209,6 +246,7 @@ export function ImportPage() {
   const [searchParams] = useSearchParams();
   const target = searchParams.get('materia');
 
+  const [origin, setOrigin] = useState<Origin>('ia');
   const [text, setText] = useState('');
   const [files, setFiles] = useState<Required<ImportSource>[]>([]);
   const [images, setImages] = useState<File[]>([]);
@@ -220,6 +258,7 @@ export function ImportPage() {
   const [saved, setSaved] = useState<ImportResult | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  useIgnoreStrayDrops();
 
   if (!subjects) return null;
   if (saved) {
@@ -260,11 +299,13 @@ export function ImportPage() {
     setImages(images.filter(file => file.name !== fileName));
   };
 
+  const sources: ImportSource[] = origin === 'ia' ? [{ texto: text }] : files;
+
   const send = async (save: boolean) => {
     const destino: ImportDestination = adding ? { tipo: 'existente', materiaId: destinationId } : { tipo: 'nueva', nombre: name, descripcion: description };
     setBusy(true);
     try {
-      const result = await importQuestions({ textos: [{ texto: text }, ...files], destino, imagenes: images, guardar: save });
+      const result = await importQuestions({ textos: sources, destino, imagenes: origin === 'archivos' ? images : [], guardar: save });
       if (save) setSaved(result);
       else {
         setPreview(result);
@@ -281,44 +322,34 @@ export function ImportPage() {
   return (
     <div className="mx-auto my-10 max-w-[860px]">
       <PageHeader eyebrow="Importar" title="Sumá preguntas en un minuto">
-        Pedile las preguntas a la IA que uses, pegá su respuesta y revisá el resultado antes de guardarlo. También podés abrir archivos .txt en formato Aiken (el de Moodle) o el .json de una materia.
+        Pedile las preguntas a la IA que uses o subí archivos .txt en formato Aiken (el de Moodle) o el .json de una materia, y revisá el resultado antes de guardarlo.
       </PageHeader>
 
-      <PromptStep />
+      <OriginTabs value={origin} onChange={edit(setOrigin)} />
 
-      <Step number={2} title="Pegá la respuesta">
-        <DropZone onFiles={openFiles}>
-          <textarea
-            aria-label="Texto con las preguntas"
-            spellCheck={false}
-            rows={14}
-            placeholder={IMPORT_PLACEHOLDER}
-            value={text}
-            onChange={event => edit(setText)(event.target.value)}
-            className={`${INPUT_CLASSES} mt-3.5 mb-3 min-h-64 w-full resize-y font-mono text-[13px] leading-relaxed`}
-          />
-          <div className="flex flex-wrap items-center gap-3">
-            <label className="cursor-pointer">
-              <input
-                type="file"
-                multiple
-                accept=".txt,.json,image/*"
-                className="sr-only"
-                onChange={event => {
-                  openFiles([...(event.target.files ?? [])]);
-                  // Permite volver a elegir el mismo archivo después de quitarlo.
-                  event.target.value = '';
-                }}
-              />
-              <span className={buttonClasses({ variant: 'ghost' })}>Abrir archivos…</span>
-            </label>
-            <span className="text-[13px] text-subtle">O arrastralos acá: archivos .txt (Aiken) o .json, junto con las imágenes que usen. Se suman a lo que pegues arriba.</span>
-          </div>
+      {origin === 'ia' ? (
+        <>
+          <PromptStep />
+          <Step number={2} title="Pegá la respuesta">
+            <textarea
+              aria-label="Texto con las preguntas"
+              spellCheck={false}
+              rows={14}
+              placeholder={IMPORT_PLACEHOLDER}
+              value={text}
+              onChange={event => edit(setText)(event.target.value)}
+              className={`${INPUT_CLASSES} mt-3.5 min-h-64 w-full resize-y font-mono text-[13px] leading-relaxed`}
+            />
+          </Step>
+        </>
+      ) : (
+        <Step number={1} title="Elegí los archivos">
+          <DropZone onFiles={openFiles} />
           <ChosenFiles names={[...files.map(source => source.archivo), ...images.map(file => file.name)]} onRemove={removeFile} />
-        </DropZone>
-      </Step>
+        </Step>
+      )}
 
-      <Step number={3} title="Elegí dónde guardarlas">
+      <Step number={origin === 'ia' ? 3 : 2} title="Elegí dónde guardarlas">
         <div className="my-4 flex flex-wrap gap-2.5">
           {(['nueva', 'existente'] as const)
             .filter(value => value === 'nueva' || canAdd)
@@ -346,7 +377,7 @@ export function ImportPage() {
         )}
 
         <div className="mt-5 flex flex-wrap gap-2.5">
-          <Button disabled={busy || (!text.trim() && !files.length)} onClick={() => send(false)}>Revisar preguntas</Button>
+          <Button disabled={busy || !sources.some(source => source.texto.trim())} onClick={() => send(false)}>Revisar preguntas</Button>
           <Button variant="primary" disabled={busy || !preview || (!adding && !name.trim())} onClick={() => send(true)}>
             {preview ? `Guardar ${plural(preview.preguntas.length, 'pregunta')}` : 'Guardar'}
           </Button>
