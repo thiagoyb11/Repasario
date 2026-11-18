@@ -62,7 +62,7 @@ function Preview({ result, adding }: { result: ImportResult; adding: boolean }) 
   return (
     <div className="mt-4">
       <Message tone="ok">
-        Formato {result.formato}: {plural(result.preguntas.length, 'pregunta válida', 'preguntas válidas')}.
+        Formato {result.formatos.join(' y ')}: {plural(result.preguntas.length, 'pregunta válida', 'preguntas válidas')}.
         {adding && ` La materia va a quedar con ${result.total}.`}
       </Message>
       <ol className="mt-3 grid list-decimal gap-3.5 pl-6">
@@ -164,7 +164,7 @@ export function ImportPage() {
     const destino: ImportDestination = adding ? { tipo: 'existente', materiaId: destinationId } : { tipo: 'nueva', nombre: name, descripcion: description };
     setBusy(true);
     try {
-      const result = await importQuestions({ texto: text, destino, imagenes: images, guardar: save });
+      const result = await importQuestions({ textos: [{ texto: text }], destino, imagenes: images, guardar: save });
       if (save) setSaved(result);
       else {
         setPreview(result);

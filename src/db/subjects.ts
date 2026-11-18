@@ -1,4 +1,4 @@
-import { parseImport, prepareQuestions, slugify, type ImportFormat } from '../domain/importText';
+import { parseImport, prepareQuestions, slugify, type ImportFormat, type ParsedImport } from '../domain/importText';
 import { fileName, imagePaths } from '../domain/richText';
 import type { Question, Subject, SubjectRef } from '../domain/types';
 import { isEssay } from '../domain/types';
@@ -16,23 +16,33 @@ export type ImportDestination =
   | { tipo: 'nueva'; nombre: string; descripcion: string }
   | { tipo: 'existente'; materiaId: string };
 
-export interface ImportRequest {
+/** Un texto con preguntas: lo pegado en el campo de texto o el contenido de un archivo. */
+export interface ImportSource {
+  /** Nombre del archivo; sin nombre es el texto pegado. */
+  archivo?: string;
   texto: string;
+}
+
+export interface ImportRequest {
+  textos: ImportSource[];
   destino: ImportDestination;
-  /** Imágenes elegidas junto con el archivo; se relacionan con las rutas por el nombre del archivo. */
+  /** Imágenes elegidas junto con los archivos; se relacionan con las rutas por el nombre del archivo. */
   imagenes?: File[];
   /** false solo valida y devuelve la vista previa. */
   guardar: boolean;
 }
 
 export interface ImportResult {
-  formato: ImportFormat;
+  /** Formatos de los textos importados, sin repetir. */
+  formatos: ImportFormat[];
   materia: SubjectRef;
   preguntas: Question[];
   /** Cantidad de preguntas que tiene la materia después de importar. */
   total: number;
   /** Nombre que trae el JSON de una materia, para sugerirlo. */
   nombreSugerido: string;
+  /** Textos que no se pudieron importar, con el motivo. Sus preguntas no se guardan. */
+  errores: string[];
 }
 
 function questionImagePaths(question: Question): string[] {
@@ -40,9 +50,41 @@ function questionImagePaths(question: Question): string[] {
   return texts.flatMap(imagePaths);
 }
 
-export async function importQuestions({ texto, destino, imagenes = [], guardar }: ImportRequest): Promise<ImportResult> {
-  if (!texto.trim()) throw new ValidationError('Pegá el texto con las preguntas o abrí un archivo');
-  const parsed = parseImport(texto);
+const sourceLabel = (source: ImportSource) => source.archivo ?? 'Texto pegado';
+
+/**
+ * Si ningún texto se pudo importar, lanza el error. Con un solo texto se lanza su error tal
+ * cual; con varios, la lista de errores.
+ */
+function failIfNothingLeft(sources: ImportSource[], failures: Map<ImportSource, Error>): void {
+  if (failures.size < sources.length) return;
+  if (sources.length === 1) throw failures.get(sources[0]);
+  const lines = sources.map(source => `${sourceLabel(source)}: ${failures.get(source)?.message}`);
+  throw new ValidationError(`No se pudo importar ninguno de los textos:\n${lines.join('\n')}`);
+}
+
+/**
+ * Une las preguntas de todos los textos en una sola importación. Un texto con errores no
+ * frena a los demás: se informa en `errores` y sus preguntas quedan afuera.
+ */
+export async function importQuestions({ textos, destino, imagenes = [], guardar }: ImportRequest): Promise<ImportResult> {
+  const sources = textos.filter(source => source.texto.trim());
+  if (!sources.length) throw new ValidationError('Pegá el texto con las preguntas o abrí un archivo');
+
+  const failures = new Map<ImportSource, Error>();
+  const parsed = new Map<ImportSource, ParsedImport>();
+  for (const source of sources) {
+    try {
+      parsed.set(source, parseImport(source.texto));
+    } catch (error) {
+      failures.set(source, error as Error);
+    }
+  }
+  failIfNothingLeft(sources, failures);
+
+  const parsedList = [...parsed.values()];
+  const suggestedName = parsedList.find(p => p.nombre)?.nombre ?? '';
+  const suggestedDescription = parsedList.find(p => p.descripcion)?.descripcion ?? '';
 
   let subject: Subject;
   if (destino.tipo === 'existente') {
@@ -50,29 +92,44 @@ export async function importQuestions({ texto, destino, imagenes = [], guardar }
     if (!existing) throw new ValidationError('La materia elegida ya no existe');
     subject = existing;
   } else {
-    const nombre = destino.nombre.trim() || parsed.nombre;
+    const nombre = destino.nombre.trim() || suggestedName;
     if (guardar && !nombre) throw new ValidationError('Escribí el nombre de la materia nueva');
     const id = nombre ? slugify(nombre) : 'materia';
     if (nombre && (await db.materias.get(id))) {
       throw new ValidationError(`Ya existe una materia con el identificador "${id}". Elegí otro nombre o agregá las preguntas a esa materia.`);
     }
-    subject = { id, nombre, descripcion: destino.descripcion.trim() || parsed.descripcion, preguntas: [], actualizada: '' };
+    subject = { id, nombre, descripcion: destino.descripcion.trim() || suggestedDescription, preguntas: [], actualizada: '' };
   }
 
   const storedImages = new Set(await db.imagenes.toCollection().primaryKeys());
   const imageFiles = new Map(imagenes.map(file => [file.name, file]));
-  const added = prepareQuestions(parsed.preguntas, {
-    subjectId: subject.id,
-    existing: subject.preguntas,
-    imageExists: path => storedImages.has(path) || imageFiles.has(fileName(path)),
-  });
+  const added: Question[] = [];
+  const formats = new Set<ImportFormat>();
+  for (const [source, { formato, preguntas }] of parsed) {
+    try {
+      // Cada texto ve las preguntas de los anteriores para no repetir sus id.
+      const prepared = prepareQuestions(preguntas, {
+        subjectId: subject.id,
+        existing: [...subject.preguntas, ...added],
+        imageExists: path => storedImages.has(path) || imageFiles.has(fileName(path)),
+        source: source.archivo ? `de ${source.archivo}` : 'del texto',
+      });
+      added.push(...prepared);
+      formats.add(formato);
+    } catch (error) {
+      failures.set(source, error as Error);
+    }
+  }
+  failIfNothingLeft(sources, failures);
 
   const result: ImportResult = {
-    formato: parsed.formato,
+    formatos: [...formats],
     materia: { id: subject.id, nombre: subject.nombre },
     preguntas: added,
     total: subject.preguntas.length + added.length,
-    nombreSugerido: parsed.nombre,
+    nombreSugerido: suggestedName,
+    // En el orden en que se eligieron los textos.
+    errores: sources.filter(source => failures.has(source)).map(source => `${sourceLabel(source)}: ${failures.get(source)?.message}`),
   };
   if (!guardar) return result;
 

@@ -39,6 +39,11 @@ describe('prepareQuestions', () => {
     expect(() => prepareQuestions(items, { subjectId: 'm', existing: [] })).toThrow('la pregunta 2 del texto');
   });
 
+  it('nombra el origen de las preguntas en los errores', () => {
+    const items = [{ ...choice('a'), correctas: [9] }];
+    expect(() => prepareQuestions(items, { subjectId: 'm', existing: [], source: 'de banco.txt' })).toThrow('la pregunta 1 de banco.txt');
+  });
+
   it('valida las imágenes con la función recibida', () => {
     const pictured = { ...choice('a'), pregunta: '![Diagrama](imagenes/d.png)' };
     expect(() => prepareQuestions([pictured], { subjectId: 'm', existing: [], imageExists: () => false })).toThrow('No se encontró la imagen');

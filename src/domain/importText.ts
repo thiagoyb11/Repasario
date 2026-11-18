@@ -73,13 +73,15 @@ interface PrepareOptions {
   subjectId: string;
   existing: Question[];
   imageExists?: (path: string) => boolean;
+  /** De dónde vienen las preguntas, para los mensajes de error: "del texto", "de banco.txt". */
+  source?: string;
 }
 
 /**
  * Valida las preguntas importadas para agregarlas a una materia. Los id faltantes o que ya
  * existen se reemplazan por <materia>-NNN.
  */
-export function prepareQuestions(items: unknown[], { subjectId, existing, imageExists }: PrepareOptions): Question[] {
+export function prepareQuestions(items: unknown[], { subjectId, existing, imageExists, source = 'del texto' }: PrepareOptions): Question[] {
   const taken = new Set(existing.map(q => q.id));
   let counter = existing.length;
   const nextId = () => {
@@ -92,7 +94,7 @@ export function prepareQuestions(items: unknown[], { subjectId, existing, imageE
   };
 
   return items.map((item, index) => {
-    const origin = `la pregunta ${index + 1} del texto`;
+    const origin = `la pregunta ${index + 1} ${source}`;
     if (typeof item !== 'object' || item === null || Array.isArray(item)) {
       throw new ValidationError(`${origin[0].toUpperCase()}${origin.slice(1)} no es un objeto`);
     }
