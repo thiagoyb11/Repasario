@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { discardProgress, finishQuiz, loadProgress, saveProgress } from '../db/attempts';
 import { isAnswered, isMultiple, MAX_ANSWER_LENGTH } from '../domain/quiz';
-import { hasImage, plainText } from '../domain/richText';
+import { plainText } from '../domain/richText';
 import type { Answer, ChoiceQuestion, QuizInProgress } from '../domain/types';
 import { isEssay } from '../domain/types';
 import { QuestionStem, RichText } from '../components/RichText';
+import { ScrollArea } from '../components/ScrollArea';
 import { Button, INPUT_CLASSES, Message, Panel } from '../components/ui';
 import { optionLetter } from '../lib/format';
 
@@ -15,8 +16,6 @@ function Hint({ children }: { children: string }) {
 
 function ChoiceAnswer({ question, selected, onChange }: { question: ChoiceQuestion; selected: number[]; onChange: (answer: number[]) => void }) {
   const multiple = isMultiple(question);
-  // Con diagramas, la lista tiene altura fija y se desplaza, en lugar de agrandar la pregunta.
-  const withImages = question.opciones.some(hasImage);
 
   const toggle = (index: number) => {
     if (!multiple) return onChange([index]);
@@ -30,7 +29,7 @@ function ChoiceAnswer({ question, selected, onChange }: { question: ChoiceQuesti
           ? 'Seleccioná todas las respuestas correctas. Cada acierto suma una parte del punto y cada opción incorrecta resta la misma parte.'
           : 'Seleccioná una respuesta.'}
       </Hint>
-      <div className={`grid gap-2.5 ${withImages ? 'max-h-[min(58vh,560px)] overflow-y-auto overscroll-contain pr-2' : ''}`} tabIndex={withImages ? 0 : undefined}>
+      <div className="grid gap-2.5">
         {question.opciones.map((option, index) => {
           const checked = selected.includes(index);
           return (
@@ -153,24 +152,28 @@ export function QuizPage() {
           </span>
         </div>
 
-        <QuestionStem text={question.pregunta} />
+        {/* Altura fija: los botones de navegación no cambian de lugar entre preguntas. La clave
+            vuelve a mostrar el principio de cada pregunta nueva. */}
+        <ScrollArea key={question.id} label={`Pregunta ${quiz.actual + 1}`} className="h-[clamp(360px,60vh,600px)]">
+          <QuestionStem text={question.pregunta} />
 
-        {isEssay(question) ? (
-          <>
-            <Hint>Pregunta de desarrollo: escribí tu respuesta. Al finalizar vas a poder compararla con la respuesta esperada; no suma puntaje automático.</Hint>
-            <textarea
-              aria-label="Tu respuesta"
-              rows={8}
-              maxLength={MAX_ANSWER_LENGTH}
-              placeholder="Escribí tu respuesta…"
-              value={(quiz.respuestas[question.id] as string | undefined) ?? ''}
-              onChange={event => answer(event.target.value)}
-              className={`${INPUT_CLASSES} min-h-44 w-full resize-y text-sm leading-relaxed`}
-            />
-          </>
-        ) : (
-          <ChoiceAnswer question={question} selected={(quiz.respuestas[question.id] as number[] | undefined) ?? []} onChange={answer} />
-        )}
+          {isEssay(question) ? (
+            <>
+              <Hint>Pregunta de desarrollo: escribí tu respuesta. Al finalizar vas a poder compararla con la respuesta esperada; no suma puntaje automático.</Hint>
+              <textarea
+                aria-label="Tu respuesta"
+                rows={8}
+                maxLength={MAX_ANSWER_LENGTH}
+                placeholder="Escribí tu respuesta…"
+                value={(quiz.respuestas[question.id] as string | undefined) ?? ''}
+                onChange={event => answer(event.target.value)}
+                className={`${INPUT_CLASSES} min-h-44 w-full resize-y text-sm leading-relaxed`}
+              />
+            </>
+          ) : (
+            <ChoiceAnswer question={question} selected={(quiz.respuestas[question.id] as number[] | undefined) ?? []} onChange={answer} />
+          )}
+        </ScrollArea>
 
         {notice && <Message tone="warn" className="mt-4">{notice}</Message>}
 

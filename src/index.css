@@ -47,3 +47,12 @@
     @apply outline-3 outline-offset-2 outline-focus;
   }
 }
+
+/* Oculta la barra de desplazamiento sin impedir el desplazamiento. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
