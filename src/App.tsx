@@ -22,7 +22,7 @@ export function App() {
       <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <div className="flex min-h-screen min-w-0 flex-col">
-        <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-line bg-white px-2.5 lg:hidden">
+        <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-line bg-surface px-2.5 lg:hidden">
           <button type="button" aria-label="Abrir menú" className="grid size-9 place-items-center rounded-lg text-lg text-muted hover:bg-sidebar-hover" onClick={() => setMenuOpen(true)}>
             ☰
           </button>

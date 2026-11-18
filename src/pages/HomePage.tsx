@@ -28,7 +28,7 @@ function Advantages() {
       </p>
       <div className="grid gap-3.5 text-left sm:grid-cols-2 lg:grid-cols-3">
         {ADVANTAGES.map(([title, text]) => (
-          <article key={title} className="rounded-2xl border border-line bg-white p-5">
+          <article key={title} className="rounded-2xl border border-line bg-surface p-5">
             <h3 className="mb-2 text-[15px] font-bold text-ink">{title}</h3>
             <p className="text-[13px] leading-relaxed text-muted">{text}</p>
           </article>
@@ -72,7 +72,7 @@ function SubjectInfo({ subject }: { subject: Subject }) {
   };
 
   return (
-    <aside className="relative overflow-hidden rounded-2xl bg-navy p-7 text-white shadow-panel">
+    <aside className="relative overflow-hidden rounded-2xl bg-hero p-7 text-white shadow-panel">
       <h2 className="text-[22px] font-extrabold tracking-tight">{subject.nombre}</h2>
       <p className="mt-3 leading-relaxed text-[#cfdef5]">{subject.descripcion || 'Banco de preguntas para practicar esta materia.'}</p>
       <div className="mt-6 text-[41px] font-black tracking-tighter">{subject.preguntas.length}</div>

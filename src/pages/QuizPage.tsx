@@ -36,7 +36,7 @@ function ChoiceAnswer({ question, selected, onChange }: { question: ChoiceQuesti
             <label
               key={index}
               className={`flex cursor-pointer items-start gap-3.5 rounded-xl border px-4 py-3.5 leading-normal transition ${
-                checked ? 'border-brand bg-[#edf5ff]' : 'border-line bg-white hover:border-[#8ab8ee] hover:bg-[#f7fbff]'
+                checked ? 'border-brand bg-option-checked' : 'border-line bg-surface hover:border-option-hover-line hover:bg-option-hover'
               }`}
             >
               <input
@@ -48,7 +48,7 @@ function ChoiceAnswer({ question, selected, onChange }: { question: ChoiceQuesti
                 className="mt-1 size-[17px] shrink-0 accent-brand"
               />
               <span className="flex-1 text-sm text-body">
-                <span className="mr-2 font-extrabold text-[#6280a2]">{optionLetter(index)}.</span>
+                <span className="mr-2 font-extrabold text-option-letter">{optionLetter(index)}.</span>
                 <RichText text={option} captions={false} inline />
               </span>
             </label>
@@ -67,13 +67,13 @@ function ProgressPanel({ quiz, onGo, onDiscard }: { quiz: QuizInProgress; onGo: 
       <div className="text-[25px] font-extrabold text-ink">
         {answered} / {quiz.preguntas.length}
       </div>
-      <div className="my-4 h-[7px] overflow-hidden rounded-full bg-[#eaf0f7]">
+      <div className="my-4 h-[7px] overflow-hidden rounded-full bg-track">
         <div className="h-full rounded-full bg-brand transition-[width]" style={{ width: `${(100 * answered) / quiz.preguntas.length}%` }} />
       </div>
       <div className="grid grid-cols-10 gap-2 xl:grid-cols-5">
         {quiz.preguntas.map((question, index) => {
           const done = isAnswered(question, quiz.respuestas[question.id]);
-          const state = index === quiz.actual ? 'border-brand bg-brand text-white' : done ? 'border-ok-line bg-[#e5f3ec] text-ok' : 'border-line bg-white text-muted';
+          const state = index === quiz.actual ? 'border-brand bg-brand text-white' : done ? 'border-ok-line bg-done text-ok' : 'border-line bg-surface text-muted';
           const label = `Pregunta ${index + 1}, ${done ? 'respondida' : 'pendiente'}`;
           return (
             <button key={question.id} type="button" title={label} aria-label={label} className={`h-[35px] rounded-lg border text-xs font-bold ${state}`} onClick={() => onGo(index)}>
@@ -144,10 +144,10 @@ export function QuizPage() {
 
       <Panel className="px-5 py-6 sm:px-10 sm:py-8">
         <div className="flex items-center justify-between gap-3 border-b border-line pb-5">
-          <span className="text-xs font-extrabold tracking-[1.1px] text-[#637d9c] uppercase">
+          <span className="text-xs font-extrabold tracking-[1.1px] text-label uppercase">
             Pregunta {quiz.actual + 1} de {quiz.preguntas.length}
           </span>
-          <span className="rounded-full bg-brand-soft px-2.5 py-1.5 text-[11px] font-bold text-[#53739b]">
+          <span className="rounded-full bg-brand-soft px-2.5 py-1.5 text-[11px] font-bold text-tag">
             {[quiz.materia.nombre, question.tema].filter(Boolean).join(' · ')}
           </span>
         </div>

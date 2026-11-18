@@ -98,7 +98,7 @@ const ORIGINS: { value: Origin; title: string; detail: string }[] = [
 /** Selector de cómo se cargan las preguntas. */
 function OriginTabs({ value, onChange }: { value: Origin; onChange: (value: Origin) => void }) {
   return (
-    <div role="tablist" aria-label="Cómo cargar las preguntas" className="mb-4 grid grid-cols-2 gap-1.5 rounded-2xl border border-line bg-white p-1.5 shadow-panel">
+    <div role="tablist" aria-label="Cómo cargar las preguntas" className="mb-4 grid grid-cols-2 gap-1.5 rounded-2xl border border-line bg-surface p-1.5 shadow-panel">
       {ORIGINS.map(origin => (
         <button
           key={origin.value}
@@ -108,7 +108,7 @@ function OriginTabs({ value, onChange }: { value: Origin; onChange: (value: Orig
           onClick={() => onChange(origin.value)}
           className={`rounded-xl px-4 py-3 text-left transition ${value === origin.value ? 'bg-brand-soft' : 'hover:bg-canvas'}`}
         >
-          <span className={`block font-extrabold ${value === origin.value ? 'text-brand-strong' : 'text-ink'}`}>{origin.title}</span>
+          <span className={`block font-extrabold ${value === origin.value ? 'text-brand-strong-fg' : 'text-ink'}`}>{origin.title}</span>
           <span className="mt-0.5 hidden text-[13px] text-muted sm:block">{origin.detail}</span>
         </button>
       ))}
@@ -141,7 +141,7 @@ function ChosenFiles({ names, onRemove }: { names: string[]; onRemove: (name: st
 function Step({ number, title, children }: { number: number; title: string; children: ReactNode }) {
   return (
     <Panel className="relative mb-4 px-5 py-6 sm:py-7 sm:pr-8 sm:pl-[78px]">
-      <div className="mb-2.5 grid size-8 place-items-center rounded-full bg-brand-tint font-black text-brand sm:absolute sm:top-6 sm:left-7">{number}</div>
+      <div className="mb-2.5 grid size-8 place-items-center rounded-full bg-brand-tint font-black text-brand-fg sm:absolute sm:top-6 sm:left-7">{number}</div>
       <h2 className="text-[19px] font-extrabold tracking-tight text-ink">{title}</h2>
       {children}
     </Panel>

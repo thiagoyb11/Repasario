@@ -16,9 +16,9 @@ const BUTTON_SIZES: Record<Size, string> = {
 
 const BUTTON_VARIANTS: Record<Variant, string> = {
   primary: 'bg-brand text-white shadow-[0_7px_16px_#266fd52b] hover:bg-brand-strong',
-  secondary: 'bg-brand-soft text-brand-strong hover:bg-brand-tint',
-  ghost: 'border border-line-strong bg-white text-body hover:border-brand/50',
-  danger: 'border border-bad-line bg-white text-bad hover:bg-bad-soft',
+  secondary: 'bg-brand-soft text-brand-strong-fg hover:bg-brand-tint',
+  ghost: 'border border-line-strong bg-surface text-body hover:border-brand/50',
+  danger: 'border border-bad-line bg-surface text-bad hover:bg-bad-soft',
   bare: '',
 };
 
@@ -46,12 +46,12 @@ export function ButtonLink({ variant, size, className, ...props }: ButtonLinkPro
 }
 
 export function Panel({ className = '', ...props }: HTMLAttributes<HTMLElement>) {
-  return <section className={`rounded-2xl border border-line bg-white shadow-panel ${className}`} {...props} />;
+  return <section className={`rounded-2xl border border-line bg-surface shadow-panel ${className}`} {...props} />;
 }
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-block rounded-full bg-brand-tint px-3 py-2 text-[11px] font-extrabold uppercase tracking-[2px] text-brand">
+    <span className="inline-block rounded-full bg-brand-tint px-3 py-2 text-[11px] font-extrabold uppercase tracking-[2px] text-brand-fg">
       {children}
     </span>
   );
@@ -62,15 +62,15 @@ export function FieldLabel({ className = '', ...props }: LabelHTMLAttributes<HTM
 }
 
 /** Estilo de los campos de texto. El ancho lo define cada uso (w-full, w-[120px], etc.). */
-export const INPUT_CLASSES = 'block rounded-xl border border-line-strong bg-white px-3.5 py-3 text-[15px] text-navy-mark';
+export const INPUT_CLASSES = 'block rounded-xl border border-line-strong bg-surface px-3.5 py-3 text-[15px] text-field';
 
 type Tone = 'info' | 'ok' | 'warn' | 'bad';
 
 const TONES: Record<Tone, string> = {
   info: 'border-line bg-brand-soft text-navy',
   ok: 'border-ok-line bg-ok-soft text-ok',
-  warn: 'border-warn-line bg-warn-soft text-[#765012]',
-  bad: 'border-bad-line bg-bad-soft text-[#9b2c2c]',
+  warn: 'border-warn-line bg-warn-soft text-warn-text',
+  bad: 'border-bad-line bg-bad-soft text-bad-text',
 };
 
 export function Message({ tone = 'info', className = '', children }: { tone?: Tone; className?: string; children: ReactNode }) {

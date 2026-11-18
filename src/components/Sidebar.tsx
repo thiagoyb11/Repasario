@@ -12,7 +12,7 @@ export function Brand() {
     <span className="flex items-center gap-2.5 text-[19px] font-extrabold tracking-tight whitespace-nowrap text-ink">
       <span className="grid size-[35px] place-items-center rounded-[10px] bg-navy-mark text-lg text-white">R</span>
       <span>
-        Repas<span className="text-brand">ario</span>
+        Repas<span className="text-brand-fg">ario</span>
       </span>
     </span>
   );
@@ -43,7 +43,7 @@ function Group({ group, open, onToggle }: { group: AttemptGroup; open: boolean; 
 
       {progress && (
         <NavLink to="/cuestionario" className={({ isActive }) => `${ITEM} ${isActive ? ITEM_ACTIVE : ''}`}>
-          <span className="flex items-center gap-2 font-bold text-brand">
+          <span className="flex items-center gap-2 font-bold text-brand-fg">
             <span className="size-[7px] rounded-full bg-brand" />
             En curso
           </span>
@@ -110,7 +110,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </div>
 
         <nav className="grid gap-1">
-          <Link to="/" className={`${SIDE_ACTION} border border-line bg-white shadow-sm hover:border-brand/40 hover:bg-white`}>
+          <Link to="/" className={`${SIDE_ACTION} border border-line bg-surface shadow-sm hover:border-brand/40 hover:bg-surface`}>
             <span aria-hidden>＋</span> Nuevo cuestionario
           </Link>
           <Link to="/importar" className={SIDE_ACTION}>

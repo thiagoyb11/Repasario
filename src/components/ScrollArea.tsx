@@ -38,7 +38,7 @@ export function ScrollArea({ className = '', label, children }: { className?: st
       </div>
       <div
         aria-hidden
-        className={`pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-ink/15 to-transparent transition-opacity duration-200 ${moreBelow ? 'opacity-100' : 'opacity-0'}`}
+        className={`pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-shade to-transparent transition-opacity duration-200 ${moreBelow ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
   );

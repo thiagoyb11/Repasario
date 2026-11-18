@@ -15,7 +15,7 @@ function Explanation({ text }: { text?: string }) {
 function EssayReview({ question, number }: { question: ReviewedEssay; number: number }) {
   return (
     <>
-      <div className="text-xs font-extrabold text-[#53739b]">Pregunta {number} · Desarrollo · Sin puntaje automático</div>
+      <div className="text-xs font-extrabold text-tag">Pregunta {number} · Desarrollo · Sin puntaje automático</div>
       <QuestionStem text={question.pregunta} size="small" />
       <div className="my-3 rounded-lg bg-canvas px-3.5 py-3 text-[13px] leading-relaxed text-body">
         <strong className="mb-1 block text-xs text-ink">Tu respuesta</strong>
@@ -45,11 +45,11 @@ function ChoiceReview({ question, number }: { question: ReviewedChoice; number: 
         Pregunta {number} · {status.label} · {question.puntaje} / 1 punto
       </div>
       <QuestionStem text={question.pregunta} size="small" />
-      <div className={`my-3 grid gap-1 text-[13px] text-[#566a86] ${withImages ? 'max-h-[min(60vh,520px)] overflow-y-auto' : ''}`}>
+      <div className={`my-3 grid gap-1 text-[13px] text-option-muted ${withImages ? 'max-h-[min(60vh,520px)] overflow-y-auto' : ''}`}>
         {question.opciones.map((option, index) => {
           const correct = question.correctas.includes(index);
           const selected = question.seleccionadas.includes(index);
-          const tone = correct ? 'bg-ok-soft text-[#216d40]' : selected ? 'bg-[#fff0ef] text-[#a63e3e]' : '';
+          const tone = correct ? 'bg-ok-soft text-ok-strong' : selected ? 'bg-wrong-soft text-bad-strong' : '';
           let note = '';
           if (correct) note = selected ? ' ✓ Correcta · Tu respuesta' : ' ✓ Correcta · No seleccionada';
           else if (selected) note = ' ✕ Tu respuesta';
@@ -86,9 +86,9 @@ function Summary({ attempt }: { attempt: Attempt }) {
     <Panel className="p-8 text-center">
       <Eyebrow>Cuestionario finalizado</Eyebrow>
       <h1 className="mt-2 mb-1 text-[33px] font-extrabold tracking-tight text-ink">Tu resultado</h1>
-      <div className="text-[61px] leading-tight font-black tracking-tighter text-[#2169cb] max-sm:text-5xl">
+      <div className="text-[61px] leading-tight font-black tracking-tighter text-score max-sm:text-5xl">
         {attempt.aciertos}
-        <small className="text-[25px] tracking-normal text-[#7b91ae]"> / {attempt.total}</small>
+        <small className="text-[25px] tracking-normal text-score-total"> / {attempt.total}</small>
       </div>
       <div className="text-[13px] text-muted">{details.join(' · ')}</div>
       <ButtonLink to="/" variant="primary" className="mt-6">Nuevo cuestionario</ButtonLink>

@@ -38,7 +38,7 @@ function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: ()
       className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-[#0b1526e6] px-4 pt-13 pb-4"
       onClick={onClose}
     >
-      <button ref={closeButton} type="button" className="fixed top-3 right-4 rounded-lg bg-white px-3 py-2 font-bold text-ink" onClick={onClose}>
+      <button ref={closeButton} type="button" className="fixed top-3 right-4 rounded-lg bg-surface px-3 py-2 font-bold text-ink" onClick={onClose}>
         ✕ Cerrar
       </button>
       <img src={src} alt={alt} className="max-h-[calc(100vh-70px)] max-w-[min(96vw,1600px)] cursor-zoom-out rounded-lg bg-white" />
@@ -61,12 +61,12 @@ function StoredFigure({ path, alt, caption }: { path: string; alt: string; capti
     return <span className="my-2 block rounded-lg border border-dashed border-bad-line p-3 text-sm text-bad">Falta la imagen {path}</span>;
   }
   return (
-    <figure className="relative my-3.5 rounded-xl border border-line bg-white p-2.5 text-center">
+    <figure className="relative my-3.5 rounded-xl border border-line bg-surface p-2.5 text-center">
       {url && <img src={url} alt={alt} loading="lazy" className="mx-auto block h-auto max-w-full cursor-zoom-in" onClick={zoom} />}
       <button
         type="button"
         aria-label={`Ampliar imagen${alt ? `: ${alt}` : ''}`}
-        className="absolute top-2 right-2 rounded-md border border-line-strong bg-white/90 px-2 py-1 text-xs font-bold text-brand-strong hover:bg-brand-soft"
+        className="absolute top-2 right-2 rounded-md border border-line-strong bg-white/90 px-2 py-1 text-xs font-bold text-brand-strong-fg hover:bg-brand-soft"
         onClick={zoom}
       >
         ⤢ Ampliar
