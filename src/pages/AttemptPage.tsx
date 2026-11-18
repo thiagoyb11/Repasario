@@ -114,7 +114,7 @@ export function AttemptPage() {
   return (
     <div className="mx-auto my-10 max-w-[840px]">
       <Summary attempt={attempt} />
-      <h2 className="mt-8 text-xl font-extrabold text-ink">Revisión de respuestas</h2>
+      <h2 className="animate-rise mt-8 text-xl font-extrabold text-ink">Revisión de respuestas</h2>
       <div className="mt-4 grid gap-3.5">
         {attempt.preguntas.map((question, index) => (
           <ReviewCard key={question.id} question={question} number={index + 1} />

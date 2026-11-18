@@ -154,7 +154,7 @@ export function QuizPage() {
 
         {/* Altura fija: los botones de navegación no cambian de lugar entre preguntas. La clave
             vuelve a mostrar el principio de cada pregunta nueva. */}
-        <ScrollArea key={question.id} label={`Pregunta ${quiz.actual + 1}`} className="h-[clamp(360px,60vh,600px)]">
+        <ScrollArea key={question.id} label={`Pregunta ${quiz.actual + 1}`} className="animate-rise h-[clamp(360px,60vh,600px)]">
           <QuestionStem text={question.pregunta} />
 
           {isEssay(question) ? (

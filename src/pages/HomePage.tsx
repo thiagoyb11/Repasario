@@ -20,7 +20,7 @@ const ADVANTAGES = [
 
 function Advantages() {
   return (
-    <section className="mx-auto mt-14 mb-5 max-w-[920px] text-center">
+    <section className="animate-rise mx-auto mt-14 mb-5 max-w-[920px] text-center">
       <Eyebrow>Por qué Repasario</Eyebrow>
       <h2 className="mt-4 mb-2 text-[clamp(24px,3vw,32px)] font-extrabold tracking-tight text-ink">Una alternativa local a NotebookLM para practicar</h2>
       <p className="mx-auto mb-6 max-w-[620px] leading-relaxed text-muted">
@@ -72,7 +72,7 @@ function SubjectInfo({ subject }: { subject: Subject }) {
   };
 
   return (
-    <aside className="relative overflow-hidden rounded-2xl bg-hero p-7 text-white shadow-panel">
+    <aside className="animate-rise relative overflow-hidden rounded-2xl bg-hero p-7 text-white shadow-panel">
       <h2 className="text-[22px] font-extrabold tracking-tight">{subject.nombre}</h2>
       <p className="mt-3 leading-relaxed text-[#cfdef5]">{subject.descripcion || 'Banco de preguntas para practicar esta materia.'}</p>
       <div className="mt-6 text-[41px] font-black tracking-tighter">{subject.preguntas.length}</div>
@@ -169,7 +169,7 @@ export function HomePage() {
 
   return (
     <>
-      <section className="mx-auto mt-12 mb-7 max-w-[760px] text-center">
+      <section className="animate-rise mx-auto mt-12 mb-7 max-w-[760px] text-center">
         <Eyebrow>Práctica a tu ritmo</Eyebrow>
         <h1 className="mt-4.5 mb-4 text-[clamp(34px,5vw,57px)] leading-[1.05] font-extrabold tracking-[-2px] text-ink">Prepará tu próximo examen.</h1>
         <p className="mx-auto max-w-[590px] text-[17px] leading-relaxed text-muted">

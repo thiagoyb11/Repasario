@@ -98,7 +98,7 @@ const ORIGINS: { value: Origin; title: string; detail: string }[] = [
 /** Selector de cómo se cargan las preguntas. */
 function OriginTabs({ value, onChange }: { value: Origin; onChange: (value: Origin) => void }) {
   return (
-    <div role="tablist" aria-label="Cómo cargar las preguntas" className="mb-4 grid grid-cols-2 gap-1.5 rounded-2xl border border-line bg-surface p-1.5 shadow-panel">
+    <div role="tablist" aria-label="Cómo cargar las preguntas" className="animate-rise mb-4 grid grid-cols-2 gap-1.5 rounded-2xl border border-line bg-surface p-1.5 shadow-panel">
       {ORIGINS.map(origin => (
         <button
           key={origin.value}

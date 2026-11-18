@@ -46,7 +46,7 @@ export function ButtonLink({ variant, size, className, ...props }: ButtonLinkPro
 }
 
 export function Panel({ className = '', ...props }: HTMLAttributes<HTMLElement>) {
-  return <section className={`rounded-2xl border border-line bg-surface shadow-panel ${className}`} {...props} />;
+  return <section className={`animate-rise rounded-2xl border border-line bg-surface shadow-panel ${className}`} {...props} />;
 }
 
 export function Eyebrow({ children }: { children: ReactNode }) {
@@ -75,7 +75,7 @@ const TONES: Record<Tone, string> = {
 
 export function Message({ tone = 'info', className = '', children }: { tone?: Tone; className?: string; children: ReactNode }) {
   return (
-    <div role={tone === 'bad' ? 'alert' : undefined} className={`whitespace-pre-wrap rounded-xl border px-4 py-3 text-sm leading-relaxed ${TONES[tone]} ${className}`}>
+    <div role={tone === 'bad' ? 'alert' : undefined} className={`animate-rise whitespace-pre-wrap rounded-xl border px-4 py-3 text-sm leading-relaxed ${TONES[tone]} ${className}`}>
       {children}
     </div>
   );
@@ -83,7 +83,7 @@ export function Message({ tone = 'info', className = '', children }: { tone?: To
 
 export function PageHeader({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) {
   return (
-    <header className="mb-6">
+    <header className="animate-rise mb-6">
       <Eyebrow>{eyebrow}</Eyebrow>
       <h1 className="mt-3.5 mb-1.5 text-[34px] font-extrabold tracking-tight text-ink max-sm:text-[27px]">{title}</h1>
       {children && <p className="max-w-2xl leading-relaxed text-muted">{children}</p>}

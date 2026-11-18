@@ -30,7 +30,8 @@ export function App() {
         </header>
 
         <main className="mx-auto w-full max-w-[1120px] flex-1 px-4 sm:px-7">
-          <Routes>
+          {/* La clave vuelve a montar la pantalla, y su animación de entrada, en cada ruta. */}
+          <Routes key={location.pathname}>
             <Route path="/" element={<HomePage />} />
             <Route path="/importar" element={<ImportPage />} />
             <Route path="/cuestionario" element={<QuizPage />} />
@@ -40,7 +41,7 @@ export function App() {
           </Routes>
         </main>
 
-        <footer className="p-7 text-center text-xs text-subtle">Tus materias y tu historial se guardan solo en este navegador.</footer>
+        <footer className="animate-rise p-7 text-center text-xs text-subtle">Tus materias y tu historial se guardan solo en este navegador.</footer>
       </div>
     </div>
   );
