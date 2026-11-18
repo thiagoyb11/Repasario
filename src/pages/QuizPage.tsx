@@ -177,14 +177,19 @@ export function QuizPage() {
 
         {notice && <Message tone="warn" className="mt-4">{notice}</Message>}
 
-        <div className="mt-7 flex flex-wrap justify-between gap-2.5 border-t border-line pt-6">
-          <Button variant="ghost" disabled={quiz.actual === 0} onClick={() => goTo(quiz.actual - 1)}>
+        {/* Tres columnas: el botón de descartar queda centrado aunque los otros dos tengan distinto ancho.
+            En pantallas chicas no entran los tres en una fila y descartar pasa abajo. */}
+        <div className="mt-7 grid grid-cols-[1fr_auto_1fr] items-center gap-2.5 border-t border-line pt-6 max-sm:grid-cols-2">
+          <Button variant="ghost" className="justify-self-start" disabled={quiz.actual === 0} onClick={() => goTo(quiz.actual - 1)}>
             ← Anterior
           </Button>
+          <Button variant="danger" size="sm" className="max-sm:order-last max-sm:col-span-2 max-sm:justify-self-center" onClick={discard}>
+            Descartar
+          </Button>
           {last ? (
-            <Button variant="primary" disabled={submitting} onClick={submit}>Finalizar</Button>
+            <Button variant="primary" className="justify-self-end" disabled={submitting} onClick={submit}>Finalizar</Button>
           ) : (
-            <Button onClick={() => goTo(quiz.actual + 1)}>Siguiente →</Button>
+            <Button className="justify-self-end" onClick={() => goTo(quiz.actual + 1)}>Siguiente →</Button>
           )}
         </div>
       </Panel>
