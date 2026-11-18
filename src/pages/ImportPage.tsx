@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type DragEvent, type ReactNode } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { importQuestions, listSubjects, type ImportDestination, type ImportResult, type ImportSource } from '../db/subjects';
 import { aikenPrompt, IMPORT_PLACEHOLDER } from '../domain/prompt';
@@ -16,6 +16,67 @@ const QUESTION_FILE = /\.(txt|json)$/i;
 function mergeByName<T>(current: T[], added: T[], name: (item: T) => string): T[] {
   const addedNames = new Set(added.map(name));
   return [...current.filter(item => !addedNames.has(name(item))), ...added];
+}
+
+const hasFiles = (event: DragEvent | globalThis.DragEvent) => event.dataTransfer?.types.includes('Files') ?? false;
+
+/**
+ * Zona donde se pueden soltar archivos. Arrastrar texto sigue funcionando como siempre: solo
+ * se interceptan los archivos.
+ */
+function DropZone({ onFiles, children }: { onFiles: (files: File[]) => void; children: ReactNode }) {
+  // dragenter y dragleave se disparan también al pasar por cada elemento hijo: se cuentan
+  // para saber cuándo el arrastre salió de verdad de la zona.
+  const depth = useRef(0);
+  const [over, setOver] = useState(false);
+
+  // Si el archivo cae fuera de la zona, el navegador lo abriría y se perdería lo cargado.
+  useEffect(() => {
+    const ignore = (event: globalThis.DragEvent) => {
+      if (hasFiles(event)) event.preventDefault();
+    };
+    window.addEventListener('dragover', ignore);
+    window.addEventListener('drop', ignore);
+    return () => {
+      window.removeEventListener('dragover', ignore);
+      window.removeEventListener('drop', ignore);
+    };
+  }, []);
+
+  return (
+    <div
+      className="relative"
+      onDragEnter={event => {
+        if (!hasFiles(event)) return;
+        depth.current += 1;
+        setOver(true);
+      }}
+      onDragLeave={event => {
+        if (!hasFiles(event)) return;
+        depth.current -= 1;
+        if (depth.current === 0) setOver(false);
+      }}
+      onDragOver={event => {
+        if (!hasFiles(event)) return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+      }}
+      onDrop={event => {
+        if (!hasFiles(event)) return;
+        event.preventDefault();
+        depth.current = 0;
+        setOver(false);
+        onFiles([...event.dataTransfer.files]);
+      }}
+    >
+      {children}
+      {over && (
+        <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-xl border-2 border-dashed border-brand bg-brand-soft/90 text-center font-bold text-brand-strong">
+          Soltá los archivos .txt, .json o imágenes
+        </div>
+      )}
+    </div>
+  );
 }
 
 /** Lista de archivos elegidos, cada uno con un botón para quitarlo. */
@@ -226,33 +287,35 @@ export function ImportPage() {
       <PromptStep />
 
       <Step number={2} title="Pegá la respuesta">
-        <textarea
-          aria-label="Texto con las preguntas"
-          spellCheck={false}
-          rows={14}
-          placeholder={IMPORT_PLACEHOLDER}
-          value={text}
-          onChange={event => edit(setText)(event.target.value)}
-          className={`${INPUT_CLASSES} mt-3.5 mb-3 min-h-64 w-full resize-y font-mono text-[13px] leading-relaxed`}
-        />
-        <div className="flex flex-wrap items-center gap-3">
-          <label className="cursor-pointer">
-            <input
-              type="file"
-              multiple
-              accept=".txt,.json,image/*"
-              className="sr-only"
-              onChange={event => {
-                openFiles([...(event.target.files ?? [])]);
-                // Permite volver a elegir el mismo archivo después de quitarlo.
-                event.target.value = '';
-              }}
-            />
-            <span className={buttonClasses({ variant: 'ghost' })}>Abrir archivos…</span>
-          </label>
-          <span className="text-[13px] text-subtle">Archivos .txt (Aiken) o .json, junto con las imágenes que usen. Se suman a lo que pegues arriba.</span>
-        </div>
-        <ChosenFiles names={[...files.map(source => source.archivo), ...images.map(file => file.name)]} onRemove={removeFile} />
+        <DropZone onFiles={openFiles}>
+          <textarea
+            aria-label="Texto con las preguntas"
+            spellCheck={false}
+            rows={14}
+            placeholder={IMPORT_PLACEHOLDER}
+            value={text}
+            onChange={event => edit(setText)(event.target.value)}
+            className={`${INPUT_CLASSES} mt-3.5 mb-3 min-h-64 w-full resize-y font-mono text-[13px] leading-relaxed`}
+          />
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                multiple
+                accept=".txt,.json,image/*"
+                className="sr-only"
+                onChange={event => {
+                  openFiles([...(event.target.files ?? [])]);
+                  // Permite volver a elegir el mismo archivo después de quitarlo.
+                  event.target.value = '';
+                }}
+              />
+              <span className={buttonClasses({ variant: 'ghost' })}>Abrir archivos…</span>
+            </label>
+            <span className="text-[13px] text-subtle">O arrastralos acá: archivos .txt (Aiken) o .json, junto con las imágenes que usen. Se suman a lo que pegues arriba.</span>
+          </div>
+          <ChosenFiles names={[...files.map(source => source.archivo), ...images.map(file => file.name)]} onRemove={removeFile} />
+        </DropZone>
       </Step>
 
       <Step number={3} title="Elegí dónde guardarlas">
