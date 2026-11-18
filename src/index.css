@@ -64,69 +64,69 @@
 }
 
 /*
- * Modo oscuro: sigue la preferencia del sistema. Los colores se tomaron de una captura de
- * referencia; los que no aparecían en ella siguen el mismo criterio.
+ * Modo oscuro. src/lib/theme.ts pone data-theme="dark" según la configuración elegida o la
+ * preferencia del sistema. Los colores se tomaron de una captura de referencia; los que no
+ * aparecían en ella siguen el mismo criterio.
  */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
+:root[data-theme="dark"] {
+  color-scheme: dark;
 
-    --color-canvas: #161a1d;
-    --color-ink: #c8c4be;
-    --color-body: #abbfd6;
-    --color-muted: #979084;
-    --color-subtle: #a29c91;
-    --color-line: #27364f;
-    --color-line-strong: #2f3f5a;
+  --color-canvas: #161a1d;
+  --color-ink: #c8c4be;
+  --color-body: #abbfd6;
+  --color-muted: #979084;
+  --color-subtle: #a29c91;
+  --color-line: #27364f;
+  --color-line-strong: #2f3f5a;
 
-    --color-brand: #2f58a4;
-    --color-brand-strong: #284c8f;
-    --color-brand-soft: #191d20;
-    --color-brand-tint: #1b2129;
-    --color-navy: #8fb0dc;
-    --color-navy-mark: #1f2e58;
-    --color-focus: #4f8fdf;
+  --color-brand: #2f58a4;
+  --color-brand-strong: #284c8f;
+  --color-brand-soft: #191d20;
+  --color-brand-tint: #1b2129;
+  --color-navy: #8fb0dc;
+  --color-navy-mark: #1f2e58;
+  --color-focus: #4f8fdf;
 
-    --color-sidebar: #181d20;
-    --color-sidebar-hover: #1c2226;
-    --color-sidebar-active: #1f2528;
+  --color-sidebar: #181d20;
+  --color-sidebar-hover: #1c2226;
+  --color-sidebar-active: #1f2528;
 
-    --color-ok: #6cc596;
-    --color-ok-soft: #142219;
-    --color-ok-line: #1f4a30;
-    --color-warn: #dfb16b;
-    --color-warn-soft: #2a2110;
-    --color-warn-line: #5a4418;
-    --color-bad: #e08080;
-    --color-bad-soft: #2a1616;
-    --color-bad-line: #5c2626;
+  --color-ok: #6cc596;
+  --color-ok-soft: #142219;
+  --color-ok-line: #1f4a30;
+  --color-warn: #dfb16b;
+  --color-warn-soft: #2a2110;
+  --color-warn-line: #5a4418;
+  --color-bad: #e08080;
+  --color-bad-soft: #2a1616;
+  --color-bad-line: #5c2626;
 
-    --color-white: #e8e6e3;
-    --color-surface: #121517;
-    --color-brand-fg: #669bdb;
-    --color-brand-strong-fg: #72a8e7;
-    --color-hero: #1a2c4f;
-    --color-field: #c8c4be;
-    --color-label: #968f82;
-    --color-tag: #879fb8;
-    --color-track: #1a1f22;
-    --color-option-checked: #16202d;
-    --color-option-hover: #151a1f;
-    --color-option-hover-line: #2f5a8f;
-    --color-option-letter: #778fa8;
-    --color-option-muted: #9fb0c4;
-    --color-done: #15241c;
-    --color-ok-strong: #7fd0a4;
-    --color-wrong-soft: #2a1718;
-    --color-bad-strong: #e88f8f;
-    --color-warn-text: #e5bd7e;
-    --color-bad-text: #ec9a9a;
-    --color-score: #6aa3e8;
-    --color-score-total: #8f9fb3;
-    --color-shade: #00000080;
-    --color-glow: transparent;
+  --color-white: #e8e6e3;
+  --color-surface: #121517;
+  --color-brand-fg: #669bdb;
+  --color-brand-strong-fg: #72a8e7;
+  --color-hero: #1a2c4f;
+  --color-field: #c8c4be;
+  --color-label: #968f82;
+  --color-tag: #879fb8;
+  --color-track: #1a1f22;
+  --color-option-checked: #16202d;
+  --color-option-hover: #151a1f;
+  --color-option-hover-line: #2f5a8f;
+  --color-option-letter: #778fa8;
+  --color-option-muted: #9fb0c4;
+  --color-done: #15241c;
+  --color-ok-strong: #7fd0a4;
+  --color-wrong-soft: #2a1718;
+  --color-bad-strong: #e88f8f;
+  --color-warn-text: #e5bd7e;
+  --color-bad-text: #ec9a9a;
+  --color-score: #6aa3e8;
+  --color-score-total: #8f9fb3;
+  --color-shade: #00000080;
+  --color-glow: transparent;
 
-    --shadow-panel: 0 14px 40px #00000040;  }
+  --shadow-panel: 0 14px 40px #00000040;
 }
 
 @layer base {

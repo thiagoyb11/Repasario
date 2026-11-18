@@ -6,6 +6,7 @@ import { isAnswered } from '../domain/quiz';
 import { formatDate } from '../lib/format';
 import { groupAttempts, type AttemptGroup } from '../lib/groupAttempts';
 import { collapsedGroups, saveCollapsedGroups } from '../lib/preferences';
+import { THEME_OPTIONS, useTheme } from '../lib/theme';
 
 export function Brand() {
   return (
@@ -21,6 +22,34 @@ export function Brand() {
 const SIDE_ACTION = 'flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-ink/90 hover:bg-sidebar-hover';
 const ITEM = 'flex w-full items-center justify-between gap-2 rounded-lg py-1.5 pr-3 pl-7 text-[13px] text-body/85 hover:bg-sidebar-hover';
 const ITEM_ACTIVE = 'bg-sidebar-active font-semibold text-navy';
+
+function Settings() {
+  const [theme, setTheme] = useTheme();
+  return (
+    <div className="px-3 pt-1 pb-2">
+      <div className="pb-2 text-[11px] font-extrabold tracking-[1.2px] text-subtle uppercase">Configuración</div>
+      <div className="flex items-center justify-between gap-3">
+        <span id="tema-label" className="text-[13px] font-semibold text-ink/90">Tema</span>
+        <div role="radiogroup" aria-labelledby="tema-label" className="flex rounded-lg border border-line bg-surface p-0.5">
+          {THEME_OPTIONS.map(option => (
+            <button
+              key={option.value}
+              type="button"
+              role="radio"
+              aria-checked={theme === option.value}
+              onClick={() => setTheme(option.value)}
+              className={`rounded-md px-2 py-1 text-xs font-semibold transition ${
+                theme === option.value ? 'bg-brand-soft text-brand-strong-fg' : 'text-muted hover:text-ink'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function scoreColor(percentage: number | null): string {
   if (percentage === null) return 'text-subtle';
@@ -128,7 +157,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="mt-2 border-t border-line pt-2">
+        <div className="mt-2 border-t border-line pt-3">
+          <Settings />
           <Link to="/datos" className={SIDE_ACTION}>
             <span aria-hidden>⛁</span> Datos y copia de seguridad
           </Link>

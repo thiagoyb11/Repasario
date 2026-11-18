@@ -3,9 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#213b72" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#161a1d" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#213b72">
+    <script>
+      // Aplica el tema antes de dibujar la página, para que no aparezca un instante en claro.
+      // La misma lógica está en src/lib/theme.ts, que después lo mantiene actualizado.
+      try {
+        var tema = localStorage.getItem('tema');
+        var oscuro = tema === 'oscuro' || (tema !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = oscuro ? 'dark' : 'light';
+      } catch (error) {}
+    </script>
     <meta name="description" content="Cuestionarios para repasar cualquier materia, sin cuenta y sin conexión.">
     <link rel="icon" href="./icono.svg" type="image/svg+xml">
     <title>Repasario</title>

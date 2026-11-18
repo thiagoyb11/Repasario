@@ -17,6 +17,9 @@ function write(key: string, value: string): void {
   }
 }
 
+export const storedTheme = () => read('tema');
+export const saveTheme = (theme: string) => write('tema', theme);
+
 export const rememberedSubject = () => read('materia');
 export const rememberSubject = (id: string) => write('materia', id);
 
