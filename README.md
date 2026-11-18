@@ -23,11 +23,17 @@ npm run preview    # sirve dist/ para probar la versión compilada
 
 ### Importar preguntas
 
-La pantalla **Importar preguntas** guía en tres pasos:
+La pantalla **Importar preguntas** tiene dos modos, que se eligen arriba de todo:
 
-1. **Pedirle las preguntas a una IA.** El botón **Copiar pedido** copia un pedido listo para pegar junto con el apunte o PDF. Pide las preguntas en formato Aiken.
-2. **Pegar la respuesta** en el campo de texto, o abrir archivos `.txt` (Aiken) o `.json` junto con las imágenes que usen. Los archivos también se pueden arrastrar al recuadro. Se pueden elegir varios a la vez, incluso de formatos distintos: sus preguntas se suman a lo pegado en una sola importación. Si un archivo tiene errores, la vista previa lo avisa y se importan los demás.
-3. **Elegir el destino:** una materia nueva o una existente. **Revisar preguntas** muestra cuántas preguntas válidas hay y una vista previa, o los errores con su número de línea. Recién después se puede guardar.
+- **Con una IA**, en tres pasos:
+  1. **Pedirle las preguntas a una IA.** El botón **Copiar pedido** copia un pedido listo para pegar junto con el apunte o PDF. Pide las preguntas en formato Aiken.
+  2. **Pegar la respuesta** en el campo de texto.
+  3. **Elegir el destino.**
+- **Subir archivos**, en dos pasos:
+  1. **Elegir los archivos** `.txt` (Aiken) o `.json`, junto con las imágenes que usen, con el botón o arrastrándolos al recuadro. Se pueden elegir varios a la vez, incluso de formatos distintos, y sus preguntas se suman en una sola importación.
+  2. **Elegir el destino.**
+
+El destino es una materia nueva o una existente. **Revisar preguntas** muestra cuántas preguntas válidas hay y una vista previa, o los errores con su número de línea. Si un archivo tiene errores, la vista previa lo avisa y se importan los demás. Recién después de revisar se puede guardar.
 
 El formato se detecta solo. En JSON se acepta el formato de una materia o una lista de preguntas, aunque la IA haya agregado texto antes o después, comas finales o un bloque ` ```json `. Los `id` faltantes o repetidos se reemplazan por `<materia>-001`, `<materia>-002`, etc.
 
