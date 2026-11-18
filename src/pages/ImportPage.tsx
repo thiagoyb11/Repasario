@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, type ReactNode } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { importQuestions, listSubjects, type ImportDestination, type ImportResult } from '../db/subjects';
+import { importQuestions, listSubjects, type ImportDestination, type ImportResult, type ImportSource } from '../db/subjects';
 import { aikenPrompt, IMPORT_PLACEHOLDER } from '../domain/prompt';
 import { plainText } from '../domain/richText';
 import { isEssay } from '../domain/types';
@@ -10,6 +10,35 @@ import { optionLetter, plural } from '../lib/format';
 import { rememberSubject } from '../lib/preferences';
 
 const PREVIEW_COUNT = 5;
+const QUESTION_FILE = /\.(txt|json)$/i;
+
+/** Suma los archivos nuevos a los anteriores; uno con el mismo nombre reemplaza al anterior. */
+function mergeByName<T>(current: T[], added: T[], name: (item: T) => string): T[] {
+  const addedNames = new Set(added.map(name));
+  return [...current.filter(item => !addedNames.has(name(item))), ...added];
+}
+
+/** Lista de archivos elegidos, cada uno con un botón para quitarlo. */
+function ChosenFiles({ names, onRemove }: { names: string[]; onRemove: (name: string) => void }) {
+  if (!names.length) return null;
+  return (
+    <ul className="mt-3 flex flex-wrap gap-2">
+      {names.map(name => (
+        <li key={name} className="flex items-center gap-1.5 rounded-full border border-line bg-canvas py-1 pr-1.5 pl-3 text-[13px] font-semibold text-body">
+          {name}
+          <button
+            type="button"
+            aria-label={`Quitar ${name}`}
+            onClick={() => onRemove(name)}
+            className="grid size-5 place-items-center rounded-full text-muted hover:bg-bad-soft hover:text-bad"
+          >
+            ×
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function Step({ number, title, children }: { number: number; title: string; children: ReactNode }) {
   return (
@@ -65,6 +94,11 @@ function Preview({ result, adding }: { result: ImportResult; adding: boolean }) 
         Formato {result.formatos.join(' y ')}: {plural(result.preguntas.length, 'pregunta válida', 'preguntas válidas')}.
         {adding && ` La materia va a quedar con ${result.total}.`}
       </Message>
+      {result.errores.length > 0 && (
+        <Message tone="warn" className="mt-3">
+          {`No se van a importar las preguntas de:\n${result.errores.join('\n')}`}
+        </Message>
+      )}
       <ol className="mt-3 grid list-decimal gap-3.5 pl-6">
         {result.preguntas.slice(0, PREVIEW_COUNT).map(question => (
           <li key={question.id} className="text-sm text-body">
@@ -115,6 +149,7 @@ export function ImportPage() {
   const target = searchParams.get('materia');
 
   const [text, setText] = useState('');
+  const [files, setFiles] = useState<Required<ImportSource>[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [mode, setMode] = useState<'nueva' | 'existente'>(target ? 'existente' : 'nueva');
   const [name, setName] = useState('');
@@ -130,6 +165,7 @@ export function ImportPage() {
     const importMore = () => {
       setSaved(null);
       setText('');
+      setFiles([]);
       setImages([]);
       setPreview(null);
       setMode('existente');
@@ -149,22 +185,25 @@ export function ImportPage() {
     setError('');
   };
 
-  const openFiles = async (files: FileList | null) => {
-    if (!files?.length) return;
-    const all = [...files];
-    const textFile = all.find(file => /\.(txt|json)$/i.test(file.name));
-    edit(setImages)(all.filter(file => file.type.startsWith('image/')));
-    if (textFile) {
-      setText(await textFile.text());
-      if (!name) setName(textFile.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '));
-    }
+  const openFiles = async (chosen: File[]) => {
+    const questionFiles = chosen.filter(file => QUESTION_FILE.test(file.name));
+    const imageFiles = chosen.filter(file => file.type.startsWith('image/'));
+    const sources = await Promise.all(questionFiles.map(async file => ({ archivo: file.name, texto: await file.text() })));
+    edit(setFiles)(mergeByName(files, sources, source => source.archivo));
+    setImages(mergeByName(images, imageFiles, file => file.name));
+    if (!name && questionFiles.length) setName(questionFiles[0].name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '));
+  };
+
+  const removeFile = (fileName: string) => {
+    edit(setFiles)(files.filter(source => source.archivo !== fileName));
+    setImages(images.filter(file => file.name !== fileName));
   };
 
   const send = async (save: boolean) => {
     const destino: ImportDestination = adding ? { tipo: 'existente', materiaId: destinationId } : { tipo: 'nueva', nombre: name, descripcion: description };
     setBusy(true);
     try {
-      const result = await importQuestions({ textos: [{ texto: text }], destino, imagenes: images, guardar: save });
+      const result = await importQuestions({ textos: [{ texto: text }, ...files], destino, imagenes: images, guardar: save });
       if (save) setSaved(result);
       else {
         setPreview(result);
@@ -181,7 +220,7 @@ export function ImportPage() {
   return (
     <div className="mx-auto my-10 max-w-[860px]">
       <PageHeader eyebrow="Importar" title="Sumá preguntas en un minuto">
-        Pedile las preguntas a la IA que uses, pegá su respuesta y revisá el resultado antes de guardarlo. También podés abrir un archivo .txt en formato Aiken (el de Moodle) o el .json de una materia.
+        Pedile las preguntas a la IA que uses, pegá su respuesta y revisá el resultado antes de guardarlo. También podés abrir archivos .txt en formato Aiken (el de Moodle) o el .json de una materia.
       </PageHeader>
 
       <PromptStep />
@@ -198,14 +237,22 @@ export function ImportPage() {
         />
         <div className="flex flex-wrap items-center gap-3">
           <label className="cursor-pointer">
-            <input type="file" multiple accept=".txt,.json,image/*" className="sr-only" onChange={event => openFiles(event.target.files)} />
+            <input
+              type="file"
+              multiple
+              accept=".txt,.json,image/*"
+              className="sr-only"
+              onChange={event => {
+                openFiles([...(event.target.files ?? [])]);
+                // Permite volver a elegir el mismo archivo después de quitarlo.
+                event.target.value = '';
+              }}
+            />
             <span className={buttonClasses({ variant: 'ghost' })}>Abrir archivos…</span>
           </label>
-          <span className="text-[13px] text-subtle">
-            Un .txt (Aiken) o .json, junto con las imágenes que use.
-            {images.length > 0 && ` ${plural(images.length, 'imagen elegida', 'imágenes elegidas')}.`}
-          </span>
+          <span className="text-[13px] text-subtle">Archivos .txt (Aiken) o .json, junto con las imágenes que usen. Se suman a lo que pegues arriba.</span>
         </div>
+        <ChosenFiles names={[...files.map(source => source.archivo), ...images.map(file => file.name)]} onRemove={removeFile} />
       </Step>
 
       <Step number={3} title="Elegí dónde guardarlas">
@@ -236,7 +283,7 @@ export function ImportPage() {
         )}
 
         <div className="mt-5 flex flex-wrap gap-2.5">
-          <Button disabled={busy || !text.trim()} onClick={() => send(false)}>Revisar preguntas</Button>
+          <Button disabled={busy || (!text.trim() && !files.length)} onClick={() => send(false)}>Revisar preguntas</Button>
           <Button variant="primary" disabled={busy || !preview || (!adding && !name.trim())} onClick={() => send(true)}>
             {preview ? `Guardar ${plural(preview.preguntas.length, 'pregunta')}` : 'Guardar'}
           </Button>
