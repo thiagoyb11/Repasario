@@ -26,7 +26,7 @@ npm run preview    # sirve dist/ para probar la versión compilada
 La pantalla **Importar preguntas** guía en tres pasos:
 
 1. **Pedirle las preguntas a una IA.** El botón **Copiar pedido** copia un pedido listo para pegar junto con el apunte o PDF. Pide las preguntas en formato Aiken.
-2. **Pegar la respuesta** en el campo de texto, o abrir un archivo `.txt` (Aiken) o `.json`, junto con las imágenes que use.
+2. **Pegar la respuesta** en el campo de texto, o abrir archivos `.txt` (Aiken) o `.json` junto con las imágenes que usen. Los archivos también se pueden arrastrar al recuadro. Se pueden elegir varios a la vez, incluso de formatos distintos: sus preguntas se suman a lo pegado en una sola importación. Si un archivo tiene errores, la vista previa lo avisa y se importan los demás.
 3. **Elegir el destino:** una materia nueva o una existente. **Revisar preguntas** muestra cuántas preguntas válidas hay y una vista previa, o los errores con su número de línea. Recién después se puede guardar.
 
 El formato se detecta solo. En JSON se acepta el formato de una materia o una lista de preguntas, aunque la IA haya agregado texto antes o después, comas finales o un bloque ` ```json `. Los `id` faltantes o repetidos se reemplazan por `<materia>-001`, `<materia>-002`, etc.
@@ -77,7 +77,7 @@ TEMA: Independencia
 - Las opciones se muestran en orden aleatorio. Las del tipo "Todas las anteriores" o "Ninguna de las anteriores" quedan en su posición. `"mezclar": false` conserva el orden escrito.
 - Una pregunta con `"tipo": "desarrollo"` se responde con texto libre. En lugar de `opciones` y `correctas` lleva `respuesta`, la respuesta esperada que se muestra en la revisión.
 - En el enunciado, el texto entre dos marcas de tres acentos graves se muestra como bloque de código.
-- Los textos pueden incluir imágenes con `![descripción](imagenes/diagrama.png)` (PNG, JPG, GIF, WebP o SVG). Al importar, hay que elegir las imágenes junto con el archivo; se relacionan por el nombre del archivo.
+- Los textos pueden incluir imágenes con `![descripción](imagenes/diagrama.png)` (PNG, JPG, GIF, WebP o SVG). Al importar, hay que elegir las imágenes junto con los archivos; se relacionan por el nombre del archivo.
 
 El botón **Exportar** de cada materia descarga su JSON en este formato, para compartirla.
 
